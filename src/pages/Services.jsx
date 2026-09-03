@@ -42,6 +42,7 @@ const uiuxData = [
 ];
 
 const graphicDesignData = [
+  
   { title: 'Brand Identity & Logo Design', content: 'Logos, typography, color palettes, and visual guidelines created to give your business a recognizable identity.' },
   { title: 'Marketing & Sales Materials', content: 'Brochures, flyers, business cards, and promotional assets designed to leave a lasting impression in the physical world.' },
   { title: 'Social Media & Advertising Design', content: 'Eye-catching graphics and ad creatives optimized for engagement across various social platforms.' },
