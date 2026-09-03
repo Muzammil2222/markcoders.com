@@ -218,7 +218,7 @@ const WhatWeDo = () => {
                 style={{
                   background: service.color,
                   transform: activeIndex === index ? 'scaleX(1)' : 'scaleX(0)',
-                  transformOrigin: 'left center',
+                  transformOrigin: 'center',
                   transition: 'transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)',
                 }}
               />

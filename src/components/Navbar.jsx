@@ -1,13 +1,15 @@
 import { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 
 const LOGO_SRC = `${import.meta.env.BASE_URL}logo.png`;
 
 const NAV_LINKS = [
   { label: 'Home', to: '/' },
-  { label: 'About Us', to: '/#about-us' },
-  { label: 'Services', to: '/#services' },
+  { label: 'About Us', to: '/about' },
+  { label: 'Services', to: '/services' },
+  { label: 'Projects', to: '/projects' },
+  { label: 'Portfolio', to: '/portfolio' },
 ];
 
 const Navbar = () => {
@@ -17,6 +19,7 @@ const Navbar = () => {
   const btnRef = useRef(null);
   const mobileMenuRef = useRef(null);
   const hamburgerRef = useRef(null);
+  const location = useLocation();
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -147,9 +150,9 @@ const Navbar = () => {
       className="fixed top-0 left-0 right-0 z-50 px-6 md:px-10 lg:px-16 py-5 will-change-transform"
       style={{
         background:
-          'linear-gradient(180deg, rgba(3,7,18,0.95) 0%, rgba(3,7,18,0.7) 60%, transparent 100%)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
+          'linear-gradient(180deg, rgba(3,7,18,0.98) 0%, rgba(3,7,18,0.95) 60%, rgba(3,7,18,0.85) 100%)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
       }}
     >
       <div className="max-w-[1400px] mx-auto flex items-center justify-between">
@@ -175,18 +178,21 @@ const Navbar = () => {
         {/* Desktop Nav Links */}
         <div
           ref={linksRef}
-          className="hidden md:flex items-center gap-8 lg:gap-12"
+          className="hidden md:flex items-center gap-8 lg:gap-10"
         >
-          {NAV_LINKS.map((item) => (
-            <Link
-              key={item.label}
-              to={item.to}
-              className="text-[24px] text-gray-300 hover:text-white transition-colors duration-300 relative group font-medium tracking-wide no-underline"
-            >
-              {item.label}
-              <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-blue-primary group-hover:w-full transition-all duration-300" />
-            </Link>
-          ))}
+          {NAV_LINKS.map((item) => {
+            const isActive = location.pathname === item.to || (item.to !== '/' && !item.to.includes('#') && location.pathname.startsWith(item.to));
+            return (
+              <Link
+                key={item.label}
+                to={item.to}
+                className={`text-[20px] lg:text-[22px] transition-colors duration-300 relative group font-medium tracking-wide no-underline ${isActive ? 'text-[#25A9E0]' : 'text-gray-300 hover:text-[#25A9E0]'}`}
+              >
+                {item.label}
+                <span className={`absolute -bottom-1 left-0 h-[2px] bg-[#25A9E0] transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`} />
+              </Link>
+            );
+          })}
         </div>
 
         {/* CTA Button */}
@@ -221,16 +227,19 @@ const Navbar = () => {
         className="md:hidden max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out"
       >
         <div className="pt-6 pb-4 flex flex-col gap-4">
-          {NAV_LINKS.map((item) => (
-            <Link
-              key={item.label}
-              to={item.to}
-              className="text-gray-300 hover:text-white transition-colors duration-300 text-base py-2 border-b border-white/5 no-underline"
-              onClick={toggleMobileMenu}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {NAV_LINKS.map((item) => {
+            const isActive = location.pathname === item.to || (item.to !== '/' && !item.to.includes('#') && location.pathname.startsWith(item.to));
+            return (
+              <Link
+                key={item.label}
+                to={item.to}
+                className={`transition-colors duration-300 text-base py-2 border-b border-white/5 no-underline ${isActive ? 'text-[#25A9E0]' : 'text-gray-300 hover:text-[#25A9E0]'}`}
+                onClick={toggleMobileMenu}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
           <button
             className="mt-2 px-6 py-3 rounded-full text-sm font-semibold text-white w-full cursor-pointer"
             style={{

@@ -116,9 +116,10 @@ const AboutAndVideo = () => {
             borderRadius: '36px',
           },
           {
-            width: '100%',
+            width: 'calc(100% - 48px)',
+            maxWidth: '1350px',
             scale: 1,
-            borderRadius: '0px',
+            borderRadius: '24px',
             ease: 'none',
             force3D: true,
             scrollTrigger: {
@@ -140,7 +141,7 @@ const AboutAndVideo = () => {
     <div
       ref={containerRef}
       id="about-us"
-      className="relative z-10 w-full bg-transparent overflow-hidden pt-20 md:pt-32 pb-8"
+      className="relative z-10 w-full bg-transparent overflow-hidden pt-20 md:pt-32 pb-24 md:pb-40"
     >
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16 mb-24 md:mb-32">
         {/* (All Work) Label */}

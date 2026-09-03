@@ -19,6 +19,9 @@ const TeamSection = ({ roundedTop = false }) => {
   const sectionRef = useRef(null);
   const cardRef = useRef(null);
   const avatarsRef = useRef([]);
+  const counter1Ref = useRef(null);
+  const counter2Ref = useRef(null);
+  const counter3Ref = useRef(null);
 
   useEffect(() => {
     let ctx = gsap.context(() => {
@@ -93,6 +96,36 @@ const TeamSection = ({ roundedTop = false }) => {
           },
         }
       );
+
+      // 5. Counters animation
+      const animateCounter = (ref, target, prefix = "", suffix = "", padZero = false) => {
+        if (!ref.current) return;
+        let obj = { val: 0 };
+        gsap.to(obj, {
+          val: target,
+          duration: 2,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: cardRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse',
+          },
+          onUpdate: () => {
+             if (!ref.current) return;
+             let currentVal = Math.floor(obj.val);
+             let displayVal = currentVal.toString();
+             if(padZero && currentVal < 10) {
+               displayVal = "0" + currentVal;
+             }
+             ref.current.innerText = `${prefix}${displayVal}${suffix}`;
+          }
+        });
+      };
+      
+      animateCounter(counter1Ref, 35);
+      animateCounter(counter2Ref, 6, "", "", true); // pass true for padding zero
+      animateCounter(counter3Ref, 5, "", "+");
+
     }, sectionRef);
 
     return () => ctx.revert();
@@ -206,21 +239,21 @@ const TeamSection = ({ roundedTop = false }) => {
               {/* Stat Row 1 */}
               <div className="flex items-center justify-between pt-12 pb-5 ">
                 <span className="text-[#111] text-[16px] md:text-[30px] font-medium tracking-tight">Team Members</span>
-                <span className="text-[#23b3e8] text-[24px] md:text-[35px] font-medium">35</span>
+                <span ref={counter1Ref} className="text-[#23b3e8] text-[24px] md:text-[35px] font-medium min-w-[50px] text-right">0</span>
               </div>
               <div className="w-full h-[1px] bg-[#808385]"></div>
 
               {/* Stat Row 2 */}
               <div className="flex items-center justify-between pt-12 pb-5">
                 <span className="text-[#111] text-[16px] md:text-[30px] font-medium tracking-tight">Core Disciplines</span>
-                <span className="text-[#23b3e8] text-[24px] md:text-[35px] font-medium">06</span>
+                <span ref={counter2Ref} className="text-[#23b3e8] text-[24px] md:text-[35px] font-medium min-w-[50px] text-right">00</span>
               </div>
               <div className="w-full h-[1px] bg-[#808385]"></div>
 
               {/* Stat Row 3 */}
               <div className="flex items-center justify-between pt-12 pb-5">
                 <span className="text-[#111] text-[16px] md:text-[30px] font-medium tracking-tight">Years Experience</span>
-                <span className="text-[#23b3e8] text-[24px] md:text-[35px] font-medium">5+</span>
+                <span ref={counter3Ref} className="text-[#23b3e8] text-[24px] md:text-[35px] font-medium min-w-[50px] text-right">0+</span>
               </div>
 
             </div>

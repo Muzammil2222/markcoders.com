@@ -46,3 +46,16 @@ body {
   background: rgba(26, 122, 248, 0.3);
   color: #ffffff;
 }
+
+/* ===== Marquee Slider ===== */
+@keyframes marquee-slider {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee-slider {
+  animation: marquee-slider 50s linear infinite;
+  will-change: transform;
+}
+.animate-marquee-slider:hover {
+  animation-play-state: paused !important;
+}
