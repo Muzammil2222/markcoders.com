@@ -43,13 +43,15 @@ const uiuxData = [
 
 const graphicDesignData = [
 
-  
+
   { title: 'Brand Identity & Logo Design', content: 'Logos, typography, color palettes, and visual guidelines created to give your business a recognizable identity.' },
   { title: 'Marketing & Sales Materials', content: 'Brochures, flyers, business cards, and promotional assets designed to leave a lasting impression in the physical world.' },
   { title: 'Social Media & Advertising Design', content: 'Eye-catching graphics and ad creatives optimized for engagement across various social platforms.' },
   { title: 'Presentations & Pitch Decks', content: 'Professional and persuasive slide decks crafted to help you secure funding, close deals, or captivate an audience.' },
   { title: 'Website, App & Print Graphics', content: 'Custom illustrations, icons, and supporting visual elements tailored specifically for your digital and print mediums.' },
 ];
+
+
 
 const apiData = [
   { title: 'Custom API Development', content: 'Secure APIs that allow websites, applications, databases, and external services to exchange information reliably.' },
