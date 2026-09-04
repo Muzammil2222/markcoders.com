@@ -1,3 +1,9 @@
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
 const headingStyle = {
   fontFamily: 'Switzer, sans-serif',
   fontWeight: 500,
@@ -15,8 +21,42 @@ const ServiceOfferings = ({
   collageAlt = 'Work collage',
   items = [],
 }) => {
+  const sectionRef = useRef(null);
+  const listRef = useRef(null);
+
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+
+    const rows = list.querySelectorAll('.offering-row');
+    if (!rows.length) return;
+
+    const ctx = gsap.context(() => {
+      gsap.set(rows, { x: 80, opacity: 0 });
+
+      rows.forEach((row) => {
+        gsap.to(row, {
+          x: 0,
+          opacity: 1,
+          duration: 0.75,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: row,
+            start: 'top 90%',
+            toggleActions: 'play none none none',
+          },
+        });
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [items]);
+
   return (
-    <section className="relative z-20 w-full bg-[#030712] text-white pt-20 md:pt-28 lg:pt-32 pb-24 md:pb-32 lg:pb-40 overflow-x-hidden">
+    <section
+      ref={sectionRef}
+      className="relative z-20 w-full bg-[#030712] text-white pt-20 md:pt-28 lg:pt-32 pb-24 md:pb-32 lg:pb-40 overflow-x-hidden"
+    >
       <div className="w-screen flex items-center pl-6 md:pl-10 lg:pl-16">
         <h2 className="select-none font-medium" style={headingStyle}>
           {headingLine1}
@@ -46,7 +86,7 @@ const ServiceOfferings = ({
           </div>
 
           <div className="flex flex-col min-h-0 lg:h-full">
-            <ul className="flex flex-col w-full h-full min-h-[420px] lg:min-h-0">
+            <ul ref={listRef} className="flex flex-col w-full h-full min-h-[420px] lg:min-h-0">
               {items.map((label, index) => {
                 const num = String(index + 1).padStart(2, '0');
                 const isLast = index === items.length - 1;
@@ -54,7 +94,7 @@ const ServiceOfferings = ({
                 return (
                   <li
                     key={label}
-                    className={`flex-1 flex items-center gap-4 md:gap-6 ${
+                    className={`offering-row flex-1 flex items-center gap-4 md:gap-6 will-change-transform ${
                       isLast ? '' : 'border-b border-white/25'
                     }`}
                   >
