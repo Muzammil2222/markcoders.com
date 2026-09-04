@@ -1,17 +1,44 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ServiceSection = ({ title, subtitle, accordionData, imageSrc, imageAlt, reverse = false }) => {
+const ServiceSection = ({ title, subtitle, accordionData, imageSrc, imageAlt, reverse = false, to }) => {
   const [openIndex, setOpenIndex] = useState(0);
   const sectionRef = useRef(null);
   const contentRef = useRef(null);
   const imageContainerRef = useRef(null);
 
-  // Removed old reveal animations as per user request to replace with reel effect
+  const ctaClassName =
+    'px-7 py-3 rounded-[15px] text-lg font-normal text-white transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer flex items-center gap-3 w-fit no-underline';
+  const ctaStyle = {
+    background: '#25A9E0',
+    boxShadow: '0 4px 20px rgba(37, 169, 224, 0.3)',
+  };
 
+  const ctaContent = (
+    <>
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 14 14"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="transform -rotate-45 shrink-0"
+      >
+        <path
+          d="M1 7H13M13 7L7 1M13 7L7 13"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+      View Details
+    </>
+  );
 
   return (
     <section ref={sectionRef} className="w-full py-24 md:py-32 px-6 md:px-10 lg:px-16 bg-[#030712] text-white overflow-hidden">
@@ -65,18 +92,15 @@ const ServiceSection = ({ title, subtitle, accordionData, imageSrc, imageAlt, re
           </div>
           
           <div className="mt-12">
-            <button 
-              className="px-7 py-3 rounded-[15px] text-lg font-normal text-white transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer flex items-center gap-3 w-fit"
-              style={{
-                background: '#25A9E0',
-                boxShadow: '0 4px 20px rgba(37, 169, 224, 0.3)',
-              }}
-            >
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="transform -rotate-45 shrink-0">
-                <path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              View Details
-            </button>
+            {to ? (
+              <Link to={to} className={ctaClassName} style={ctaStyle}>
+                {ctaContent}
+              </Link>
+            ) : (
+              <button type="button" className={ctaClassName} style={ctaStyle}>
+                {ctaContent}
+              </button>
+            )}
           </div>
         </div>
         

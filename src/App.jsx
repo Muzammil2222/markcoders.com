@@ -13,6 +13,7 @@ const Projects = lazy(() => import('./pages/Projects'))
 const About = lazy(() => import('./pages/About'))
 const Services = lazy(() => import('./pages/services'))
 const Branding = lazy(() => import('./pages/services/Branding'))
+const UiUx = lazy(() => import('./pages/services/UiUx'))
 
 function ScrollRefresh() {
   const location = useLocation()
@@ -29,6 +30,10 @@ function ScrollRefresh() {
       touchMultiplier: 2,
       infinite: false,
     })
+
+    // Reset to top on every route change (Lenis + native)
+    lenis.scrollTo(0, { immediate: true })
+    window.scrollTo(0, 0)
 
     lenis.on('scroll', ScrollTrigger.update)
 
@@ -93,6 +98,7 @@ const App = () => {
             <Route path="/services">
               <Route index element={<Services />} />
               <Route path="branding" element={<Branding />} />
+              <Route path="ui-ux" element={<UiUx />} />
             </Route>
             <Route path="/projects" element={<Projects />} />
             <Route path="/project" element={<Projects />} />

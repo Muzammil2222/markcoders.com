@@ -145,6 +145,7 @@ function Services() {
             accordionData={uiuxData}
             imageSrc={uiuxImg}
             imageAlt="UI/UX Design"
+            to="/services/ui-ux"
           />
         </div>
 
@@ -155,6 +156,7 @@ function Services() {
             accordionData={graphicDesignData}
             imageSrc={graphicDesignImg}
             imageAlt="Graphic Design"
+            to="/services/branding"
           />
         </div>
 
