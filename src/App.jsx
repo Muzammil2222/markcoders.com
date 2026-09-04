@@ -1,8 +1,7 @@
-import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import TextLoader from './components/TextLoader'
 import SplashCursor from './components/SplashCursor'
 import Lenis from 'lenis'
 import 'lenis/dist/lenis.css'
@@ -11,6 +10,7 @@ gsap.registerPlugin(ScrollTrigger)
 
 const Home = lazy(() => import('./pages/Home'))
 const Projects = lazy(() => import('./pages/Projects'))
+const Portfolio = lazy(() => import('./pages/Portfolio'))
 const About = lazy(() => import('./pages/About'))
 const Services = lazy(() => import('./pages/services'))
 const Branding = lazy(() => import('./pages/services/Branding'))
@@ -60,30 +60,15 @@ function ScrollRefresh() {
 }
 
 const App = () => {
-  const [loading, setLoading] = useState(true)
-
-  const handleLoaderComplete = useCallback(() => {
-    setLoading(false)
+  useEffect(() => {
+    // Refresh ScrollTrigger after initial render to ensure GSAP calculates correctly
+    const t = window.setTimeout(() => ScrollTrigger.refresh(true), 500)
+    return () => window.clearTimeout(t)
   }, [])
 
-  useEffect(() => {
-    document.body.style.overflow = loading ? 'hidden' : ''
-    if (!loading) {
-      const t = window.setTimeout(() => ScrollTrigger.refresh(true), 500)
-      return () => {
-        document.body.style.overflow = ''
-        window.clearTimeout(t)
-      }
-    }
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [loading])
-
   return (
-    <BrowserRouter >
+    <BrowserRouter>
       <ScrollRefresh />
-      {loading && <TextLoader duration={3} onComplete={handleLoaderComplete} />}
       <SplashCursor
         DENSITY_DISSIPATION={3.5}
         VELOCITY_DISSIPATION={2}
@@ -97,14 +82,7 @@ const App = () => {
         COLOR="#005ef7"
       />
       <Suspense fallback={null}>
-        <div
-          aria-hidden={loading}
-          style={{
-            opacity: loading ? 0 : 1,
-            transition: 'opacity 0.5s ease',
-            pointerEvents: loading ? 'none' : 'auto',
-          }}
-        >
+        <div>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -115,6 +93,7 @@ const App = () => {
             </Route>
             <Route path="/projects" element={<Projects />} />
             <Route path="/project" element={<Projects />} />
+            <Route path="/portfolio" element={<Portfolio />} />
           </Routes>
         </div>
       </Suspense>
