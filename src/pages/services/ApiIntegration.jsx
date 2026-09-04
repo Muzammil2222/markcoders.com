@@ -8,11 +8,11 @@ import FeaturedWork from '../../components/FeaturedWork';
 import WorkAndPlaySection from '../../components/WorkAndPlaySection';
 import TrustSection from '../../components/TrustSection';
 import Footer from '../../components/Footer';
-import { uiuxData } from './data/uiux';
+import { apiIntegrationData } from './data/apiIntegration';
 
-const UiUx = () => {
+const ApiIntegration = () => {
   const previewImageRef = useRef(null);
-  const { hero, showcase, offerings, framework, featuredWork } = uiuxData;
+  const { hero, showcase, offerings, framework, featuredWork } = apiIntegrationData;
 
   return (
     <div className="relative bg-[#030712] min-h-screen text-white overflow-x-hidden max-w-[100vw]">
@@ -31,4 +31,4 @@ const UiUx = () => {
   );
 };
 
-export default UiUx;
+export default ApiIntegration;

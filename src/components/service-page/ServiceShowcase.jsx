@@ -1,26 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import brandingImg from '../assets/image 14.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const UiUxShowcase = ({ previewImageRef }) => {
+const ServiceShowcase = ({ previewImageRef, imageSrc, imageAlt = 'Showcase' }) => {
   const sectionRef = useRef(null);
   const targetImageContainerRef = useRef(null);
   const cloneRef = useRef(null);
   const [morphComplete, setMorphComplete] = useState(false);
 
   useEffect(() => {
-    if (!previewImageRef?.current || !targetImageContainerRef.current) return;
+    if (!previewImageRef?.current || !targetImageContainerRef.current || !imageSrc) return;
 
     const heroImg = previewImageRef.current;
     const targetContainer = targetImageContainerRef.current;
     const mm = gsap.matchMedia();
 
-    document.querySelectorAll('.uiux-morph-clone').forEach((el) => el.remove());
+    document.querySelectorAll('.service-morph-clone').forEach((el) => el.remove());
 
-    // Morph from medium phones up — no animation on small phones
     mm.add('(min-width: 640px)', () => {
       setMorphComplete(false);
       heroImg.style.opacity = '1';
@@ -28,9 +26,9 @@ const UiUxShowcase = ({ previewImageRef }) => {
       let st;
       const timer = setTimeout(() => {
         const clone = document.createElement('img');
-        clone.src = brandingImg;
-        clone.alt = 'Branding work';
-        clone.className = 'uiux-morph-clone';
+        clone.src = imageSrc;
+        clone.alt = imageAlt;
+        clone.className = 'service-morph-clone';
         clone.style.cssText = `
           position: fixed;
           pointer-events: none;
@@ -105,7 +103,6 @@ const UiUxShowcase = ({ previewImageRef }) => {
       };
     });
 
-    // Small phones only: static image, no animation
     mm.add('(max-width: 639px)', () => {
       setMorphComplete(true);
       heroImg.style.opacity = '1';
@@ -121,7 +118,7 @@ const UiUxShowcase = ({ previewImageRef }) => {
         cloneRef.current = null;
       }
     };
-  }, [previewImageRef]);
+  }, [previewImageRef, imageSrc, imageAlt]);
 
   return (
     <section
@@ -133,8 +130,8 @@ const UiUxShowcase = ({ previewImageRef }) => {
         className="relative w-[90%] h-auto aspect-[4/5] sm:aspect-[16/10] lg:aspect-auto lg:w-[90%] lg:h-[90%] mx-auto overflow-hidden rounded-[20px] lg:rounded-[24px] bg-[#0A0D14]"
       >
         <img
-          src={brandingImg}
-          alt="Lengo branding showcase"
+          src={imageSrc}
+          alt={imageAlt}
           className="absolute inset-0 w-full h-full object-cover"
           style={{ opacity: morphComplete ? 1 : 0 }}
           draggable={false}
@@ -144,4 +141,4 @@ const UiUxShowcase = ({ previewImageRef }) => {
   );
 };
 
-export default UiUxShowcase;
+export default ServiceShowcase;

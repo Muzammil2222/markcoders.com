@@ -2,21 +2,13 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import vantageImg from '../assets/vantage.webp';
-import saucedImg from '../assets/sauced.webp';
-import savmontImg from '../assets/Savmont.webp';
-import jerseyImg from '../assets/jersey2.webp';
-
 gsap.registerPlugin(ScrollTrigger);
 
-const imagesList = [
-  { src: vantageImg, alt: 'Vantage' },
-  { src: saucedImg, alt: 'Sauced' },
-  { src: savmontImg, alt: 'Savmont' },
-  { src: jerseyImg, alt: 'TIG The Jersey Generator' },
-];
-
-const FeaturedWork = () => {
+const FeaturedWork = ({
+  titleLine1 = 'Featured',
+  titleLine2 = 'Work.',
+  images = [],
+}) => {
   const sectionRef = useRef(null);
   const cardRefs = useRef([]);
 
@@ -51,8 +43,8 @@ const FeaturedWork = () => {
     const refresh = () => ScrollTrigger.refresh(true);
     const onLoad = () => refresh();
 
-    const images = section.querySelectorAll('img');
-    images.forEach((img) => {
+    const imgs = section.querySelectorAll('img');
+    imgs.forEach((img) => {
       if (!img.complete) img.addEventListener('load', onLoad, { once: true });
     });
 
@@ -63,17 +55,16 @@ const FeaturedWork = () => {
 
     return () => {
       refreshTimers.forEach((id) => window.clearTimeout(id));
-      images.forEach((img) => img.removeEventListener('load', onLoad));
+      imgs.forEach((img) => img.removeEventListener('load', onLoad));
       ctx.revert();
     };
-  }, []);
+  }, [images]);
 
   return (
     <section
       ref={sectionRef}
       className="relative z-30 w-full bg-white overflow-x-hidden py-16 md:py-24 lg:py-28"
     >
-      {/* Line 1 — left-padded */}
       <div className="w-screen flex items-center pl-6 md:pl-16 lg:pl-[171px]">
         <h2
           className="select-none"
@@ -87,11 +78,10 @@ const FeaturedWork = () => {
             width: 'min(761px, 100%)',
           }}
         >
-          Featured
+          {titleLine1}
         </h2>
       </div>
 
-      {/* Line 2 — centered */}
       <div className="w-screen flex items-center justify-center mt-2 md:mt-4 mb-14 md:mb-20 lg:mb-24">
         <h2
           className="select-none"
@@ -104,16 +94,15 @@ const FeaturedWork = () => {
             color: '#00060B',
           }}
         >
-          Work.
+          {titleLine2}
         </h2>
       </div>
 
-      {/* 2×2 project images — same dimensions + scroll animation as /projects */}
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 justify-items-center">
-          {imagesList.map((item, i) => (
+          {images.map((item, i) => (
             <div
-              key={item.alt}
+              key={`${item.alt}-${i}`}
               ref={(el) => {
                 cardRefs.current[i] = el;
               }}
