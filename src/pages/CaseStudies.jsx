@@ -4,15 +4,15 @@ import Footer from '../components/Footer';
 import PageHero from '../components/landing/PageHero';
 import canvasBg from '../assets/canvasbg.gif';
 
-import imgSauced from '../assets/Portfolio/Sauced-2rG--Umz.webp';
-import imgAtlas from '../assets/Portfolio/Cozy101-DOKmVxsg.webp';
-import imgMeridian from '../assets/Portfolio/alextarnava-DvmfbhVB.webp';
-import imgVantage from '../assets/Portfolio/vantage-CmEHyY-D.webp';
-import imgAura from '../assets/Portfolio/eko-DF8SVeeE.webp';
-import imgDPacific from '../assets/Portfolio/checkmyride-CSxqntTt.webp';
-import imgEasylife from '../assets/Portfolio/gardeninminutes-D0oKrHHj.webp';
-import imgScanZilla from '../assets/Portfolio/farkle-C0Whz4yg.webp';
-import imgNexus from '../assets/Portfolio/wordsmith-DpXww4zo.webp';
+import imgSauced from '../assets/case studies/sauced-1_IwkNFW.webp';
+import imgAtlas from '../assets/case studies/atlas-CJvbMeez.jpg';
+import imgMeridian from '../assets/case studies/meridian-C0PfNsQw.jpg';
+import imgVantage from '../assets/case studies/vantage-hQQo3mBo.jpg';
+import imgAura from '../assets/case studies/aura-D94zrlUD.jpg';
+import imgDPacific from '../assets/case studies/d-pacific-BJOU6N19.jpg';
+import imgEasylife from '../assets/case studies/easylife-BBPFfYkg.jpg';
+import imgScanZilla from '../assets/case studies/scanzilla-fTga8FP5.jpg';
+import imgNexus from '../assets/case studies/nexus-Clf_NSag.webp';
 
 const CASE_STUDIES = [
   {
@@ -197,7 +197,7 @@ const CaseStudies = () => {
                     {/* Hover Overlay Desktop */}
                     <div className="absolute inset-0 hidden flex-col justify-between bg-black/80 p-8 sm:p-10 lg:flex lg:p-12 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
                       <div className="relative z-10 max-w-xl translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                        <h2 className="text-[clamp(1.85rem,3.2vw,2.85rem)] font-black leading-[1.1] tracking-tight text-white">
+                        <h2 className="text-[clamp(1.85rem,3.2vw,2.85rem)] font-bold leading-[1.1] tracking-tight text-white">
                           {study.title} <span className="text-[#25a9e0]">{study.highlight}</span>
                         </h2>
                         <p className="mt-5 line-clamp-4 text-xl leading-relaxed text-white/70 sm:text-2xl">
@@ -213,7 +213,7 @@ const CaseStudies = () => {
                   
                   {/* Text Mobile/Tablet */}
                   <div className="mt-4 px-0.5 sm:mt-5 sm:px-1">
-                    <h3 className="text-xl font-black tracking-tight text-white sm:text-2xl">
+                    <h3 className="text-xl font-bold tracking-tight text-white sm:text-2xl">
                       {study.title} {study.highlight}
                     </h3>
                     <p className="mt-1 text-sm text-white/55 sm:mt-1.5 sm:text-base">{study.tags}</p>
