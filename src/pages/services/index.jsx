@@ -112,6 +112,7 @@ function Services() {
             accordionData={websiteDevData}
             imageSrc={websiteDevImg}
             imageAlt="Website Development"
+            to="/services/web-development"
           />
         </div>
 
@@ -154,6 +155,7 @@ function Services() {
             accordionData={apiData}
             imageSrc={apiImg}
             imageAlt="API Integration & Automation"
+            to="/services/api-integration"
           />
         </div>
 

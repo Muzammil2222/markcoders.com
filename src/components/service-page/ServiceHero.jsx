@@ -1,8 +1,7 @@
-import PageHero from './landing/PageHero';
-import canvasBg from '../assets/canvasbg.gif';
-import cardImage from '../assets/image 14.png';
+import PageHero from '../landing/PageHero';
+import canvasBg from '../../assets/canvasbg.gif';
 
-const StoryCard = ({ imageRef }) => (
+const StoryCard = ({ imageRef, cardImage, cardTitle, cardSubtitle, cardImageAlt }) => (
   <div
     className="w-full max-w-[430.82px] h-[216.86px] rounded-[15px] p-[10px] relative overflow-hidden group cursor-pointer flex flex-row items-stretch"
     style={{
@@ -37,7 +36,7 @@ const StoryCard = ({ imageRef }) => (
             verticalAlign: 'middle',
           }}
         >
-          Our work
+          {cardTitle}
         </span>
         <h3
           className="mt-2.5 select-none text-left"
@@ -51,7 +50,7 @@ const StoryCard = ({ imageRef }) => (
             color: '#FFFFFF66',
           }}
         >
-          Designing a bold voice for thought leadership
+          {cardSubtitle}
         </h3>
       </div>
 
@@ -94,7 +93,7 @@ const StoryCard = ({ imageRef }) => (
       <img
         ref={imageRef}
         src={cardImage}
-        alt="Our work"
+        alt={cardImageAlt}
         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 relative z-50 will-change-transform opacity-100 origin-center"
         style={{
           width: '162.16px',
@@ -108,10 +107,17 @@ const StoryCard = ({ imageRef }) => (
   </div>
 );
 
-const UiUxHero = ({ previewImageRef }) => {
+const ServiceHero = ({
+  previewImageRef,
+  title,
+  subtitle,
+  cardImage,
+  cardTitle,
+  cardSubtitle,
+  cardImageAlt = 'Our work',
+}) => {
   return (
     <section className="relative min-h-[100svh] flex flex-col justify-between pt-28 pb-12 px-6 md:px-10 lg:px-16 overflow-visible z-10">
-      {/* Background GIF */}
       <img
         src={canvasBg}
         alt=""
@@ -121,7 +127,6 @@ const UiUxHero = ({ previewImageRef }) => {
         }}
       />
 
-      {/* Top Gradient Overlay for smooth blending with Navbar */}
       <div
         className="absolute inset-0 pointer-events-none z-0"
         style={{
@@ -130,7 +135,6 @@ const UiUxHero = ({ previewImageRef }) => {
         }}
       />
 
-      {/* Ambient Blue Glow */}
       <div
         className="absolute inset-0 pointer-events-none z-0"
         style={{
@@ -140,12 +144,13 @@ const UiUxHero = ({ previewImageRef }) => {
       />
       <div className="relative z-10 w-full flex-1 flex flex-col">
         <PageHero
-          title="Branding"
-          subtitle="Branding shapes perception, builds trust, and creates lasting value."
+          title={title}
+          subtitle={subtitle}
           layout="split"
           spread
+          fullWidthTitle
           showDot
-          titleSize="clamp(64px, 15vw, 210px)"
+          titleSize="clamp(48px, 11vw, 180px)"
           className="flex-1 text-size-[35px]"
           titleClassName="!tracking-[-1.4px] my-auto"
           subtitleClassName="text-[24px] sm:text-[28px] lg:!text-[35px] leading-[1.2] font-[500] tracking-[-1px] text-white/90"
@@ -157,7 +162,13 @@ const UiUxHero = ({ previewImageRef }) => {
             verticalAlign: 'middle',
           }}
         >
-          <StoryCard imageRef={previewImageRef} />
+          <StoryCard
+            imageRef={previewImageRef}
+            cardImage={cardImage}
+            cardTitle={cardTitle}
+            cardSubtitle={cardSubtitle}
+            cardImageAlt={cardImageAlt}
+          />
         </PageHero>
       </div>
 
@@ -171,4 +182,4 @@ const UiUxHero = ({ previewImageRef }) => {
   );
 };
 
-export default UiUxHero;
+export default ServiceHero;

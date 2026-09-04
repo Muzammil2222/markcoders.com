@@ -15,6 +15,8 @@ const About = lazy(() => import('./pages/About'))
 const Services = lazy(() => import('./pages/services'))
 const Branding = lazy(() => import('./pages/services/Branding'))
 const UiUx = lazy(() => import('./pages/services/UiUx'))
+const WebDevelopment = lazy(() => import('./pages/services/WebDevelopment'))
+const ApiIntegration = lazy(() => import('./pages/services/ApiIntegration'))
 
 function ScrollRefresh() {
   const location = useLocation()
@@ -95,6 +97,8 @@ const App = () => {
               <Route index element={<Services />} />
               <Route path="branding" element={<Branding />} />
               <Route path="ui-ux" element={<UiUx />} />
+              <Route path="web-development" element={<WebDevelopment />} />
+              <Route path="api-integration" element={<ApiIntegration />} />
             </Route>
             <Route path="/projects" element={<Projects />} />
             <Route path="/project" element={<Projects />} />

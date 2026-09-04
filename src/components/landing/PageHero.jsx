@@ -14,6 +14,7 @@ const PageHero = ({
   titleSize = 'lg',
   showDot = false,
   spread = false,
+  fullWidthTitle = false,
   animateFooter = true,
   className = '',
   titleClassName = '',
@@ -149,7 +150,11 @@ const PageHero = ({
       className={`relative overflow-visible ${spread ? 'flex flex-col flex-1' : ''} ${className}`}
     >
       <div
-        className={`max-w-[1400px] mx-auto w-full relative z-10 ${
+        className={`${
+          fullWidthTitle
+            ? 'w-screen relative left-1/2 -translate-x-1/2 px-6 md:px-10 lg:px-16'
+            : 'max-w-[1400px] mx-auto w-full'
+        } relative z-10 ${
           isCenter ? 'flex flex-col items-center text-center' : ''
         } ${spread ? 'flex flex-col flex-1 h-full justify-between' : ''}`}
       >
@@ -159,12 +164,12 @@ const PageHero = ({
           size={titleSize}
           className={`${
             isSplit ? (spread ? 'mb-0' : 'mb-12 md:mb-16') : ''
-          } ${titleClassName}`}
+          } ${fullWidthTitle ? 'whitespace-nowrap' : ''} ${titleClassName}`}
         />
 
         {isSplit ? (
           <div
-            className={`w-full flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-12 ${
+            className={`w-full max-w-[1400px] ${fullWidthTitle ? 'mx-auto' : ''} flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-12 ${
               spread ? 'mt-auto pt-10 md:pt-16' : 'mt-8 md:mt-12'
             }`}
           >
