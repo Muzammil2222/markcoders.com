@@ -61,6 +61,11 @@ function ScrollRefresh() {
 
 const App = () => {
   useEffect(() => {
+    // Hide the HTML preloader immediately once React is mounted
+    if (window.hideMarkcodersLoader) {
+      window.hideMarkcodersLoader()
+    }
+    
     // Refresh ScrollTrigger after initial render to ensure GSAP calculates correctly
     const t = window.setTimeout(() => ScrollTrigger.refresh(true), 500)
     return () => window.clearTimeout(t)

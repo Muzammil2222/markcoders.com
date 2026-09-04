@@ -134,24 +134,26 @@
       var pre  = document.getElementById('mcPre');
       var root = document.documentElement;
       if (!pre) return;
-      if (root.classList.contains('mc-skip')) { pre.remove(); return; }
 
-      var start = Date.now(), fired = false;
-      var MIN_SHOW = 1500;
-      var FAILSAFE = 6000;
+      var start = Date.now();
+      var MIN_SHOW = 1500; // minimum time to show loader for smooth animation
+      var fired = false;
 
-      function finish(){
-        if (fired) return; fired = true;
+      window.hideMarkcodersLoader = function(){
+        if (fired) return;
+        fired = true;
+        var elapsed = Date.now() - start;
+        var delay = Math.max(0, MIN_SHOW - elapsed);
+        
         setTimeout(function(){
           pre.classList.add('is-done');
           root.classList.remove('mc-lock');
           setTimeout(function(){ pre.remove(); }, 700);
-        }, Math.max(0, MIN_SHOW - (Date.now() - start)));
-      }
+        }, delay);
+      };
 
-      if (document.readyState === 'complete') finish();
-      else window.addEventListener('load', finish);
-      setTimeout(finish, FAILSAFE);
+      // Failsafe in case React fails to load
+      setTimeout(window.hideMarkcodersLoader, 8000);
     })();
     </script>
     <div id="root"></div>
