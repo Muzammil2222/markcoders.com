@@ -201,7 +201,7 @@ const Dropdown = ({ label, options, selected, onSelect }) => {
                 {opt}
               </span>
               {selected === opt && (
-                <div className="w-1.5 h-1.5 rounded-full bg-[#7b80ff]" />
+                <div className="w-1.5 h-1.5 rounded-full bg-[#25a9e0]" />
               )}
             </div>
           ))}
@@ -262,9 +262,9 @@ const PortfolioCard = ({ item, index, setCardRef }) => {
         {/* Custom Cursor */}
         <div
           ref={cursorRef}
-          className={`absolute top-0 left-0 w-[90px] h-[90px] rounded-full bg-[#7b80ff] flex flex-col items-center justify-center pointer-events-none z-20 transition-opacity duration-300 ${isHovering ? 'opacity-100' : 'opacity-0'}`}
+          className={`absolute top-0 left-0 w-[90px] h-[90px] rounded-full bg-[#25a9e0] flex flex-col items-center justify-center pointer-events-none z-20 transition-opacity duration-300 ${isHovering ? 'opacity-100' : 'opacity-0'}`}
           style={{
-            boxShadow: '0 4px 20px rgba(123, 128, 255, 0.4)',
+            boxShadow: '0 4px 20px rgba(37, 169, 224, 0.4)',
           }}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mb-0.5">

@@ -9,7 +9,7 @@ import 'lenis/dist/lenis.css'
 gsap.registerPlugin(ScrollTrigger)
 
 const Home = lazy(() => import('./pages/Home'))
-const Projects = lazy(() => import('./pages/Projects'))
+const CaseStudies = lazy(() => import('./pages/CaseStudies'))
 const Portfolio = lazy(() => import('./pages/Portfolio'))
 const About = lazy(() => import('./pages/About'))
 const Services = lazy(() => import('./pages/services'))
@@ -100,8 +100,7 @@ const App = () => {
               <Route path="web-development" element={<WebDevelopment />} />
               <Route path="api-integration" element={<ApiIntegration />} />
             </Route>
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/project" element={<Projects />} />
+            <Route path="/case-studies" element={<CaseStudies />} />
             <Route path="/portfolio" element={<Portfolio />} />
           </Routes>
         </div>

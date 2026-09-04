@@ -13,6 +13,7 @@ const EXPLORE_LINKS = [
   { label: "Home", to: "/" },
   { label: "About Us", to: "/about" },
   { label: "Services", to: "/services" },
+  { label: "Case Studies", to: "/case-studies" },
   { label: "Contact Us", to: "/contact" },
 ];
 
