@@ -11,7 +11,8 @@ gsap.registerPlugin(ScrollTrigger)
 const Home = lazy(() => import('./pages/Home'))
 const Projects = lazy(() => import('./pages/Projects'))
 const About = lazy(() => import('./pages/About'))
-const Services = lazy(() => import('./pages/Services'))
+const Services = lazy(() => import('./pages/services'))
+const Branding = lazy(() => import('./pages/services/Branding'))
 
 function ScrollRefresh() {
   const location = useLocation()
@@ -89,7 +90,10 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
-            <Route path="/services" element={<Services />} />
+            <Route path="/services">
+              <Route index element={<Services />} />
+              <Route path="branding" element={<Branding />} />
+            </Route>
             <Route path="/projects" element={<Projects />} />
             <Route path="/project" element={<Projects />} />
           </Routes>
