@@ -15,7 +15,7 @@ const WebDevelopment = () => {
   const { hero, showcase, offerings, framework, featuredWork } = webDevelopmentData;
 
   return (
-    <div className="relative bg-[#030712] min-h-screen text-white overflow-x-hidden max-w-[100vw]">
+    <div className="relative bg-[#030712] min-h-screen text-white overflow-x-clip max-w-[100vw]">
       <Navbar />
       <main>
         <ServiceHero previewImageRef={previewImageRef} {...hero} />

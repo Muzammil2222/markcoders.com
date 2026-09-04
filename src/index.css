@@ -22,7 +22,8 @@ body {
   font-family: var(--font-switzer);
   background-color: var(--dark-950);
   color: #ffffff;
-  overflow-x: hidden;
+  /* clip keeps horizontal overflow cut off without breaking position:sticky */
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
