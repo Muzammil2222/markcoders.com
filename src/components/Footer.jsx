@@ -78,7 +78,7 @@ const Footer = () => {
 
   return (
     <footer ref={rootRef} className="footer footer-bg">
-      <div className="footer__inner mx-auto w-full max-w-[1440px] px-6 pt-16 sm:px-10 sm:pt-20 lg:px-20 lg:pt-24 pb-40">
+      <div className="footer__inner mx-auto w-[90%] sm:w-[92%] lg:w-[95%] max-w-[1440px] pt-16 sm:pt-20 lg:pt-24 pb-40">
         <div className="footer__top flex flex-col gap-14 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
           <div className="footer__intro max-w-md">
             <h2

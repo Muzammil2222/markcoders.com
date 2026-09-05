@@ -3,6 +3,9 @@ import Footer from '../../components/Footer';
 import ServicesHero from '../../components/ServicesHero';
 import AppDevelopmentSection from '../../components/AppDevelopmentSection';
 import ServiceSection from '../../components/ServiceSection';
+import TrustSection from '../../components/TrustSection';
+import WorkAndPlaySection from '../../components/WorkAndPlaySection';
+import TeamSection from '../../components/TeamSection';
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -158,6 +161,10 @@ function Services() {
             to="/services/api-integration"
           />
         </div>
+
+        <TeamSection roundedTop={true} />
+        <WorkAndPlaySection />
+        <TrustSection />
 
         <Footer />
       </main>

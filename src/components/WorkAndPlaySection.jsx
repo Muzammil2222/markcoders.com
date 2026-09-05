@@ -66,6 +66,14 @@ const WorkAndPlaySection = () => {
         className="relative w-full h-[100vh] flex flex-col items-center justify-start pt-[15vh] md:pt-[20vh] overflow-hidden"
         style={{ color: '#111' }}
       >
+        <style>{`
+          @media (min-width: 1024px) and (max-width: 1300px) {
+            .scatter-image {
+              width: 170px !important;
+              height: 170px !important;
+            }
+          }
+        `}</style>
         {/* Heading */}
         <h2
           className="text-center font-medium leading-[1.05] tracking-tight z-10 text-[#111]"
@@ -80,7 +88,7 @@ const WorkAndPlaySection = () => {
             key={index}
             src={src}
             alt={`Work and Play ${index + 1}`}
-            className="scatter-image absolute top-1/2 w-[220px] h-[220px] md:w-[320px] md:h-[320px] object-cover z-20"
+            className="scatter-image absolute top-1/2 w-[220px] h-[220px] md:w-[320px] md:h-[320px] min-[1301px]:w-[320px] min-[1301px]:h-[320px] object-cover z-20"
             style={{ transform: 'translate(-50%, -50%)' }} // Initial centering alignment
           />
         ))}

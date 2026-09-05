@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PageHero from '../components/landing/PageHero';
 import canvasBg from '../assets/canvasbg.gif';
+import TrustSection from '../components/TrustSection';
+import WorkAndPlaySection from '../components/WorkAndPlaySection';
+import TeamSection from '../components/TeamSection.jsx';
 
 import imgSauced from '../assets/case studies/sauced-1_IwkNFW.webp';
 import imgAtlas from '../assets/case studies/atlas-CJvbMeez.jpg';
@@ -19,91 +23,91 @@ const CASE_STUDIES = [
     id: 1,
     title: 'Sauced',
     highlight: 'Discover & Share',
-    tags: '• Design • Development',
+    tags: 'Web Design, App Development',
     category: 'Mobile Apps',
     description: 'Full-platform design and mobile app rollout for Sauced — the hot sauce discovery platform connecting 685K+ sauce lovers, brand pros, and event organizers in one fiery experience.',
     image: imgSauced,
-    link: '#',
+    link: '/case-studies/sauced',
   },
   {
     id: 2,
     title: 'Project',
     highlight: 'Atlas',
-    tags: '• Design • Development',
-    category: 'Web Apps',
+    tags: 'UI/UX Design, Web Apps',
+    category: 'Websites',
     description: 'A fully custom B2B ERP platform that replaced spreadsheets and phone-tag with a unified system — covering interactive quoting, field measurement capture, production tracking, and CRM sync for a specialty manufacturer with a nationwide dealer network.',
     image: imgAtlas,
-    link: '#',
+    link: '/case-studies/project-atlas',
   },
   {
     id: 3,
     title: 'Project',
     highlight: 'Meridian',
-    tags: '• Design • Development',
-    category: 'Web Apps',
+    tags: 'App Design, Development',
+    category: 'Mobile Apps',
     description: 'Cross-border order fulfillment automation platform that connects e-commerce storefronts, overseas factories, and international shipping providers into one seamless, role-based pipeline.',
     image: imgMeridian,
-    link: '#',
+    link: '/case-studies/project-meridian',
   },
   {
     id: 4,
     title: 'Project',
     highlight: 'Vantage',
-    tags: '• Design • Development',
-    category: 'Websites',
+    tags: 'Web Development',
+    category: 'Web Apps',
     description: 'Automotive inventory automation platform that eliminates manual feed processing, enables self-service dealer configuration, and keeps hundreds of dealership websites in perfect sync — automatically.',
     image: imgVantage,
-    link: '#',
+    link: '/case-studies/project-vantage',
   },
   {
     id: 5,
     title: 'Project',
     highlight: 'Aura',
-    tags: '• Design • Development',
-    category: 'Mobile Apps',
+    tags: 'Web Design, App Development',
+    category: 'Websites',
     description: 'A full-stack AI-powered mental wellness mobile app — featuring a voice-first therapy interface, adaptive mood intelligence, and a full suite of personalized mental health tools built entirely in React Native.',
     image: imgAura,
-    link: '#',
+    link: '/case-studies/project-aura',
   },
   {
     id: 6,
     title: 'D-Pacific',
     highlight: 'Distribution',
-    tags: '• Design • Development',
-    category: 'Web Apps',
+    tags: 'UI/UX Design, Web Apps',
+    category: 'Mobile Apps',
     description: 'A purpose-built distribution ERP for a fast-moving FMCG distributor — covering multi-role dashboards, product & stock management, order tracking, invoicing, and payment collection across a live field sales network.',
     image: imgDPacific,
-    link: '#',
+    link: '/case-studies/d-pacific-distribution',
   },
   {
     id: 7,
     title: 'Easylife Kitchens',
     highlight: 'DQS',
-    tags: '• Design • Development',
+    tags: 'App Design, Development',
     category: 'Web Apps',
     description: 'A Dynamic Quoting & Order Intelligence Platform for South Africa\'s leading kitchen manufacturer — connecting 45+ showrooms, franchise branches, and factory pricing into one seamless system.',
     image: imgEasylife,
-    link: '#',
+    link: '/case-studies/easylife-kitchens-dqs',
   },
   {
     id: 8,
     title: '',
     highlight: 'ScanZilla',
-    tags: '• Design • Development',
-    category: 'Web Apps',
+    tags: 'Web Development',
+    category: 'Websites',
     description: 'An AI-powered document scanning and data extraction platform that transforms raw documents, receipts, and forms into structured, searchable, and actionable data — eliminating manual data entry at scale.',
     image: imgScanZilla,
-    link: '#',
+    link: '/case-studies/scanzilla',
   },
   {
     id: 9,
     title: 'Project',
     highlight: 'Nexus',
-    tags: '• Design • Development',
-    category: 'Web Apps',
+    tags: 'App Design, Development',
+    category: 'Mobile Apps',
     description: 'A full-stack project collaboration platform that unifies team communication, file management, structured action tracking, automated escalation, and role-based visibility in one centralized workspace.',
     image: imgNexus,
-    link: '#',
+    link: '/case-studies/project-nexus',
   },
 ];
 
@@ -171,12 +175,12 @@ const CaseStudies = () => {
         <CaseStudiesHero />
         
         {/* Filters Section */}
-        <div className="relative z-50 -mt-8 mb-12 flex w-full max-w-xl mx-auto flex-wrap items-center justify-center gap-1.5 rounded-3xl border border-white/10 bg-[#141414] p-1.5 shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_8px_40px_rgba(0,0,0,0.45)] sm:-mt-12 sm:gap-2 sm:rounded-full sm:p-2 px-4">
+        <div className="relative z-50 -mt-8 mb-12 flex w-fit max-w-[95%] mx-auto flex-nowrap overflow-x-auto items-center justify-start sm:justify-center gap-1 sm:gap-2 rounded-full border border-white/10 bg-[#141414] p-1 sm:p-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {FILTERS.map(filter => (
             <button
               key={filter}
               onClick={() => setActiveFilter(filter)}
-              className={`rounded-full px-4 py-2 text-xs font-semibold transition-colors sm:px-5 sm:text-sm ${
+              className={`rounded-full px-3 sm:px-5 py-2 text-[11px] sm:text-sm font-semibold whitespace-nowrap transition-colors flex-shrink-0 ${
                 activeFilter === filter 
                   ? 'bg-[#25a9e0] text-white' 
                   : 'text-white/55 hover:bg-white/5 hover:text-white'
@@ -191,8 +195,8 @@ const CaseStudies = () => {
         <section className="relative z-0 w-full bg-[#030712] pb-20 sm:pb-28">
           <div className="px-5 sm:px-10 lg:px-16 max-w-[1600px] mx-auto">
             <div className="grid w-full gap-8 sm:gap-12 md:grid-cols-2 md:gap-x-10 md:gap-y-14">
-              {filteredStudies.map(study => (
-                <article key={study.id} className="group cursor-pointer">
+              {filteredStudies.map((study, index) => (
+                <article key={study.id} className={`group cursor-pointer ${index % 2 === 0 ? 'md:translate-y-16 lg:translate-y-24' : ''}`}>
                   <div className="relative overflow-hidden rounded-2xl bg-[#0A0A0A] sm:rounded-[1.75rem] aspect-[4/3]">
                     {/* Hover Overlay Desktop */}
                     <div className="absolute inset-0 hidden flex-col justify-between bg-black/80 p-8 sm:p-10 lg:flex lg:p-12 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
@@ -204,9 +208,9 @@ const CaseStudies = () => {
                           {study.description}
                         </p>
                       </div>
-                      <a className="relative z-10 mt-8 inline-flex w-fit items-center rounded-full bg-white px-7 py-3.5 text-base font-semibold text-black transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-[#25a9e0] hover:text-white translate-y-4 group-hover:translate-y-0" href={study.link}>
+                      <Link className="relative z-10 mt-8 inline-flex w-fit items-center rounded-full bg-white px-7 py-3.5 text-base font-semibold text-black transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-[#25a9e0] hover:text-white translate-y-4 group-hover:translate-y-0" to={study.link}>
                         View Case Study
-                      </a>
+                      </Link>
                     </div>
                     <img src={study.image} alt={study.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   </div>
@@ -220,15 +224,19 @@ const CaseStudies = () => {
                     <p className="mt-2 line-clamp-3 text-base leading-relaxed text-white/70 lg:hidden">
                       {study.description}
                     </p>
-                    <a className="mt-3 inline-flex items-center rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-[#25a9e0] hover:text-white lg:hidden" href={study.link}>
+                    <Link className="mt-3 inline-flex items-center rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-[#25a9e0] hover:text-white lg:hidden" to={study.link}>
                       View Case Study
-                    </a>
+                    </Link>
                   </div>
                 </article>
               ))}
             </div>
           </div>
         </section>
+        
+        <TeamSection roundedTop={true} />
+        <WorkAndPlaySection />
+        <TrustSection />
       </main>
 
       <Footer />

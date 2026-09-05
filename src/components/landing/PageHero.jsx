@@ -152,7 +152,7 @@ const PageHero = ({
       <div
         className={`${
           fullWidthTitle
-            ? 'w-screen relative left-1/2 -translate-x-1/2 px-6 md:px-10 lg:px-16'
+            ? 'w-full max-w-[1400px] mx-auto'
             : 'max-w-[1400px] mx-auto w-full'
         } relative z-10 ${
           isCenter ? 'flex flex-col items-center text-center' : ''
@@ -161,10 +161,10 @@ const PageHero = ({
         <AnimatedHeroTitle
           ref={headingRef}
           text={title}
-          size={titleSize}
+          size={fullWidthTitle ? 'clamp(3rem, 10vw, 7.5rem)' : titleSize}
           className={`${
             isSplit ? (spread ? 'mb-0' : 'mb-12 md:mb-16') : ''
-          } ${fullWidthTitle ? 'whitespace-nowrap' : ''} ${titleClassName}`}
+          } ${fullWidthTitle ? 'whitespace-normal break-words max-w-full' : ''} ${titleClassName}`}
         />
 
         {isSplit ? (

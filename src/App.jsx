@@ -10,6 +10,7 @@ gsap.registerPlugin(ScrollTrigger)
 
 const Home = lazy(() => import('./pages/Home'))
 const CaseStudies = lazy(() => import('./pages/CaseStudies'))
+const CaseStudyDetail = lazy(() => import('./pages/CaseStudyDetail'))
 const Portfolio = lazy(() => import('./pages/Portfolio'))
 const About = lazy(() => import('./pages/About'))
 const Services = lazy(() => import('./pages/services'))
@@ -100,7 +101,10 @@ const App = () => {
               <Route path="web-development" element={<WebDevelopment />} />
               <Route path="api-integration" element={<ApiIntegration />} />
             </Route>
-            <Route path="/case-studies" element={<CaseStudies />} />
+            <Route path="/case-studies">
+              <Route index element={<CaseStudies />} />
+              <Route path=":slug" element={<CaseStudyDetail />} />
+            </Route>
             <Route path="/portfolio" element={<Portfolio />} />
           </Routes>
         </div>
