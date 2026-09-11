@@ -215,8 +215,10 @@ const ProjectsGrid = ({ previewImageRef }) => {
               ref={i === 0 ? card1ImageRef : null}
               src={item.src}
               alt={item.alt}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              style={i === 0 ? { opacity: morphComplete ? 1 : 0 } : {}}
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-50 relative will-change-transform opacity-100 origin-center"
+              loading="lazy"
+              decoding="async"
+              draggable={false}
             />
           </div>
         ))}

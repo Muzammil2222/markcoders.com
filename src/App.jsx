@@ -89,7 +89,13 @@ const App = () => {
         RAINBOW_MODE={false}
         COLOR="#005ef7"
       />
-      <Suspense fallback={null}>
+      <Suspense 
+        fallback={
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#030712]">
+            <div className="w-12 h-12 border-4 border-[#25A9E0] border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        }
+      >
         <div>
           <Routes>
             <Route path="/" element={<Home />} />
