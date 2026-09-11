@@ -415,7 +415,7 @@ function Portfolio() {
               layout="split"
               spread
               showDot
-              titleSize="clamp(50px, 13vw, 190px)"
+              titleSize="clamp(42px, 13vw, 190px)"
               className="flex-1"
               titleClassName="!tracking-[-1.4px] my-auto leading-[1.1] whitespace-nowrap"
               subtitleClassName="text-[24px] sm:text-[28px] lg:!text-[35px] leading-[1.2] font-[500] tracking-[-1px] text-white/90"

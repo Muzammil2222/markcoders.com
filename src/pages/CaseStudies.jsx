@@ -142,7 +142,7 @@ const CaseStudiesHero = () => {
           layout="split"
           spread
           showDot
-          titleSize="clamp(64px, 12vw, 150px)"
+          titleSize="clamp(42px, 12vw, 150px)"
           className="flex-1"
           titleClassName="!tracking-[-1.4px] my-auto"
           subtitleClassName="text-[20px] sm:text-[24px] lg:!text-[28px] leading-[1.3] font-[500] tracking-[-1px] text-white/90"

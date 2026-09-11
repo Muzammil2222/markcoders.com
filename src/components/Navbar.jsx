@@ -169,7 +169,7 @@ const Navbar = () => {
         {/* Desktop Nav Links */}
         <div
           ref={linksRef}
-          className="hidden md:flex items-center gap-8 lg:gap-10"
+          className="hidden lg:flex items-center gap-6 xl:gap-10"
         >
           {NAV_LINKS.map((item) => {
             const isActive = location.pathname === item.to || (item.to !== '/' && !item.to.includes('#') && location.pathname.startsWith(item.to));
@@ -177,7 +177,7 @@ const Navbar = () => {
               <Link
                 key={item.label}
                 to={item.to}
-                className={`text-[20px] lg:text-[22px] transition-colors duration-300 relative group font-medium tracking-wide no-underline ${isActive ? 'text-[#25A9E0]' : 'text-gray-300 hover:text-[#25A9E0]'}`}
+                className={`text-[16px] xl:text-[20px] transition-colors duration-300 relative group font-medium tracking-wide no-underline ${isActive ? 'text-[#25A9E0]' : 'text-gray-300 hover:text-[#25A9E0]'}`}
               >
                 {item.label}
                 <span className={`absolute -bottom-1 left-0 h-[2px] bg-[#25A9E0] transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`} />
@@ -187,9 +187,9 @@ const Navbar = () => {
         </div>
 
         {/* CTA Button */}
-        <div ref={btnRef} className="hidden md:block">
+        <div ref={btnRef} className="hidden lg:block">
           <button
-            className="px-7 py-3 rounded-[15px] text-lg font-normal text-white transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
+            className="px-6 xl:px-7 py-2.5 xl:py-3 rounded-[15px] text-base xl:text-lg font-normal text-white transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
             style={{
               background: '#25A9E0',
               boxShadow: '0 4px 20px rgba(26, 122, 248, 0.3)',
@@ -202,7 +202,7 @@ const Navbar = () => {
         {/* Mobile Hamburger */}
         <button
           ref={hamburgerRef}
-          className="md:hidden flex flex-col gap-1.5 p-2 cursor-pointer bg-transparent border-none"
+          className="lg:hidden flex flex-col gap-1.5 p-2 cursor-pointer bg-transparent border-none"
           onClick={toggleMobileMenu}
           aria-label="Toggle menu"
         >
@@ -215,7 +215,7 @@ const Navbar = () => {
       {/* Mobile Menu */}
       <div
         ref={mobileMenuRef}
-        className="md:hidden max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out"
+        className="lg:hidden max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out"
       >
         <div className="pt-6 pb-4 flex flex-col gap-4">
           {NAV_LINKS.map((item) => {
