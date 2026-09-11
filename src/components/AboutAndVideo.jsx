@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import videoImg from '../assets/videoimg.jpg';
@@ -6,6 +7,7 @@ import videoImg from '../assets/videoimg.jpg';
 gsap.registerPlugin(ScrollTrigger);
 
 const AboutAndVideo = () => {
+  const navigate = useNavigate();
   const containerRef = useRef(null);
   const headingRef = useRef(null);
   const paragraphRef = useRef(null);
@@ -145,18 +147,21 @@ const AboutAndVideo = () => {
     >
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16 mb-24 md:mb-32">
         {/* (All Work) Label */}
-        <h2
-          className="text-[#25A9E0] text-center mb-[120px] sm:mb-[180px] md:mb-[220px] lg:mb-[260px]"
-          style={{
-            fontFamily: 'Switzer, sans-serif',
-            fontWeight: 500,
-            fontSize: 'clamp(42px, 6.5vw, 91px)',
-            lineHeight: '1.13',
-            letterSpacing: '-3.4px',
-          }}
-        >
-          (All Work)
-        </h2>
+        <div className="w-full text-center mb-[120px] sm:mb-[180px] md:mb-[220px] lg:mb-[260px]">
+          <h2
+            className="text-[#25A9E0] inline-block cursor-pointer transition-transform duration-300 hover:scale-95"
+            onClick={() => navigate('/portfolio')}
+            style={{
+              fontFamily: 'Switzer, sans-serif',
+              fontWeight: 500,
+              fontSize: 'clamp(42px, 6.5vw, 91px)',
+              lineHeight: '1.13',
+              letterSpacing: '-3.4px',
+            }}
+          >
+            (All Work)
+          </h2>
+        </div>
 
         {/* Large Statement Heading */}
         <h3

@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
-
-const LOGO_SRC = `${import.meta.env.BASE_URL}logo.png`;
+import LOGO_SRC from '../assets/logo.png';
 
 const NAV_LINKS = [
   { label: 'Home', to: '/' },
@@ -157,22 +156,14 @@ const Navbar = () => {
     >
       <div className="max-w-[1400px] mx-auto flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" ref={logoRef} className="flex items-center gap-2.5 sm:gap-3 cursor-pointer select-none no-underline">
+        <Link to="/" ref={logoRef} className="flex items-center cursor-pointer select-none no-underline">
           <img
             src={LOGO_SRC}
-            alt=""
-            className="h-9 w-9 sm:h-10 sm:w-10 object-contain shrink-0"
+            alt="Markcoders"
+            className="h-[40px] w-auto object-contain shrink-0"
             decoding="async"
             draggable={false}
           />
-          <span
-            className="text-[1.35rem] sm:text-[1.65rem] font-extrabold text-white uppercase leading-none tracking-[-0.04em]"
-            style={{ fontFamily: 'Switzer, sans-serif' }}
-          >
-            MARKCODERS
-            <span className="text-white">/</span>
-            <span className="text-[#25A9E0]">&gt;</span>
-          </span>
         </Link>
 
         {/* Desktop Nav Links */}

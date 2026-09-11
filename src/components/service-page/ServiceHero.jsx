@@ -1,8 +1,12 @@
 import PageHero from '../landing/PageHero';
+import { useNavigate } from 'react-router-dom';
 import canvasBg from '../../assets/canvasbg.gif';
 
-const StoryCard = ({ imageRef, cardImage, cardTitle, cardSubtitle, cardImageAlt }) => (
+const StoryCard = ({ imageRef, cardImage, cardTitle, cardSubtitle, cardImageAlt }) => {
+  const navigate = useNavigate();
+  return (
   <div
+    onClick={() => navigate('/portfolio')}
     className="w-full max-w-[430.82px] h-[216.86px] rounded-[15px] p-[10px] relative overflow-hidden group cursor-pointer flex flex-row items-stretch"
     style={{
       width: '430.82px',
@@ -54,12 +58,16 @@ const StoryCard = ({ imageRef, cardImage, cardTitle, cardSubtitle, cardImageAlt 
         </h3>
       </div>
 
-      <div className="flex justify-start mt-auto">
+      <div className="flex justify-start mt-auto z-20 relative">
         <div
-          className="w-[42px] h-[42px] rounded-[10px] flex items-center justify-center transition-all duration-300 group-hover:scale-105"
+          className="w-[42px] h-[42px] rounded-[10px] flex items-center justify-center transition-all duration-300 group-hover:scale-105 hover:!scale-110 cursor-pointer"
           style={{
             background: '#1399e8',
             boxShadow: '0 2px 10px rgba(19, 153, 232, 0.3)',
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate('/portfolio');
           }}
         >
           <svg
@@ -106,6 +114,7 @@ const StoryCard = ({ imageRef, cardImage, cardTitle, cardSubtitle, cardImageAlt 
     </div>
   </div>
 );
+};
 
 const ServiceHero = ({
   previewImageRef,

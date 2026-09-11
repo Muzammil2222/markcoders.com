@@ -73,10 +73,10 @@ export const webDevelopmentData = {
     titleLine1: 'Featured',
     titleLine2: 'Work.',
     images: [
-      { src: vantageImg, alt: 'Vantage' },
-      { src: saucedImg, alt: 'Sauced' },
-      { src: savmontImg, alt: 'Savmont' },
-      { src: jerseyImg, alt: 'TIG The Jersey Generator' },
+      { src: vantageImg, alt: 'Vantage', link: 'https://vantage-contractors.com/' },
+      { src: saucedImg, alt: 'Sauced', link: 'https://play.google.com/store/apps/details?id=com.sauced&pcampaignid=web_share' },
+      { src: savmontImg, alt: 'Savmont', link: 'https://strive-d595ee.webflow.io/' },
+      { src: jerseyImg, alt: 'TIG The Jersey Generator', link: 'https://thejerseygenerator.com/' },
     ],
   },
 };

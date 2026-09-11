@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import heroCardImg from '../assets/vantage.webp';
@@ -9,6 +10,7 @@ import jersey2Img from '../assets/jersey2.webp';
 gsap.registerPlugin(ScrollTrigger);
 
 const WorkGrid = ({ heroImageRef }) => {
+  const navigate = useNavigate();
   const sectionRef = useRef(null);
   const card1Ref = useRef(null);
   const card1ImageRef = useRef(null);
@@ -196,6 +198,7 @@ const WorkGrid = ({ heroImageRef }) => {
         <div
           ref={card1Ref}
           className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center"
+          onClick={() => window.open("https://vantage-contractors.com/", "_blank")}
         >
           {/* This image shows ONLY when morph is complete */}
           <img
@@ -211,6 +214,7 @@ const WorkGrid = ({ heroImageRef }) => {
         <div
           ref={card2Ref}
           className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center"
+          onClick={() => window.open("https://play.google.com/store/apps/details?id=com.sauced&pcampaignid=web_share", "_blank")}
         >
           <img
             src={saucedImg}
@@ -223,6 +227,7 @@ const WorkGrid = ({ heroImageRef }) => {
         <div
           ref={card3Ref}
           className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center"
+          onClick={() => navigate("/case-studies")}
         >
           <img
             src={jerseyImg}
@@ -235,6 +240,7 @@ const WorkGrid = ({ heroImageRef }) => {
         <div
           ref={card4Ref}
           className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center"
+          onClick={() => window.open("https://thejerseygenerator.com/", "_blank")}
         >
           <img
             src={jersey2Img}

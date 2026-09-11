@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import SplashCursor from '../components/SplashCursor';
 import Footer from '../components/Footer';
@@ -36,25 +37,27 @@ const WORK_TYPES = ['Everything', 'App Development', 'Website Development', 'CMS
 const DOMAINS = ['Anything', 'Advertising Technology', 'Food & Community', 'eCommerce', 'Personal Brands', 'Logistics Technology', 'Home & Garden', 'Sports & Apparel', 'Construction', 'Skincare'];
 
 const imagesList = [
-  { src: img1, title: "Cozy101", type: "Website Development", domain: "eCommerce" },
-  { src: img2, title: "Sauced", type: "App Development", domain: "Food & Community" },
-  { src: img3, title: "WebApp", type: "CMS Development", domain: "Anything" },
-  { src: img4, title: "Alex Tarnava", type: "Website Development", domain: "Personal Brands" },
-  { src: img5, title: "Check My Ride", type: "App Development", domain: "Anything" },
-  { src: img6, title: "Eko", type: "UI/UX Design", domain: "Advertising Technology" },
-  { src: img7, title: "Farkle", type: "App Development", domain: "Sports & Apparel" },
-  { src: img8, title: "Floral", type: "Website Development", domain: "Home & Garden" },
-  { src: img9, title: "Garden In Minutes", type: "Website Development", domain: "Home & Garden" },
-  { src: img10, title: "Iona", type: "Graphic Design", domain: "Skincare" },
-  { src: img11, title: "Lengo", type: "App Development", domain: "Anything" },
-  { src: img12, title: "Monastic Mail", type: "CMS Development", domain: "Logistics Technology" },
-  { src: img13, title: "Olaads", type: "Website Development", domain: "Advertising Technology" },
-  { src: img14, title: "The Jersey Designer", type: "Website Development", domain: "Sports & Apparel" },
-  { src: img15, title: "Vantage", type: "Website Development", domain: "Construction" },
-  { src: img16, title: "Wordsmith", type: "CMS Development", domain: "Personal Brands" },
+  { src: img1, title: "Cozy101", type: "Website Development", domain: "eCommerce", link: "https://getcozy101.com/" },
+  { src: img2, title: "Sauced", type: "App Development", domain: "Food & Community", link: "https://play.google.com/store/apps/details?id=com.sauced&pcampaignid=web_share" },
+  { src: img3, title: "Resilience Skin and Beauty", type: "CMS Development", domain: "Anything", link: "https://rsbskin.com/" },
+  { src: img4, title: "Alex Tarnava", type: "Website Development", domain: "Personal Brands", link: "https://alextarnava.com/" },
+  { src: img5, title: "Check My Ride", type: "App Development", domain: "Anything", link: "/case-studies" },
+  { src: img6, title: "EKO", type: "UI/UX Design", domain: "Advertising Technology", link: "/case-studies" },
+  { src: img7, title: "Farkle", type: "App Development", domain: "Sports & Apparel", link: "/case-studies" },
+  { src: img8, title: "Floral", type: "Website Development", domain: "Home & Garden", link: "/case-studies" },
+  { src: img9, title: "Garden in Minutes", type: "Website Development", domain: "Home & Garden", link: "https://gardeninminutes.com/" },
+  { src: img10, title: "IONA", type: "Graphic Design", domain: "Skincare", link: "https://ionadrones.com/" },
+  { src: img11, title: "Lengo", type: "App Development", domain: "Anything", link: "/case-studies" },
+  { src: img12, title: "Monastic Mail", type: "CMS Development", domain: "Logistics Technology", link: "/case-studies" },
+  { src: img13, title: "OLA-ADS", type: "Website Development", domain: "Advertising Technology", link: "/case-studies" },
+  { src: img14, title: "The Jersey Generator", type: "Website Development", domain: "Sports & Apparel", link: "https://thejerseygenerator.com/" },
+  { src: img15, title: "Vantage", type: "Website Development", domain: "Construction", link: "https://vantage-contractors.com/" },
+  { src: img16, title: "Wordsmith", type: "CMS Development", domain: "Personal Brands", link: "/case-studies" },
 ];
 
-const OurWorkCard = ({ tagline, image, title }) => (
+const OurWorkCard = ({ tagline, image, title, link }) => {
+  const navigate = useNavigate();
+  return (
   <div
     className="w-full max-w-[430.82px] h-[216.86px] rounded-[15px] p-[10px] relative overflow-hidden group cursor-pointer flex flex-row items-stretch"
     style={{
@@ -67,6 +70,7 @@ const OurWorkCard = ({ tagline, image, title }) => (
       backdropFilter: 'blur(20px)',
       opacity: 1,
     }}
+    onClick={() => navigate('/portfolio')}
   >
     <div
       className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
@@ -107,12 +111,16 @@ const OurWorkCard = ({ tagline, image, title }) => (
         </h3>
       </div>
 
-      <div className="flex justify-start mt-auto">
+      <div className="flex justify-start mt-auto z-20 relative">
         <div
-          className="w-[42px] h-[42px] rounded-[10px] flex items-center justify-center transition-all duration-300 group-hover:scale-105"
+          className="w-[42px] h-[42px] rounded-[10px] flex items-center justify-center transition-all duration-300 group-hover:scale-105 hover:!scale-110 cursor-pointer"
           style={{
             background: '#1399e8',
             boxShadow: '0 2px 10px rgba(19, 153, 232, 0.3)',
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate('/portfolio');
           }}
         >
           <svg
@@ -158,6 +166,7 @@ const OurWorkCard = ({ tagline, image, title }) => (
     </div>
   </div>
 );
+};
 
 const Dropdown = ({ label, options, selected, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -215,6 +224,7 @@ const PortfolioCard = ({ item, index, setCardRef }) => {
   const cardRef = useRef(null);
   const cursorRef = useRef(null);
   const [isHovering, setIsHovering] = useState(false);
+  const navigate = useNavigate();
 
   const stopEvent = (e) => {
     e.stopPropagation();
@@ -251,7 +261,16 @@ const PortfolioCard = ({ item, index, setCardRef }) => {
         onMouseMove={handleMouseMove}
         onMouseDown={stopEvent}
         onMouseUp={stopEvent}
-        onClick={stopEvent}
+        onClick={(e) => {
+          stopEvent(e);
+          if (item.link) {
+            if (item.link.startsWith('http')) {
+              window.open(item.link, '_blank');
+            } else {
+              navigate(item.link);
+            }
+          }
+        }}
       >
         <img
           src={item.src}
@@ -410,6 +429,7 @@ function Portfolio() {
                 tagline={featured.tagline}
                 image={cardImage}
                 title={featured.title}
+                link="https://vantage-contractors.com/"
               />
             </PageHero>
           </div>

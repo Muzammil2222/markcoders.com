@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -9,6 +10,7 @@ const FeaturedWork = ({
   titleLine2 = 'Work.',
   images = [],
 }) => {
+  const navigate = useNavigate();
   const sectionRef = useRef(null);
   const cardRefs = useRef([]);
 
@@ -107,6 +109,15 @@ const FeaturedWork = ({
                 cardRefs.current[i] = el;
               }}
               className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center"
+              onClick={(e) => {
+                if (item.link) {
+                  if (item.link.startsWith('http')) {
+                    window.open(item.link, '_blank');
+                  } else {
+                    navigate(item.link);
+                  }
+                }
+              }}
             >
               <img
                 src={item.src}

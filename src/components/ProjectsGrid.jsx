@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -14,6 +15,7 @@ import dogImg from '../assets/dog.webp';
 gsap.registerPlugin(ScrollTrigger);
 
 const ProjectsGrid = ({ previewImageRef }) => {
+  const navigate = useNavigate();
   const sectionRef = useRef(null);
   const card1Ref = useRef(null);
   const card1ImageRef = useRef(null);
@@ -177,14 +179,14 @@ const ProjectsGrid = ({ previewImageRef }) => {
   };
 
   const imagesList = [
-    { src: heroCardImg, alt: "Vantage" },
-    { src: saucedImg, alt: "Sauced" },
-    { src: savmontImg, alt: "Savmont" },
-    { src: jerseyImg, alt: "TIG The Jersey Generator" },
-    { src: midasImg, alt: "Midas" },
-    { src: gardenImg, alt: "Garden In Minutes" },
-    { src: checkMyRideImg, alt: "Check My Ride" },
-    { src: dogImg, alt: "Dog App" },
+    { src: heroCardImg, alt: "Vantage", link: "https://vantage-contractors.com/" },
+    { src: saucedImg, alt: "Sauced", link: "https://play.google.com/store/apps/details?id=com.sauced&pcampaignid=web_share" },
+    { src: savmontImg, alt: "Savmont", link: "https://strive-d595ee.webflow.io/" },
+    { src: jerseyImg, alt: "TIG The Jersey Generator", link: "https://thejerseygenerator.com/" },
+    { src: midasImg, alt: "Midas", link: "/case-studies" },
+    { src: gardenImg, alt: "Garden In Minutes", link: "https://gardeninminutes.com/" },
+    { src: checkMyRideImg, alt: "Check My Ride", link: "/case-studies" },
+    { src: dogImg, alt: "Dog App", link: "/case-studies" },
   ];
 
   return (
@@ -199,6 +201,15 @@ const ProjectsGrid = ({ previewImageRef }) => {
             key={i}
             ref={(el) => setCardRef(el, i)}
             className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center"
+            onClick={(e) => {
+              if (item.link) {
+                if (item.link.startsWith('http')) {
+                  window.open(item.link, '_blank');
+                } else {
+                  navigate(item.link);
+                }
+              }
+            }}
           >
             <img
               ref={i === 0 ? card1ImageRef : null}
