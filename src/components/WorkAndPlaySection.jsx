@@ -1,15 +1,18 @@
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import playwithImg from '../assets/playwith.webp';
+import workAndPlay1 from '../assets/WorkAndPLayImage1.jpg';
+import workAndPlay2 from '../assets/WorkAndPLayImage2.jpg';
+import workAndPlay3 from '../assets/WorkAndPLayImage3.jpg';
+import workAndPlay4 from '../assets/WorkAndPLayImage4.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const images = [
-  playwithImg,
-  playwithImg,
-  playwithImg,
-  playwithImg
+  workAndPlay1,
+  workAndPlay2,
+  workAndPlay3,
+  workAndPlay4,
 ];
 
 const WorkAndPlaySection = () => {

@@ -2,30 +2,20 @@ import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import webflowImg from '../assets/Tools Logo/webflow.png';
-import figmaImg from '../assets/Tools Logo/figma.png';
-import shopifyImg from '../assets/Tools Logo/shopify.png';
-import wordpressImg from '../assets/Tools Logo/wordpress.png';
-import aiImg from '../assets/Tools Logo/illustartor.png';
-import psImg from '../assets/Tools Logo/photoshop.png';
-import reactImg from '../assets/Tools Logo/react.png';
-import framerImg from '../assets/Tools Logo/framer.png';
-import cubeImg from '../assets/Tools Logo/cube.png';
-import tsImg from '../assets/Tools Logo/typescript.png';
+import chatgptImg from '../assets/ChatGPT Logo - Black - 512x512 - zonalogo.com.png';
+import claudeImg from '../assets/Claude-AI-Icon---Colored---512x512---zonalogo.com.png';
+import codexImg from '../assets/Codex Logo - Colored - 512x512 - zonalogo.com.png';
+import cursorImg from '../assets/Cursor Icon - Black - 451x512 - zonalogo.com.png';
+import geminiImg from '../assets/Google-Gemini-Icon---Colored---512x512---zonalogo.com.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const tools = [
-  { name: 'Webflow', img: webflowImg },
-  { name: 'Figma', img: figmaImg },
-  { name: 'Shopify', img: shopifyImg },
-  { name: 'WordPress', img: wordpressImg },
-  { name: 'Illustrator', img: aiImg },
-  { name: 'Photoshop', img: psImg },
-  { name: 'React', img: reactImg },
-  { name: 'Framer', img: framerImg },
-  { name: 'Cube', img: cubeImg },
-  { name: 'Tailwind', img: tsImg },
+  { name: 'ChatGPT', img: chatgptImg },
+  { name: 'Claude', img: claudeImg },
+  { name: 'Codex', img: codexImg },
+  { name: 'Cursor', img: cursorImg },
+  { name: 'Gemini', img: geminiImg },
 ];
 
 const cards = [

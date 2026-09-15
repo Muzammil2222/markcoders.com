@@ -5,17 +5,21 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const baseMembers = [
-  { name: "Toutiq Hossen", title: "Creative Director", img: "https://i.pravatar.cc/300?img=68" },
-  { name: "Kamruzzaman Sishir", title: "Creative Strategist", img: "https://i.pravatar.cc/300?img=59" },
-  { name: "Sean Napier", title: "Founder and CEO", img: "https://i.pravatar.cc/300?img=11" },
-  { name: "Jahid Hasan", title: "Co-Founder & CPO", img: "https://i.pravatar.cc/300?img=33" }
+  { name: "Saarang Ali", title: "Co-Founder & CEO", img: "https://i.pravatar.cc/300?img=12" },
+  { name: "Syed Shamekh Hussain", title: "Co-Founder & COO", img: "https://i.pravatar.cc/300?img=13" },
+  { name: "Bilal", title: "Co-Founder & CTO" }, // no photo
+  { name: "Muzammil Ahmed", title: "Co-Founder & CAO", img: "https://i.pravatar.cc/300?img=15" },
+  { name: "Affan Abdullah", title: "Director Of Sales", img: "https://i.pravatar.cc/300?img=33" },
+  { name: "Aman Raza", title: "Creative Director", img: "https://i.pravatar.cc/300?img=52" },
+  { name: "Ammar Sheikh", title: "Project Manager", img: "https://i.pravatar.cc/300?img=57" },
+  { name: "Shahzaib Ali", title: "Senior Developer", img: "https://i.pravatar.cc/300?img=60" },
 ];
 
-// Only 8 members for the vertical list
-const displayMembers = [...baseMembers, ...baseMembers];
+const displayMembers = baseMembers;
 
-// Duplicate many times for the infinite horizontal scroll scrub
-const teamMembers = [...baseMembers, ...baseMembers, ...baseMembers, ...baseMembers, ...baseMembers, ...baseMembers];
+// Members with photos only — duplicated for the horizontal scroll scrub
+const photoMembers = baseMembers.filter((m) => m.img);
+const teamMembers = [...photoMembers, ...photoMembers, ...photoMembers, ...photoMembers, ...photoMembers, ...photoMembers];
 
 const TeamSection = ({ roundedTop = false }) => {
   const sectionRef = useRef(null);

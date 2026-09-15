@@ -17,7 +17,7 @@ import websiteDevImg from '../../assets/services/WebsiteDevelopment-CsTaI-wB.web
 import cmsDevImg from '../../assets/services/CMSDevelopment-BqtLsmuH.webp';
 import uiuxImg from '../../assets/services/UIUXDesign-Drsg_a-L.webp';
 import graphicDesignImg from '../../assets/services/GraphicDesign-DhYkR5Ad.webp';
-import apiImg from '../../assets/services/API-lG8GiBXY.webp';
+import apiImg from '../../assets/services/api.png';
 
 const websiteDevData = [
   { title: 'Marketing & Brand Websites', content: 'Purpose-built websites for companies, service providers, startups, and established brands that need a stronger online presence.' },

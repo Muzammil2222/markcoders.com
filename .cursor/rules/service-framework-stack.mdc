@@ -1,0 +1,40 @@
+---
+description: ServiceFramework scroll card-stack pattern (GSAP pin, Lenis-safe)
+globs: **/service-page/ServiceFramework.jsx
+alwaysApply: false
+---
+
+# ServiceFramework — pinned card stack
+
+**Location:** `Markcoders2/markcoders.com/src/components/service-page/ServiceFramework.jsx`  
+Used on nested service pages (`/services/web-development`, branding, uiux, api-integration).
+
+## Behavior
+
+- **Left column** (heading + CTA): stays put while the right card column scrolls — GSAP `ScrollTrigger.pin` on desktop (`min-width: 1024px`), `pinSpacing: false`, trigger = cards wrapper.
+- **Right cards**: each card is pinned in turn (`pin: true`, `pinSpacing: false`) so the next card scrolls up and covers it. Stepped pin tops via `cardTopPx(i)` so earlier cards peek behind.
+- **Depth polish**: when the next card arrives, previous card scrubs to `scale: 0.95` / `opacity: 0.55`.
+- **Tablet** (`768px–1023px`): same card-stack pins (no left-column pin).
+- **Phone** (`<768px`): per-card fade/slide reveal; tight margins (no pin stack).
+- **Extras**: section bg black→white scrub; left children fade/slide in once; `document.fonts.ready` → `ScrollTrigger.refresh()`.
+
+## Why GSAP pin (not CSS sticky)
+
+Site may use **Lenis**. Lenis/transform wrappers break native `position: sticky`. ScrollTrigger pin works with transformed scrollers; wire Lenis → `ScrollTrigger.update` (+ ticker / scrollerProxy if virtual scroll).
+
+## Constants
+
+- `NAV_TOP_PX = 88` (clear fixed navbar)
+- `CARD_TOP_STEP = 14`, `CARD_TOP_STEP_MAX = 56`
+- Card `marginBottom`: `50vh` (or `35vh` on last) for scroll runway
+
+## Related files
+
+- `src/index.css` — prefer `overflow-x: clip` over `hidden` if any sticky remains
+- Service page wrappers — `overflow-x-clip`
+- `ServiceOfferings.jsx` — separate list reveal (right→left on scroll)
+
+## Do not
+
+- Do not use `pinReparent: true` here (caused blank white screen).
+- Do not pin the whole section and scrub a Y track as the primary stack (jumpy with Lenis / reverse scroll).
