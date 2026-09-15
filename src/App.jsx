@@ -29,7 +29,7 @@ function ScrollRefresh() {
       direction: 'vertical',
       gestureDirection: 'vertical',
       smooth: true,
-      multiplier: 1.35,
+      multiplier: 2,
       smartphone: { smooth: true },
       tablet: { smooth: true },
     })

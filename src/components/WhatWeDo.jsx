@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import img1 from '../assets/hero-card.png';
@@ -9,10 +10,10 @@ import img4 from '../assets/3.png';
 gsap.registerPlugin(ScrollTrigger);
 
 const services = [
-  { num: '01', title: 'Branding', color: '#E84E3A', img: img1 },
-  { num: '02', title: 'UI/UX Design', color: '#6C5CE7', img: img2 },
-  { num: '03', title: 'Web & Development', color: '#00B894', img: img3 },
-  { num: '04', title: 'SEO', color: '#FDCB6E', img: img4 },
+  { num: '01', title: 'Branding', color: '#E84E3A', img: img1, to: '/services/branding' },
+  { num: '02', title: 'UI/UX Design', color: '#6C5CE7', img: img2, to: '/services/ui-ux' },
+  { num: '03', title: 'Web & Development', color: '#00B894', img: img3, to: '/services/web-development' },
+  { num: '04', title: 'SEO', color: '#FDCB6E', img: img4, to: '/services/web-development' },
 ];
 
 const WhatWeDo = () => {
@@ -204,10 +205,11 @@ const WhatWeDo = () => {
 
           {/* Service rows */}
           {services.map((service, index) => (
-            <div
+            <Link
               key={service.num}
+              to={service.to}
               ref={(el) => (rowRefs.current[index] = el)}
-              className="service-row relative overflow-hidden cursor-pointer"
+              className="service-row relative overflow-hidden cursor-pointer block no-underline"
               onMouseEnter={(e) => handleItemEnter(index, e)}
               onMouseMove={() => handleItemHover(index)}
               style={{
@@ -260,7 +262,7 @@ const WhatWeDo = () => {
                   {service.title}
                 </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
