@@ -252,7 +252,7 @@ const TeamSection = ({ roundedTop = false }) => {
 
               {/* Stat Row 3 */}
               <div className="flex items-center justify-between pt-12 pb-5">
-                <span className="text-[#111] text-[16px] md:text-[30px] font-medium tracking-tight">Combined years of experience</span>
+                <span className="text-[#111] text-[16px] md:text-[30px] font-medium tracking-tight">Years Experience</span>
                 <span ref={counter3Ref} className="text-[#23b3e8] text-[24px] md:text-[35px] font-medium min-w-[50px] text-right">0+</span>
               </div>
 

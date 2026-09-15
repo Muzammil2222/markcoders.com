@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import LOGO_SRC from '../assets/logo.png';
-import { getScrollY, subscribeScroll } from '../lib/scrollBus';
 
 const NAV_LINKS = [
   { label: 'Home', to: '/' },
@@ -23,11 +22,13 @@ const Navbar = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Initial state
       gsap.set([logoRef.current, linksRef.current, btnRef.current], {
         opacity: 0,
         y: -30,
       });
 
+      // Staggered entrance
       const tl = gsap.timeline({ delay: 0.3 });
 
       tl.to(logoRef.current, {
@@ -61,12 +62,12 @@ const Navbar = () => {
     return () => ctx.revert();
   }, []);
 
-  // Hide on scroll down, show on a little scroll up (Locomotive + native)
+  // Hide on scroll down, show on any scroll up
   useEffect(() => {
     const nav = navRef.current;
     if (!nav) return;
 
-    let lastScrollY = getScrollY();
+    let lastScrollY = window.scrollY;
     let isHidden = false;
 
     const showNav = () => {
@@ -84,6 +85,7 @@ const Navbar = () => {
       if (isHidden) return;
       isHidden = true;
 
+      // Close mobile menu when nav hides
       const menu = mobileMenuRef.current;
       const hamburger = hamburgerRef.current;
       if (menu && !menu.classList.contains('max-h-0')) {
@@ -100,36 +102,31 @@ const Navbar = () => {
       });
     };
 
-    gsap.set(nav, { y: 0 });
-    isHidden = false;
-    lastScrollY = getScrollY();
+    const onScroll = () => {
+      const currentScrollY = window.scrollY;
 
-    const onScroll = (currentScrollY) => {
-      const y = typeof currentScrollY === 'number' ? currentScrollY : getScrollY();
-      const delta = y - lastScrollY;
-
-      if (y <= 24) {
+      if (currentScrollY <= 10) {
         showNav();
-        lastScrollY = y;
+        lastScrollY = currentScrollY;
         return;
       }
 
-      if (delta > 4 && y > 80) {
+      if (currentScrollY > lastScrollY && currentScrollY > 72) {
         hideNav();
-      } else if (delta < -4) {
+      } else if (currentScrollY < lastScrollY) {
         showNav();
       }
 
-      lastScrollY = y;
+      lastScrollY = currentScrollY;
     };
 
-    const unsubscribe = subscribeScroll(onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
 
     return () => {
-      unsubscribe();
+      window.removeEventListener('scroll', onScroll);
       gsap.set(nav, { clearProps: 'y' });
     };
-  }, [location.pathname]);
+  }, []);
 
   const toggleMobileMenu = () => {
     const menu = mobileMenuRef.current;
@@ -158,6 +155,7 @@ const Navbar = () => {
       }}
     >
       <div className="max-w-[1400px] mx-auto flex items-center justify-between">
+        {/* Logo */}
         <Link to="/" ref={logoRef} className="flex items-center cursor-pointer select-none no-underline">
           <img
             src={LOGO_SRC}
@@ -168,6 +166,7 @@ const Navbar = () => {
           />
         </Link>
 
+        {/* Desktop Nav Links */}
         <div
           ref={linksRef}
           className="hidden lg:flex items-center gap-6 xl:gap-10"
@@ -187,6 +186,7 @@ const Navbar = () => {
           })}
         </div>
 
+        {/* CTA Button */}
         <div ref={btnRef} className="hidden lg:block">
           <button
             className="px-6 xl:px-7 py-2.5 xl:py-3 rounded-[15px] text-base xl:text-lg font-normal text-white transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
@@ -199,6 +199,7 @@ const Navbar = () => {
           </button>
         </div>
 
+        {/* Mobile Hamburger */}
         <button
           ref={hamburgerRef}
           className="lg:hidden flex flex-col gap-1.5 p-2 cursor-pointer bg-transparent border-none"
@@ -211,6 +212,7 @@ const Navbar = () => {
         </button>
       </div>
 
+      {/* Mobile Menu */}
       <div
         ref={mobileMenuRef}
         className="lg:hidden max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out"
