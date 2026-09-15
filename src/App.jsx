@@ -55,7 +55,7 @@ function SmoothScroll({ children }) {
     const locoScroll = new LocomotiveScroll({
       el: scroller,
       smooth: true,
-      multiplier: 1,
+      multiplier: 1.35,
       smartphone: { smooth: true },
       tablet: { smooth: true },
     })
