@@ -33,6 +33,9 @@ const PageHero = ({
   const isSplit = layout === 'split';
 
   useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
     const ctx = gsap.context(() => {
       gsap.set(headingRef.current, { opacity: 0, y: 80, scale: 0.95 });
 
@@ -55,13 +58,15 @@ const PageHero = ({
 
       const tl = gsap.timeline({ delay: 0.8 });
 
-      tl.to(headingRef.current, {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 1.2,
-        ease: 'power4.out',
-      });
+      if (headingRef.current) {
+        tl.to(headingRef.current, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1.2,
+          ease: 'power4.out',
+        });
+      }
 
       if (subRef.current) {
         tl.to(
@@ -115,7 +120,7 @@ const PageHero = ({
           delay: 2.5,
         });
       }
-    }, sectionRef);
+    }, section);
 
     return () => ctx.revert();
   }, [align, animateFooter, isCenter]);

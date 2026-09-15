@@ -263,9 +263,6 @@ const NAV_TOP_PX = 88;
 const CARD_TOP_STEP = 14;
 const CARD_TOP_STEP_MAX = 56;
 
-const cardTopPx = (index) =>
-  NAV_TOP_PX + Math.min(index * CARD_TOP_STEP, CARD_TOP_STEP_MAX);
-
 const ServiceFramework = ({
   headingLine1 = 'A framework that',
   headingLine2 = 'drives excellence',
@@ -306,9 +303,7 @@ const ServiceFramework = ({
         }
       );
 
-      // Left column: fade/slide the heading + CTA in once. The "stay
-      // in place" part is handled separately below by the pin, which
-      // is media-gated so it only runs on large screens.
+      // Left column: fade/slide the heading + CTA in once.
       if (leftRef.current) {
         gsap.fromTo(
           leftRef.current.children,
@@ -327,26 +322,24 @@ const ServiceFramework = ({
           }
         );
       }
-    }, sectionRef);
+    }, section);
 
-    // Pinning is desktop-only: on small screens the left column and
-    // cards just flow normally (nothing pinned, no overlap to fight
-    // with on a narrow viewport). matchMedia re-runs this whenever
-    // the viewport crosses the 1024px line, and automatically calls
-    // the returned cleanup function when it stops matching.
-    mm.add('(min-width: 1024px)', () => {
+    const setupCardStack = (opts = {}) => {
+      const { pinLeft = false, navTop = NAV_TOP_PX } = opts;
       const triggers = [];
+      const cardEls = cardRefs.current.filter(Boolean);
 
-      // Left column stays put for exactly as long as the card stack
-      // (`wrapper`) is scrolling past. Pinning the sibling instead of
-      // relying on `position: sticky` keeps this correct even though
-      // the right column is much taller and everything is inside a
-      // Lenis-driven scroll.
-      if (leftRef.current) {
+      // Pin runway only while the stack is active
+      cardEls.forEach((card, i) => {
+        const isLast = i === cardEls.length - 1;
+        gsap.set(card, { marginBottom: isLast ? '35vh' : '50vh' });
+      });
+
+      if (pinLeft && leftRef.current) {
         triggers.push(
           ScrollTrigger.create({
             trigger: wrapper,
-            start: `top ${NAV_TOP_PX}px`,
+            start: `top ${navTop}px`,
             end: 'bottom bottom',
             pin: leftRef.current,
             pinSpacing: false,
@@ -355,18 +348,12 @@ const ServiceFramework = ({
         );
       }
 
-      // Cards: pin each one in turn so it holds in place while the
-      // next card scrolls up and settles over it. All the currently-
-      // pinned cards share the same release point (`endTrigger` /
-      // `end`: the bottom of the whole stack reaching the top of the
-      // viewport), so near the end of the section the accumulated
-      // stack releases together and scrolls away as a group.
-      const cardEls = cardRefs.current.filter(Boolean);
       cardEls.forEach((card, i) => {
+        const top = navTop + Math.min(i * CARD_TOP_STEP, CARD_TOP_STEP_MAX);
         triggers.push(
           ScrollTrigger.create({
             trigger: card,
-            start: `top ${cardTopPx(i)}px`,
+            start: `top ${top}px`,
             endTrigger: wrapper,
             end: 'bottom top',
             pin: true,
@@ -375,12 +362,9 @@ const ServiceFramework = ({
           })
         );
 
-        // Polish: as the next card arrives and settles into its own
-        // pinned spot, scale/dim this one down a touch so the stack
-        // reads as layered depth instead of one card flatly swapping
-        // for another.
         const nextCard = cardEls[i + 1];
         if (nextCard) {
+          const nextTop = navTop + Math.min((i + 1) * CARD_TOP_STEP, CARD_TOP_STEP_MAX);
           const dampen = gsap.to(card, {
             scale: 0.95,
             opacity: 0.55,
@@ -388,7 +372,7 @@ const ServiceFramework = ({
             scrollTrigger: {
               trigger: nextCard,
               start: 'top bottom',
-              end: `top ${cardTopPx(i + 1)}px`,
+              end: `top ${nextTop}px`,
               scrub: 0.8,
             },
           });
@@ -396,17 +380,61 @@ const ServiceFramework = ({
         }
       });
 
-      return () => triggers.forEach((st) => st && st.kill());
+      return () => {
+        triggers.forEach((st) => st && st.kill());
+        gsap.set(cardEls, { clearProps: 'marginBottom,scale,opacity' });
+      };
+    };
+
+    // Desktop: pin left column + card stack
+    mm.add('(min-width: 1024px)', () => setupCardStack({ pinLeft: true }));
+
+    // Tablet: same card-stack animation (no left pin — stacked layout)
+    mm.add('(min-width: 768px) and (max-width: 1023px)', () =>
+      setupCardStack({ pinLeft: false, navTop: 72 })
+    );
+
+    // Phone: reveal each card on scroll (pin stack is too tight on small screens)
+    mm.add('(max-width: 767px)', () => {
+      const cardEls = cardRefs.current.filter(Boolean);
+      const triggers = [];
+
+      cardEls.forEach((card) => {
+        gsap.set(card, { marginBottom: '1.5rem' });
+        const tween = gsap.fromTo(
+          card,
+          { y: 48, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: card,
+              start: 'top 88%',
+              toggleActions: 'play none none none',
+            },
+          }
+        );
+        triggers.push(tween.scrollTrigger);
+      });
+
+      return () => {
+        triggers.forEach((st) => st && st.kill());
+        gsap.set(cardEls, { clearProps: 'marginBottom,y,opacity' });
+      };
     });
 
-    // Switzer is a custom web font; if it finishes loading after
-    // ScrollTrigger has already measured card/text heights, pin
-    // positions can be off by a few pixels. Recalculate once it's in.
     if (typeof document !== 'undefined' && document.fonts) {
       document.fonts.ready.then(() => ScrollTrigger.refresh());
     }
 
+    const refresh = () => ScrollTrigger.refresh();
+    requestAnimationFrame(refresh);
+    const t = window.setTimeout(refresh, 400);
+
     return () => {
+      window.clearTimeout(t);
       ctx.revert();
       mm.revert();
     };
@@ -487,8 +515,6 @@ const ServiceFramework = ({
           className="relative w-full lg:flex-1 lg:max-w-[700px] lg:pb-[30vh]"
         >
           {cards.map((card, index) => {
-            const isLast = index === cards.length - 1;
-
             return (
               <article
                 key={card.number}
@@ -496,10 +522,8 @@ const ServiceFramework = ({
                 className="relative w-full max-w-[678.71px] ml-auto min-h-[360px] lg:min-h-[396px] bg-white rounded-[24px] p-8 md:p-10 flex flex-col justify-between"
                 style={{
                   zIndex: index + 1,
-                  // Scroll room after this card before the next one
-                  // takes over; the last one gets less so the section
-                  // doesn't end on a long empty scroll.
-                  marginBottom: isLast ? '35vh' : '50vh',
+                  // Default tight spacing; pin matchMedia overrides to 50vh runway on tablet+
+                  marginBottom: '1.5rem',
                   boxShadow: '0px 0px 13px 0px rgba(140, 140, 140, 0.25)',
                 }}
               >

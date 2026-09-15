@@ -29,10 +29,31 @@ function ScrollRefresh() {
       direction: 'vertical',
       gestureDirection: 'vertical',
       smooth: true,
-      mouseMultiplier: 1,
-      smoothTouch: false,
-      touchMultiplier: 2,
-      infinite: false,
+      multiplier: 1.35,
+      smartphone: { smooth: true },
+      tablet: { smooth: true },
+    })
+    locoRef.current = locoScroll
+    setLocoScroll(locoScroll)
+
+    locoScroll.on('scroll', ScrollTrigger.update)
+
+    ScrollTrigger.scrollerProxy(scroller, {
+      scrollTop(value) {
+        if (arguments.length) {
+          locoScroll.scrollTo(value, { duration: 0, disableLerp: true })
+        }
+        return locoScroll.scroll.instance.scroll.y
+      },
+      getBoundingClientRect() {
+        return {
+          top: 0,
+          left: 0,
+          width: window.innerWidth,
+          height: window.innerHeight,
+        }
+      },
+      pinType: scroller.style.transform ? 'transform' : 'fixed',
     })
 
     // Reset to top on every route change (Lenis + native)

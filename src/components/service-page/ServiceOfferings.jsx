@@ -26,7 +26,8 @@ const ServiceOfferings = ({
 
   useEffect(() => {
     const list = listRef.current;
-    if (!list) return;
+    const section = sectionRef.current;
+    if (!list || !section) return;
 
     const rows = list.querySelectorAll('.offering-row');
     if (!rows.length) return;
@@ -47,7 +48,7 @@ const ServiceOfferings = ({
           },
         });
       });
-    }, sectionRef);
+    }, section);
 
     return () => ctx.revert();
   }, [items]);

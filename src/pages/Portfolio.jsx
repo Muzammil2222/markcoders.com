@@ -339,7 +339,7 @@ function Portfolio() {
           },
         });
       });
-    }, sectionRef);
+    }, section);
 
     const refresh = () => ScrollTrigger.refresh(true);
     const onLoad = () => refresh();

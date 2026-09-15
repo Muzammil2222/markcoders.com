@@ -25,23 +25,28 @@ const TeamSection = ({ roundedTop = false }) => {
   const sliderRef = useRef(null);
 
   useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
     let ctx = gsap.context(() => {
 
       // 1. Heading Animation (Fade & Slide up on scroll scrub)
-      gsap.fromTo(headingRef.current,
-        { y: 60, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 85%',
-            end: 'top 50%',
-            scrub: 1.5,
+      if (headingRef.current) {
+        gsap.fromTo(headingRef.current,
+          { y: 60, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top 85%',
+              end: 'top 50%',
+              scrub: 1.5,
+            }
           }
-        }
-      );
+        );
+      }
 
       // 2. Left Text Letter-by-Letter Scrub
       const chars = descRef.current?.querySelectorAll('.team-desc-char');
@@ -51,7 +56,7 @@ const TeamSection = ({ roundedTop = false }) => {
           stagger: 0.05,
           ease: 'none',
           scrollTrigger: {
-            trigger: sectionRef.current,
+            trigger: section,
             start: 'top 75%',
             end: 'top 30%',
             scrub: 1.5,
@@ -60,20 +65,22 @@ const TeamSection = ({ roundedTop = false }) => {
       }
 
       // 3. Right Side Entrance (Comes from right)
-      gsap.fromTo(rightSideRef.current,
-        { x: 150, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 75%',
-            end: 'top 45%',
-            scrub: 1.5,
+      if (rightSideRef.current) {
+        gsap.fromTo(rightSideRef.current,
+          { x: 150, opacity: 0 },
+          {
+            x: 0,
+            opacity: 1,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top 75%',
+              end: 'top 45%',
+              scrub: 1.5,
+            }
           }
-        }
-      );
+        );
+      }
 
       // 4. Horizontal Slider Scrub
       // It slides to the left as the user scrolls down through the section
@@ -86,7 +93,7 @@ const TeamSection = ({ roundedTop = false }) => {
             x: -scrollDistance,
             ease: 'none',
             scrollTrigger: {
-              trigger: sectionRef.current,
+              trigger: section,
               start: 'top 30%', // start moving when section is somewhat in view
               end: 'bottom top', // finish moving when section leaves viewport
               scrub: 1,
@@ -95,7 +102,7 @@ const TeamSection = ({ roundedTop = false }) => {
         }
       }
 
-    }, sectionRef);
+    }, section);
 
     return () => ctx.revert();
   }, []);

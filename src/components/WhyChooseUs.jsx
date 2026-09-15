@@ -42,6 +42,9 @@ const WhyChooseUs = () => {
   const headingRef = useRef(null);
 
   useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
     const ctx = gsap.context(() => {
       if (headingRef.current) {
         gsap.fromTo(headingRef.current,
@@ -51,7 +54,7 @@ const WhyChooseUs = () => {
             opacity: 1,
             ease: 'none',
             scrollTrigger: {
-              trigger: sectionRef.current,
+              trigger: section,
               start: 'top 85%',
               end: 'top 50%',
               scrub: 1.5,
@@ -59,7 +62,7 @@ const WhyChooseUs = () => {
           }
         );
       }
-    }, sectionRef);
+    }, section);
     return () => ctx.revert();
   }, []);
 
