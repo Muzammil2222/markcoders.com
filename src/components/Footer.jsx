@@ -14,12 +14,12 @@ const EXPLORE_LINKS = [
   { label: "About Us", to: "/about" },
   { label: "Services", to: "/services" },
   { label: "Case Studies", to: "/case-studies" },
-  { label: "Portfolio", to: "/portfolio" },
+  { label: "Contact Us", to: "/contact" },
 ];
 
 const SOCIAL_LINKS = [
   { label: "Behance", href: "https://www.behance.net/markcoders" },
-  { label: "Instagram", href: "https://www.instagram.com/markcoders.official/" },
+  { label: "Instagram", href: "https://www.instagram.com/markcoders" },
   { label: "Linkedin", href: "https://www.linkedin.com/company/markcoders" },
   { label: "The X", href: "https://x.com/markcoders" },
 ];
@@ -51,7 +51,6 @@ const Footer = () => {
             trigger: root,
             start: "top 85%",
             once: true,
-            scroller,
           },
           defaults: { ease: "power3.out" },
         });
@@ -114,8 +113,8 @@ const Footer = () => {
               ))}
             </h2>
 
-            <a
-              href="mailto:info@markcoders.com"
+            <Link
+              to="/contact"
               className="js-cta inline-flex items-center justify-center gap-2.5 px-7 text-white transition-all duration-300 hover:scale-[1.03] hover:shadow-xl mt-20 group"
               style={{
                 height: '52.88px',
@@ -147,7 +146,7 @@ const Footer = () => {
                 />
               </svg>
               <span>Get in Touch</span>
-            </a>
+            </Link>
           </div>
 
           <nav
