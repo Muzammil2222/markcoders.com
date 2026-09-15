@@ -15,7 +15,17 @@
 
 /* ===== Global Styles ===== */
 html {
-  scroll-behavior: smooth;
+  /* Locomotive Scroll owns smooth scrolling */
+  scroll-behavior: auto;
+}
+
+html.has-scroll-smooth,
+html.has-scroll-dragging {
+  overflow: hidden;
+}
+
+.has-scroll-smooth body {
+  overflow: hidden;
 }
 
 body {
@@ -26,6 +36,11 @@ body {
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Locomotive scroll container — vertical site (not horizontal) */
+[data-scroll-container] {
+  min-height: 100vh;
 }
 
 /* ===== Scrollbar ===== */

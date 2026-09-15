@@ -8,6 +8,7 @@ import Footer from '../components/Footer';
 import TrustSection from '../components/TrustSection';
 import WorkAndPlaySection from '../components/WorkAndPlaySection';
 import TeamSection from '../components/TeamSection.jsx';
+import { getLocoScroll, scrollToTarget } from '../lib/scrollBus';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -23,66 +24,82 @@ const CaseStudyDetail = () => {
   const testimonialTextRef = useRef(null);
 
   useEffect(() => {
+    // Reset to top via Locomotive (window.scrollTo alone does nothing under loco)
+    const loco = getLocoScroll();
+    if (loco) {
+      loco.scrollTo(0, { duration: 0, disableLerp: true });
+    }
     window.scrollTo(0, 0);
-    // Basic GSAP Animations
-    const tl = gsap.timeline();
 
-    // Hero Animations
-    if (heroContentRef.current) {
-      tl.fromTo(heroContentRef.current.children,
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out', delay: 0.2 }
-      );
+    // Strip leftover hash from a previous #overview click so browser doesn't re-jump
+    if (window.location.hash) {
+      const { pathname, search } = window.location;
+      window.history.replaceState(null, '', `${pathname}${search}`);
     }
 
-    // Parallax background text
-    if (heroTextRef.current) {
-      gsap.to(heroTextRef.current, {
-        y: '20%',
-        ease: 'none',
-        scrollTrigger: {
-          trigger: heroTextRef.current.parentElement,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true
-        }
-      });
-    }
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline();
 
-    if (testimonialTextRef.current) {
-      gsap.to(testimonialTextRef.current, {
-        y: '20%',
-        ease: 'none',
-        scrollTrigger: {
-          trigger: testimonialTextRef.current.parentElement,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: true
-        }
-      });
-    }
-
-    // Fade in sections
-    const fadeSections = [problemsRef.current, featuresRef.current, beforeAfterRef.current];
-    fadeSections.forEach(section => {
-      if (section) {
-        gsap.fromTo(section,
-          { y: 40, opacity: 0 },
-          {
-            y: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top 80%',
-            }
-          }
+      if (heroContentRef.current) {
+        tl.fromTo(heroContentRef.current.children,
+          { y: 30, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out', delay: 0.2 }
         );
       }
+
+      if (heroTextRef.current) {
+        gsap.to(heroTextRef.current, {
+          y: '20%',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: heroTextRef.current.parentElement,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+          },
+        });
+      }
+
+      if (testimonialTextRef.current) {
+        gsap.to(testimonialTextRef.current, {
+          y: '20%',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: testimonialTextRef.current.parentElement,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true,
+          },
+        });
+      }
+
+      const fadeSections = [problemsRef.current, featuresRef.current, beforeAfterRef.current];
+      fadeSections.forEach((section) => {
+        if (section) {
+          gsap.fromTo(section,
+            { y: 40, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.8,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: section,
+                start: 'top 80%',
+              },
+            }
+          );
+        }
+      });
     });
 
-    return () => {
-      ScrollTrigger.getAll().forEach(t => t.kill());
-    };
+    return () => ctx.revert();
   }, [slug]);
+
+  const handleExplore = (e) => {
+    e.preventDefault();
+    scrollToTarget('#overview', { offset: -96, duration: 900 });
+  };
 
   if (!data) {
     return <Navigate to="/case-studies" replace />;
@@ -135,12 +152,19 @@ const CaseStudyDetail = () => {
                 </p>
 
                 <div className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
-                  <a href="#overview" className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25a9e0] px-5 py-3 text-sm font-medium text-white transition-[transform,background-color,box-shadow] duration-300 hover:-translate-y-0.5 hover:bg-[#1a85b8] hover:shadow-[0_8px_28px_rgba(37,169,224,0.35)] sm:w-auto sm:gap-2.5 sm:px-7 sm:py-3.5 sm:text-base">
+                  <button
+                    type="button"
+                    onClick={handleExplore}
+                    className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25a9e0] px-5 py-3 text-sm font-medium text-white transition-[transform,background-color,box-shadow] duration-300 hover:-translate-y-0.5 hover:bg-[#1a85b8] hover:shadow-[0_8px_28px_rgba(37,169,224,0.35)] sm:w-auto sm:gap-2.5 sm:px-7 sm:py-3.5 sm:text-base cursor-pointer border-0"
+                  >
                     Explore Case Study
-                  </a>
-                  <Link to="/contact" className="inline-flex w-full items-center justify-center rounded-full border border-white/80 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-white hover:text-black sm:w-auto sm:px-7 sm:py-3.5 sm:text-base">
+                  </button>
+                  <a
+                    href="mailto:info@markcoders.com"
+                    className="inline-flex w-full items-center justify-center rounded-full border border-white/80 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-white hover:text-black sm:w-auto sm:px-7 sm:py-3.5 sm:text-base no-underline"
+                  >
                     Start a Project
-                  </Link>
+                  </a>
                 </div>
               </div>
 

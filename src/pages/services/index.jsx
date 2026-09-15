@@ -105,7 +105,10 @@ function Services() {
         <ServicesHero previewImageRef={previewImageRef} />
         
         <div className="reel-item">
-          <AppDevelopmentSection previewImageRef={previewImageRef} />
+          <AppDevelopmentSection
+            previewImageRef={previewImageRef}
+            to="/services/app-development"
+          />
         </div>
         
         <div className="reel-item">
@@ -126,6 +129,7 @@ function Services() {
             accordionData={cmsDevData}
             imageSrc={cmsDevImg}
             imageAlt="CMS Development"
+            to="/services/cms-development"
           />
         </div>
 
@@ -147,7 +151,7 @@ function Services() {
             accordionData={graphicDesignData}
             imageSrc={graphicDesignImg}
             imageAlt="Graphic Design"
-            to="/services/branding"
+            to="/services/graphic-design"
           />
         </div>
 

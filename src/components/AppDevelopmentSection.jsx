@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import appDevImg from '../assets/services/AppDevelopment-BC7DxIEZ.webp';
@@ -28,7 +29,7 @@ const accordionData = [
   }
 ];
 
-const AppDevelopmentSection = ({ previewImageRef }) => {
+const AppDevelopmentSection = ({ previewImageRef, to }) => {
   const [openIndex, setOpenIndex] = useState(0);
   const sectionRef = useRef(null);
   const leftContentRef = useRef(null);
@@ -191,18 +192,35 @@ const AppDevelopmentSection = ({ previewImageRef }) => {
           </div>
           
           <div className="mt-12">
-            <button 
-              className="px-7 py-3 rounded-[15px] text-lg font-normal text-white transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer flex items-center gap-3"
-              style={{
-                background: '#25A9E0',
-                boxShadow: '0 4px 20px rgba(37, 169, 224, 0.3)',
-              }}
-            >
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="transform -rotate-45 shrink-0">
-                <path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              View Details
-            </button>
+            {to ? (
+              <Link
+                to={to}
+                className="px-7 py-3 rounded-[15px] text-lg font-normal text-white transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer flex items-center gap-3 w-fit no-underline"
+                style={{
+                  background: '#25A9E0',
+                  boxShadow: '0 4px 20px rgba(37, 169, 224, 0.3)',
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="transform -rotate-45 shrink-0">
+                  <path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                View Details
+              </Link>
+            ) : (
+              <button
+                type="button"
+                className="px-7 py-3 rounded-[15px] text-lg font-normal text-white transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer flex items-center gap-3"
+                style={{
+                  background: '#25A9E0',
+                  boxShadow: '0 4px 20px rgba(37, 169, 224, 0.3)',
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="transform -rotate-45 shrink-0">
+                  <path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                View Details
+              </button>
+            )}
           </div>
         </div>
         

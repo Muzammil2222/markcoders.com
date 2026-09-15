@@ -26,13 +26,15 @@
 /* Footer content (links, heading, CTA) sits above the gradient */
 .footer-bg .footer__inner {
   position: relative;
-  z-index: 2;
+  z-index: 5;
+  pointer-events: auto;
 }
 
 /* MarkCoders text sits BEHIND the gradient — peeks through subtly */
 .footer-bg .footer__brand-wrap {
   position: relative;
   z-index: 0;
+  pointer-events: none;
 }
 
 @keyframes slowGif {

@@ -1,10 +1,11 @@
-import { lazy, Suspense, useEffect } from 'react'
+import { lazy, Suspense, useLayoutEffect, useEffect, useRef } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import LocomotiveScroll from 'locomotive-scroll'
 import SplashCursor from './components/SplashCursor'
-import Lenis from 'lenis'
-import 'lenis/dist/lenis.css'
+import { setLocoScroll } from './lib/scrollBus'
+import 'locomotive-scroll/dist/locomotive-scroll.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -18,70 +19,133 @@ const Branding = lazy(() => import('./pages/services/Branding'))
 const UiUx = lazy(() => import('./pages/services/UiUx'))
 const WebDevelopment = lazy(() => import('./pages/services/WebDevelopment'))
 const ApiIntegration = lazy(() => import('./pages/services/ApiIntegration'))
+const AppDevelopment = lazy(() => import('./pages/services/AppDevelopment'))
+const CmsDevelopment = lazy(() => import('./pages/services/CmsDevelopment'))
+const GraphicDesign = lazy(() => import('./pages/services/GraphicDesign'))
 
-function ScrollRefresh() {
+/**
+ * Locomotive (vertical) + GSAP ScrollTrigger — GreenSock scrollerProxy order:
+ * 1) init Locomotive
+ * 2) on scroll → ScrollTrigger.update
+ * 3) scrollerProxy (scrollTop for vertical)
+ * 4) ScrollTrigger.defaults({ scroller })
+ * 5) refresh ↔ loco.update
+ *
+ * useLayoutEffect so proxy/defaults exist before page useEffects create ScrollTriggers.
+ * Do NOT use data-scroll-section with ScrollTrigger (breaks position calc).
+ */
+function SmoothScroll({ children }) {
+  const containerRef = useRef(null)
+  const locoRef = useRef(null)
   const location = useLocation()
 
-  useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.5,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      direction: 'vertical',
-      gestureDirection: 'vertical',
-      smooth: true,
-      mouseMultiplier: 1,
-      smoothTouch: false,
-      touchMultiplier: 2,
-      infinite: false,
-    })
+  useLayoutEffect(() => {
+    const scroller = containerRef.current
+    if (!scroller) return
 
-    // Reset to top on every route change (Lenis + native)
-    lenis.scrollTo(0, { immediate: true })
-    window.scrollTo(0, 0)
-
-    lenis.on('scroll', ScrollTrigger.update)
-
-    const ticker = (time) => {
-      lenis.raf(time * 1000)
+    if (locoRef.current) {
+      locoRef.current.destroy()
+      locoRef.current = null
     }
 
-    gsap.ticker.add(ticker)
-    gsap.ticker.lagSmoothing(0)
+    // Clear leftover transform / height from a previous instance
+    scroller.style.transform = ''
+    scroller.style.removeProperty('transform')
 
-    const refresh = () => ScrollTrigger.refresh(true)
+    const locoScroll = new LocomotiveScroll({
+      el: scroller,
+      smooth: true,
+      multiplier: 1,
+      smartphone: { smooth: true },
+      tablet: { smooth: true },
+    })
+    locoRef.current = locoScroll
+    setLocoScroll(locoScroll)
+
+    locoScroll.on('scroll', ScrollTrigger.update)
+
+    ScrollTrigger.scrollerProxy(scroller, {
+      scrollTop(value) {
+        if (arguments.length) {
+          locoScroll.scrollTo(value, { duration: 0, disableLerp: true })
+        }
+        return locoScroll.scroll.instance.scroll.y
+      },
+      getBoundingClientRect() {
+        return {
+          top: 0,
+          left: 0,
+          width: window.innerWidth,
+          height: window.innerHeight,
+        }
+      },
+      pinType: scroller.style.transform ? 'transform' : 'fixed',
+    })
+
+    ScrollTrigger.defaults({ scroller })
+
+    const onRefresh = () => locoScroll.update()
+    ScrollTrigger.addEventListener('refresh', onRefresh)
+
+    locoScroll.scrollTo(0, { duration: 0, disableLerp: true })
+    window.scrollTo(0, 0)
+
+    const refresh = () => {
+      locoScroll.update()
+      ScrollTrigger.refresh()
+    }
+
+    // After paint + after lazy images/fonts settle
     requestAnimationFrame(refresh)
-    const t = window.setTimeout(refresh, 300)
+    const t1 = window.setTimeout(refresh, 100)
+    const t2 = window.setTimeout(refresh, 400)
+    const t3 = window.setTimeout(refresh, 1000)
+
+    const ro = new ResizeObserver(() => {
+      locoScroll.update()
+      ScrollTrigger.refresh()
+    })
+    ro.observe(scroller)
 
     return () => {
-      lenis.destroy()
-      gsap.ticker.remove(ticker)
-      window.clearTimeout(t)
+      window.clearTimeout(t1)
+      window.clearTimeout(t2)
+      window.clearTimeout(t3)
+      ro.disconnect()
+      ScrollTrigger.removeEventListener('refresh', onRefresh)
+      ScrollTrigger.scrollerProxy(scroller) // clear proxy for this element
+      setLocoScroll(null)
+      locoScroll.destroy()
+      locoRef.current = null
+      scroller.style.transform = ''
     }
   }, [location.pathname])
 
-  return null
+  return (
+    <div
+      ref={containerRef}
+      data-scroll-container
+      id="smooth-scroll"
+    >
+      {children}
+    </div>
+  )
 }
 
 const App = () => {
   useEffect(() => {
-    // Hide the HTML preloader immediately once React is mounted
     if (window.hideMarkcodersLoader) {
       window.hideMarkcodersLoader()
     }
-    
-    // Refresh ScrollTrigger after initial render to ensure GSAP calculates correctly
-    const t = window.setTimeout(() => ScrollTrigger.refresh(true), 500)
-    return () => window.clearTimeout(t)
   }, [])
 
   return (
     <BrowserRouter>
-      <ScrollRefresh />
       <SplashCursor
-        DENSITY_DISSIPATION={3.5}
-        VELOCITY_DISSIPATION={2}
+        DENSITY_DISSIPATION={2.5}
+        VELOCITY_DISSIPATION={1.5}
         PRESSURE={0.1}
-        CURL={3}
+        CURL={2}
         SPLAT_RADIUS={0.2}
         SPLAT_FORCE={6000}
         COLOR_UPDATE_SPEED={12}
@@ -89,14 +153,14 @@ const App = () => {
         RAINBOW_MODE={false}
         COLOR="#005ef7"
       />
-      <Suspense 
+      <Suspense
         fallback={
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#030712]">
             <div className="w-12 h-12 border-4 border-[#25A9E0] border-t-transparent rounded-full animate-spin"></div>
           </div>
         }
       >
-        <div>
+        <SmoothScroll>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -106,6 +170,9 @@ const App = () => {
               <Route path="ui-ux" element={<UiUx />} />
               <Route path="web-development" element={<WebDevelopment />} />
               <Route path="api-integration" element={<ApiIntegration />} />
+              <Route path="app-development" element={<AppDevelopment />} />
+              <Route path="cms-development" element={<CmsDevelopment />} />
+              <Route path="graphic-design" element={<GraphicDesign />} />
             </Route>
             <Route path="/case-studies">
               <Route index element={<CaseStudies />} />
@@ -113,7 +180,7 @@ const App = () => {
             </Route>
             <Route path="/portfolio" element={<Portfolio />} />
           </Routes>
-        </div>
+        </SmoothScroll>
       </Suspense>
     </BrowserRouter>
   )
