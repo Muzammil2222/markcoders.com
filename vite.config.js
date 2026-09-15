@@ -7,6 +7,10 @@ import viteCompression from 'vite-plugin-compression'
 export default defineConfig({
   // GitHub Pages project site: https://<user>.github.io/Markcoders/
   base: '/',
+  server: {
+    // Allow ngrok tunnels when testing on other devices
+    allowedHosts: ['.ngrok-free.dev', '.ngrok.io'],
+  },
   plugins: [
     react(), 
     tailwindcss(),

@@ -40,7 +40,7 @@ const FeaturedWork = ({
           },
         });
       });
-    }, sectionRef);
+    }, section);
 
     const refresh = () => ScrollTrigger.refresh(true);
     const onLoad = () => refresh();

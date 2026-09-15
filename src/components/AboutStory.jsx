@@ -117,6 +117,9 @@ const AboutStory = ({ previewImageRef }) => {
 
   // Entrance Animations
   useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
     const ctx = gsap.context(() => {
       // 1. Text Reveal Animation for the paragraph
       const chars = paragraphRef.current?.querySelectorAll('.about-story-char');
@@ -171,7 +174,7 @@ const AboutStory = ({ previewImageRef }) => {
           }
         );
       }
-    }, sectionRef);
+    }, section);
 
     return () => ctx.revert();
   }, []);

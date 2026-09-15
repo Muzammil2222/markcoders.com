@@ -22,21 +22,31 @@ const Navbar = () => {
   const location = useLocation();
 
   useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+
+    const targets = [logoRef.current, linksRef.current, btnRef.current].filter(Boolean);
+
     const ctx = gsap.context(() => {
-      gsap.set([logoRef.current, linksRef.current, btnRef.current], {
+      if (!targets.length) return;
+
+      gsap.set(targets, {
         opacity: 0,
         y: -30,
       });
 
       const tl = gsap.timeline({ delay: 0.3 });
 
-      tl.to(logoRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-      })
-        .to(
+      if (logoRef.current) {
+        tl.to(logoRef.current, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+        });
+      }
+      if (linksRef.current) {
+        tl.to(
           linksRef.current,
           {
             opacity: 1,
@@ -45,8 +55,10 @@ const Navbar = () => {
             ease: 'power3.out',
           },
           '-=0.5'
-        )
-        .to(
+        );
+      }
+      if (btnRef.current) {
+        tl.to(
           btnRef.current,
           {
             opacity: 1,
@@ -56,7 +68,8 @@ const Navbar = () => {
           },
           '-=0.5'
         );
-    }, navRef);
+      }
+    }, nav);
 
     return () => ctx.revert();
   }, []);

@@ -26,6 +26,9 @@ const WhatWeDo = () => {
 
   // Scroll-triggered entrance animation
   useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
     const ctx = gsap.context(() => {
       if (headingRef.current) {
         gsap.fromTo(
@@ -64,7 +67,7 @@ const WhatWeDo = () => {
           }
         );
       }
-    }, sectionRef);
+    }, section);
 
     return () => ctx.revert();
   }, []);

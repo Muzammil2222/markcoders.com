@@ -16,8 +16,11 @@ const WorkAndPlaySection = () => {
   const containerRef = useRef(null);
 
   useEffect(() => {
+    const root = containerRef.current;
+    if (!root) return;
+
     let ctx = gsap.context(() => {
-      const slides = gsap.utils.toArray('.scatter-image');
+      const slides = gsap.utils.toArray(root.querySelectorAll('.scatter-image'));
 
       if (slides.length === 4) {
         let mm = gsap.matchMedia();
@@ -36,7 +39,7 @@ const WorkAndPlaySection = () => {
 
           const tl = gsap.timeline({
             scrollTrigger: {
-              trigger: containerRef.current,
+              trigger: root,
               start: 'top top',
               end: '+=250%',
               pin: true,
@@ -78,7 +81,7 @@ const WorkAndPlaySection = () => {
           });
         });
       }
-    }, containerRef);
+    }, root);
 
     return () => ctx.revert();
   }, []);

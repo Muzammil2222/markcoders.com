@@ -15,6 +15,9 @@ const AboutAndVideo = () => {
   const videoImgRef = useRef(null);
 
   useEffect(() => {
+    const root = containerRef.current;
+    if (!root) return;
+
     const ctx = gsap.context(() => {
       // 1. Heading Char Reveal
       const headingElement = headingRef.current;
@@ -134,7 +137,7 @@ const AboutAndVideo = () => {
           }
         );
       }
-    }, containerRef);
+    }, root);
 
     return () => ctx.revert();
   }, []);

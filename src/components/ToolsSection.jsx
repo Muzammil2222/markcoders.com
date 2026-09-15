@@ -54,79 +54,95 @@ const ToolsSection = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   useEffect(() => {
+    const root = sectionRef.current;
+    if (!root) return;
+
     let ctx = gsap.context(() => {
+      const headings = root.querySelectorAll('.tools-heading');
+      const icons = root.querySelectorAll('.tool-icon');
+      const bottomIntro = root.querySelector('.bottom-intro');
+      const serviceCards = root.querySelectorAll('.service-card');
+
       // 1. Top Headings Animation
-      gsap.fromTo(
-        '.tools-heading',
-        { y: 80, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1.2,
-          stagger: 0.2,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.tools-heading', // Triggers exactly when heading enters
-            start: 'top 85%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
+      if (headings.length) {
+        gsap.fromTo(
+          headings,
+          { y: 80, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1.2,
+            stagger: 0.2,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: headings[0],
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      }
 
       // 2. Tools Icons Staggered Pop-in
-      gsap.fromTo(
-        '.tool-icon',
-        { opacity: 0, scale: 0.6, y: 40 },
-        {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          duration: 1,
-          stagger: 0.05,
-          ease: 'back.out(1.4)',
-          scrollTrigger: {
-            trigger: '.tool-icon', // Triggers exactly when icons enter
-            start: 'top 85%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
+      if (icons.length) {
+        gsap.fromTo(
+          icons,
+          { opacity: 0, scale: 0.6, y: 40 },
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 1,
+            stagger: 0.05,
+            ease: 'back.out(1.4)',
+            scrollTrigger: {
+              trigger: icons[0],
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      }
 
       // 3. Bottom Intro Text Reveal
-      gsap.fromTo(
-        '.bottom-intro',
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.2,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.bottom-intro', // Triggers when text enters
-            start: 'top 85%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
+      if (bottomIntro) {
+        gsap.fromTo(
+          bottomIntro,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: bottomIntro,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      }
 
       // 4. Cards Staggered Slide Up
-      gsap.fromTo(
-        '.service-card',
-        { opacity: 0, y: 100 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.2,
-          stagger: 0.15,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.service-card', // Triggers when cards enter
-            start: 'top 85%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
-    }, sectionRef);
+      if (serviceCards.length) {
+        gsap.fromTo(
+          serviceCards,
+          { opacity: 0, y: 100 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            stagger: 0.15,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: serviceCards[0],
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      }
+    }, root);
 
     return () => ctx.revert();
   }, []);

@@ -34,14 +34,21 @@ const Footer = () => {
   const rootRef = useRef(null);
 
   useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
       const scroller = document.querySelector("[data-scroll-container]") || undefined;
+      const lines = root.querySelectorAll(".js-line");
+      const cta = root.querySelectorAll(".js-cta");
+      const cols = root.querySelectorAll(".js-col");
+      const brand = root.querySelectorAll(".js-brand");
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         const tl = gsap.timeline({
           scrollTrigger: {
-            trigger: rootRef.current,
+            trigger: root,
             start: "top 85%",
             once: true,
             scroller,
@@ -49,31 +56,39 @@ const Footer = () => {
           defaults: { ease: "power3.out" },
         });
 
-        tl.fromTo(
-          ".js-line",
-          { yPercent: 115, opacity: 0 },
-          { yPercent: 0, opacity: 1, duration: 0.9, stagger: 0.09 }
-        )
-          .fromTo(
-            ".js-cta",
+        if (lines.length) {
+          tl.fromTo(
+            lines,
+            { yPercent: 115, opacity: 0 },
+            { yPercent: 0, opacity: 1, duration: 0.9, stagger: 0.09 }
+          );
+        }
+        if (cta.length) {
+          tl.fromTo(
+            cta,
             { y: 18, opacity: 0 },
             { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
             "-=0.55"
-          )
-          .fromTo(
-            ".js-col",
+          );
+        }
+        if (cols.length) {
+          tl.fromTo(
+            cols,
             { y: 22, opacity: 0 },
             { y: 0, opacity: 1, duration: 0.6, ease: "power2.out", stagger: 0.1 },
             "-=0.5"
-          )
-          .fromTo(
-            ".js-brand",
+          );
+        }
+        if (brand.length) {
+          tl.fromTo(
+            brand,
             { opacity: 0, y: 40 },
             { opacity: 1, y: 0, duration: 1, ease: "power3.out" },
             "-=0.35"
           );
+        }
       });
-    }, rootRef);
+    }, root);
 
     return () => ctx.revert();
   }, []);

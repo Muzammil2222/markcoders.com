@@ -24,28 +24,37 @@ const TeamSection = ({ roundedTop = false }) => {
   const counter3Ref = useRef(null);
 
   useEffect(() => {
+    const root = sectionRef.current;
+    if (!root) return;
+
     let ctx = gsap.context(() => {
+      const headings = root.querySelectorAll('.team-heading');
+      const avatarsTrigger = root.querySelector('.avatars-container');
+      const desc = root.querySelector('.team-desc');
+
       // 1. Scroll reveal animation for the heading
-      gsap.fromTo(
-        '.team-heading',
-        { y: 80, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1.2,
-          stagger: 0.2,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.team-heading',
-            start: 'top 85%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
+      if (headings.length) {
+        gsap.fromTo(
+          headings,
+          { y: 80, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1.2,
+            stagger: 0.2,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: headings[0],
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      }
 
       // 2. Staggered 3D reveal for avatars
       gsap.fromTo(
-        avatarsRef.current,
+        avatarsRef.current.filter(Boolean),
         { opacity: 0, scale: 0.5, rotationY: 90 },
         {
           opacity: 1,
@@ -55,7 +64,7 @@ const TeamSection = ({ roundedTop = false }) => {
           stagger: 0.05,
           ease: 'back.out(1.5)',
           scrollTrigger: {
-            trigger: '.avatars-container',
+            trigger: avatarsTrigger || root,
             start: 'top 85%',
             toggleActions: 'play none none reverse',
           },
@@ -63,39 +72,43 @@ const TeamSection = ({ roundedTop = false }) => {
       );
 
       // 3. Description text fade up
-      gsap.fromTo(
-        '.team-desc',
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.team-desc',
-            start: 'top 90%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
+      if (desc) {
+        gsap.fromTo(
+          desc,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: desc,
+              start: 'top 90%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      }
 
       // 4. Stats card fade up
-      gsap.fromTo(
-        cardRef.current,
-        { y: 80, opacity: 0, rotationX: 15 },
-        {
-          y: 0,
-          opacity: 1,
-          rotationX: 0,
-          duration: 1.2,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: cardRef.current,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
+      if (cardRef.current) {
+        gsap.fromTo(
+          cardRef.current,
+          { y: 80, opacity: 0, rotationX: 15 },
+          {
+            y: 0,
+            opacity: 1,
+            rotationX: 0,
+            duration: 1.2,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: cardRef.current,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      }
 
       // 5. Counters animation
       const animateCounter = (ref, target, prefix = "", suffix = "", padZero = false) => {
@@ -106,7 +119,7 @@ const TeamSection = ({ roundedTop = false }) => {
           duration: 2,
           ease: 'power2.out',
           scrollTrigger: {
-            trigger: cardRef.current,
+            trigger: cardRef.current || root,
             start: 'top 85%',
             toggleActions: 'play none none reverse',
           },
@@ -126,7 +139,7 @@ const TeamSection = ({ roundedTop = false }) => {
       animateCounter(counter2Ref, 6, "", "", true); // pass true for padding zero
       animateCounter(counter3Ref, 5, "", "+");
 
-    }, sectionRef);
+    }, root);
 
     return () => ctx.revert();
   }, []);

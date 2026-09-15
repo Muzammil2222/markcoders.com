@@ -52,8 +52,10 @@ const TrustSection = () => {
   const isAnimatingRef = useRef(false);
 
   useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
     const ctx = gsap.context(() => {
-      const section = sectionRef.current;
       const heading = headingRef.current;
       const cards = cardsRef.current?.children;
 
@@ -142,7 +144,7 @@ const TrustSection = () => {
         },
         0.55
       );
-    }, sectionRef);
+    }, section);
 
     return () => ctx.revert();
   }, []);

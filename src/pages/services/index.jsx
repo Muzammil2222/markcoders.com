@@ -68,8 +68,11 @@ function Services() {
   const mainRef = useRef(null);
 
   useEffect(() => {
+    const main = mainRef.current;
+    if (!main) return;
+
     let ctx = gsap.context(() => {
-      const items = gsap.utils.toArray('.reel-item');
+      const items = gsap.utils.toArray(main.querySelectorAll('.reel-item'));
       
       items.forEach((item) => {
         gsap.set(item, { transformPerspective: 2500, transformOrigin: 'center center' });
@@ -93,7 +96,7 @@ function Services() {
           { rotationX: 25, scale: 0.85, opacity: 0.4, duration: 1, ease: "power2.in" }
         );
       });
-    }, mainRef);
+    }, main);
 
     return () => ctx.revert();
   }, []);
