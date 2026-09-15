@@ -4,9 +4,10 @@ import tailwindcss from '@tailwindcss/vite'
 import viteCompression from 'vite-plugin-compression'
 
 // https://vite.dev/config/
-export default defineConfig({
-  // GitHub Pages project site: https://<user>.github.io/Markcoders/
-  base: '/',
+export default defineConfig(({ command }) => ({
+  // GitHub Pages project site: https://muzammil2222.github.io/markcoders.com/
+  // Keep `/` for local `vite` / `vite preview` unless you open the subpath.
+  base: command === 'build' ? '/markcoders.com/' : '/',
   server: {
     // Allow ngrok tunnels when testing on other devices
     allowedHosts: ['.ngrok-free.dev', '.ngrok.io'],
@@ -38,4 +39,4 @@ export default defineConfig({
     },
     chunkSizeWarningLimit: 1000,
   }
-})
+}))

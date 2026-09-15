@@ -140,7 +140,7 @@ const App = () => {
   }, [])
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '') || '/'}>
       <SplashCursor
         DENSITY_DISSIPATION={2.5}
         VELOCITY_DISSIPATION={1.5}
