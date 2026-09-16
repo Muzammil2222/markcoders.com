@@ -201,15 +201,18 @@ const Navbar = () => {
         </div>
 
         <div ref={btnRef} className="hidden lg:block">
-          <button
-            className="px-6 xl:px-7 py-2.5 xl:py-3 rounded-[15px] text-base xl:text-lg font-normal text-white transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
+          <a
+            href="https://calendly.com/jared-dean-techdejure"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-6 xl:px-7 py-2.5 xl:py-3 rounded-[15px] text-base xl:text-lg font-normal text-white transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer no-underline"
             style={{
               background: '#25A9E0',
               boxShadow: '0 4px 20px rgba(26, 122, 248, 0.3)',
             }}
           >
             Get in Touch
-          </button>
+          </a>
         </div>
 
         <button
@@ -242,14 +245,18 @@ const Navbar = () => {
               </Link>
             );
           })}
-          <button
-            className="mt-2 px-6 py-3 rounded-full text-sm font-semibold text-white w-full cursor-pointer"
+          <a
+            href="https://calendly.com/jared-dean-techdejure"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 px-6 py-3 rounded-full text-sm font-semibold text-white w-full cursor-pointer no-underline text-center box-border"
             style={{
               background: 'linear-gradient(135deg, #1a7af8 0%, #1565d8 100%)',
             }}
+            onClick={toggleMobileMenu}
           >
             Get in Touch
-          </button>
+          </a>
         </div>
       </div>
     </nav>

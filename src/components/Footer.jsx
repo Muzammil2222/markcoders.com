@@ -115,8 +115,10 @@ const Footer = () => {
             </h2>
 
             <a
-              href="mailto:info@markcoders.com"
-              className="js-cta inline-flex items-center justify-center gap-2.5 px-7 text-white transition-all duration-300 hover:scale-[1.03] hover:shadow-xl mt-20 group"
+              href="https://calendly.com/jared-dean-techdejure"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="js-cta inline-flex items-center justify-center gap-2.5 px-7 text-white transition-all duration-300 hover:scale-[1.03] hover:shadow-xl mt-20 group cursor-pointer"
               style={{
                 height: '52.88px',
                 borderRadius: '15px',
