@@ -180,7 +180,7 @@ const CaseStudies = () => {
             <button
               key={filter}
               onClick={() => setActiveFilter(filter)}
-              className={`rounded-full px-3 sm:px-5 py-2 text-[11px] sm:text-sm font-semibold whitespace-nowrap transition-colors flex-shrink-0 ${
+              className={`cursor-pointer rounded-full px-3 sm:px-5 py-2 text-[11px] sm:text-sm font-semibold whitespace-nowrap transition-colors flex-shrink-0 ${
                 activeFilter === filter 
                   ? 'bg-[#25a9e0] text-white' 
                   : 'text-white/55 hover:bg-white/5 hover:text-white'

@@ -74,7 +74,7 @@ const AboutAndVideo = () => {
 
         const segments = [
           { text: 'About us. ', isBold: true },
-          { text: 'Markcoders is a research-driven design studio that treats every project like its own product. We go deep into your market and your users before designing a single screen. ', isBold: false },
+          { text: 'MarkCoders is a research-driven design studio that treats every project like its own product. We go deep into your market and your users before designing a single screen. ', isBold: false },
           { text: "The result: digital experiences that don't just look sharp, they perform.", isBold: true },
         ];
 
@@ -162,7 +162,7 @@ const AboutAndVideo = () => {
               letterSpacing: '-3.4px',
             }}
           >
-            (All Work)
+            (All Projects)
           </h2>
         </div>
 
