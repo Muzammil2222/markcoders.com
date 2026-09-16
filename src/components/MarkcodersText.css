@@ -20,6 +20,9 @@
   background: transparent;
   align-items: flex-end;
   overflow: visible;
+  /* Don't block footer Explore / Social / Contact links above */
+  pointer-events: none;
+  cursor: default;
 }
 
 .markcoders-stack {
