@@ -5,9 +5,12 @@ import viteCompression from 'vite-plugin-compression'
 
 // https://vite.dev/config/
 export default defineConfig(({ command }) => ({
-  // GitHub Pages project site: https://muzammil2222.github.io/markcoders.com/
-  // Keep `/` for local `vite` / `vite preview` unless you open the subpath.
-  base: command === 'build' ? '/markcoders.com/' : '/',
+  // Vercel / local: site is served from domain root → base `/`
+  // GitHub Pages project site only: https://muzammil2222.github.io/markcoders.com/
+  base:
+    command === 'build' && process.env.GITHUB_ACTIONS === 'true'
+      ? '/markcoders.com/'
+      : '/',
   server: {
     // Allow ngrok tunnels when testing on other devices
     allowedHosts: ['.ngrok-free.dev', '.ngrok.io'],
