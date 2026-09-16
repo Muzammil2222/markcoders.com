@@ -206,8 +206,11 @@ const AboutAndVideo = () => {
 
             {/* Figma Pixel-Perfect Button */}
             <div>
-              <button
-                className="inline-flex items-center justify-center gap-2.5 text-white transition-all duration-300 hover:scale-[1.03] hover:shadow-xl cursor-pointer"
+              <a
+                href="https://calendly.com/jared-dean-techdejure"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center justify-center gap-2.5 text-white transition-all duration-300 hover:scale-[1.03] hover:shadow-xl cursor-pointer no-underline"
                 style={{
                   width: '223.65px',
                   height: '52.88px',
@@ -238,8 +241,8 @@ const AboutAndVideo = () => {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <span>Explore Our Process</span>
-              </button>
+                <span>Explore More</span>
+              </a>
             </div>
           </div>
 

@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -20,24 +21,64 @@ const tools = [
 
 const cards = [
   {
-    title: 'UX/UI Design',
-    desc: 'Every screen has a purpose. From wireframes to pixel-perfect UI, we create experiences that guide users and drive business goals.',
+    title: 'App Development',
+    desc: 'We design and develop mobile apps, web applications, SaaS products, customer portals, dashboards, and internal tools around your users and business requirements.',
+    to: '/services/app-development',
   },
   {
-    title: 'No-code Development',
-    desc: 'We build responsive, production-ready websites in Webflow and Framer, so your product launches faster without sacrificing quality. One team from concept to live site.',
+    title: 'Website Development',
+    desc: 'Modern, responsive websites designed to communicate your value clearly and guide visitors toward inquiries, bookings, purchases, or other important actions.',
+    to: '/services/web-development',
     isRight: true,
   },
   {
-    title: 'Corporate Design',
-    desc: 'Pitch decks, brand presentations, and visual identities that match the ambition of your business. We design corporate materials that feel modern, polished, and unmistakably yours.',
+    title: 'CMS Development',
+    desc: 'Flexible websites and online stores that give your team practical control over pages, products, media, and everyday content updates.',
+    to: '/services/cms-development',
   },
   {
-    title: '3D Design',
-    desc: 'Immersive 3D visuals and motion design that give your product a cinematic edge. From animated product showcases to interface elements with depth.',
+    title: 'UI/UX Design',
+    desc: 'User journeys, interfaces, and interactive experiences designed around how people understand, navigate, and use your digital product.',
+    to: '/services/ui-ux',
+    isRight: true,
+  },
+  {
+    title: 'Graphic Design',
+    desc: 'Brand identities and digital visuals that help your business remain recognizable wherever customers interact with it.',
+    to: '/services/graphic-design',
+  },
+  {
+    title: 'API Integration & Automation',
+    desc: 'Connected platforms and automated workflows that reduce repetitive work, improve data movement, and help your business tools work together.',
+    to: '/services/api-integration',
     isRight: true,
   },
 ];
+
+const ServiceCard = ({ card }) => (
+  <Link
+    to={card.to}
+    className="service-card bg-white rounded-[28px] p-8 md:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.06)] group cursor-pointer relative flex flex-col h-auto no-underline"
+    style={{ transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)' }}
+    onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(0.975)'; }}
+    onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+  >
+    <h3 className="text-[32px] md:text-[36px] font-medium tracking-[-0.05em] mb-5 text-[#111]">
+      {card.title}
+    </h3>
+    <div className="w-full h-[1px] bg-[#e5e5e5] mb-12" />
+    <div className="mb-10 max-w-[95%]">
+      <p className="text-[#111] text-[14px] md:text-[20px] leading-[1.4] font-medium tracking-[-0.01em]">
+        {card.desc}
+      </p>
+    </div>
+    <div className="absolute bottom-6 right-6 md:bottom-8 md:right-8 w-9 h-9 bg-[#f2f2f2] rounded-[8px] flex items-center justify-center transition-transform duration-500 ease-out group-hover:scale-110 group-hover:bg-[#e4e4e4]">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#111] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+        <path d="M4 12L12 4M12 4H5.33M12 4V10.67" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </div>
+  </Link>
+);
 
 const ToolsSection = () => {
   const sectionRef = useRef(null);
@@ -244,59 +285,15 @@ const ToolsSection = () => {
 
             {/* Left Column (Shifted down for masonry effect) */}
             <div className="flex flex-col gap-6 md:gap-10 md:mt-[100px]">
-              {cards.filter(c => !c.isRight).map((card, i) => (
-                <div
-                  key={i}
-                  className="service-card bg-white rounded-[28px] p-8 md:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.06)] group cursor-pointer relative flex flex-col h-auto"
-                  style={{ transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)' }}
-                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(0.975)'}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                >
-                  <h3 className="text-[32px] md:text-[40px] font-medium tracking-[-0.05em] mb-5 text-[#111]">
-                    {card.title}
-                  </h3>
-                  <div className="w-full h-[1px] bg-[#e5e5e5] mb-12"></div>
-                  <div className="mb-4 max-w-[95%]">
-                    <p className="text-[#111] text-[14px] md:text-[20px] leading-[1.4] font-medium tracking-[-0.01em]">
-                      {card.desc}
-                    </p>
-                  </div>
-                  {/* Arrow Button */}
-                  <div className="absolute bottom-6 right-6 md:bottom-8 md:right-8 w-9 h-9 bg-[#f2f2f2] rounded-[8px] flex items-center justify-center transition-transform duration-500 ease-out group-hover:scale-110 group-hover:bg-[#e4e4e4]">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#111] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                      <path d="M4 12L12 4M12 4H5.33M12 4V10.67" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-                    </svg>
-                  </div>
-                </div>
+              {cards.filter((c) => !c.isRight).map((card) => (
+                <ServiceCard key={card.to} card={card} />
               ))}
             </div>
 
             {/* Right Column (Starts higher) */}
             <div className="flex flex-col gap-6 md:gap-10">
-              {cards.filter(c => c.isRight).map((card, i) => (
-                <div
-                  key={i}
-                  className="service-card bg-white rounded-[28px] p-8 md:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.06)] group cursor-pointer relative flex flex-col h-auto"
-                  style={{ transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)' }}
-                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(0.975)'}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                >
-                  <h3 className="text-[32px] md:text-[36px] font-medium tracking-[-0.05em] mb-5 text-[#111]">
-                    {card.title}
-                  </h3>
-                  <div className="w-full h-[1px] bg-[#e5e5e5] mb-12"></div>
-                  <div className="mb-4 max-w-[95%]">
-                    <p className="text-[#111] text-[14px] md:text-[20px] leading-[1.4] font-medium tracking-[-0.01em]">
-                      {card.desc}
-                    </p>
-                  </div>
-                  {/* Arrow Button */}
-                  <div className="absolute bottom-6 right-6 md:bottom-8 md:right-8 w-9 h-9 bg-[#f2f2f2] rounded-[8px] flex items-center justify-center transition-transform duration-500 ease-out group-hover:scale-110 group-hover:bg-[#e4e4e4]">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#111] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                      <path d="M4 12L12 4M12 4H5.33M12 4V10.67" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-                    </svg>
-                  </div>
-                </div>
+              {cards.filter((c) => c.isRight).map((card) => (
+                <ServiceCard key={card.to} card={card} />
               ))}
             </div>
 
