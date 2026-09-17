@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import SplashCursor from '../components/SplashCursor';
 import Footer from '../components/Footer';
 import TrustSection from '../components/TrustSection';
 import WorkAndPlaySection from '../components/WorkAndPlaySection';
@@ -373,18 +372,6 @@ function Portfolio() {
 
   return (
     <div className="relative bg-[#030712] min-h-screen text-white overflow-x-hidden max-w-[100vw]">
-      <SplashCursor
-        DENSITY_DISSIPATION={3.5}
-        VELOCITY_DISSIPATION={2}
-        PRESSURE={0.1}
-        CURL={3}
-        SPLAT_RADIUS={0.2}
-        SPLAT_FORCE={6000}
-        COLOR_UPDATE_SPEED={12}
-        SHADING
-        RAINBOW_MODE={false}
-        COLOR="#005ef7"
-      />
       <Navbar />
       <main>
         {/* Banner Section with PageHero */}
