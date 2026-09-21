@@ -18,10 +18,9 @@ const EXPLORE_LINKS = [
 ];
 
 const SOCIAL_LINKS = [
-  { label: "Behance", href: "https://www.behance.net/markcoders" },
   { label: "Instagram", href: "https://www.instagram.com/markcoders.official/" },
   { label: "Linkedin", href: "https://www.linkedin.com/company/markcoders" },
-  { label: "The X", href: "https://x.com/markcoders" },
+  { label: "Facebook", href: "https://www.facebook.com/markcodersofficial/" },
 ];
 
 const HEADING_LINES = [

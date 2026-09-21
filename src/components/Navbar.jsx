@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import LOGO_SRC from '../assets/logo.png';
@@ -74,22 +75,24 @@ const Navbar = () => {
     return () => ctx.revert();
   }, []);
 
-  // Hide on scroll down, show on a little scroll up (Locomotive + native)
+  // Hide on scroll down, show on scroll up (Locomotive + native)
   useEffect(() => {
     const nav = navRef.current;
     if (!nav) return;
 
     let lastScrollY = getScrollY();
     let isHidden = false;
+    let ticking = false;
 
     const showNav = () => {
       if (!isHidden) return;
       isHidden = false;
       gsap.to(nav, {
-        y: 0,
-        duration: 0.35,
-        ease: 'power2.out',
+        yPercent: 0,
+        duration: 0.45,
+        ease: 'power3.out',
         overwrite: true,
+        pointerEvents: 'auto',
       });
     };
 
@@ -106,41 +109,45 @@ const Navbar = () => {
       }
 
       gsap.to(nav, {
-        y: '-100%',
-        duration: 0.35,
-        ease: 'power2.in',
+        yPercent: -110,
+        duration: 0.4,
+        ease: 'power3.inOut',
         overwrite: true,
+        pointerEvents: 'none',
       });
     };
 
-    gsap.set(nav, { y: 0 });
+    gsap.set(nav, { yPercent: 0, pointerEvents: 'auto' });
     isHidden = false;
     lastScrollY = getScrollY();
 
     const onScroll = (currentScrollY) => {
-      const y = typeof currentScrollY === 'number' ? currentScrollY : getScrollY();
-      const delta = y - lastScrollY;
+      if (ticking) return;
+      ticking = true;
 
-      if (y <= 24) {
-        showNav();
+      requestAnimationFrame(() => {
+        const y = typeof currentScrollY === 'number' ? currentScrollY : getScrollY();
+        const delta = y - lastScrollY;
+
+        if (y <= 40) {
+          showNav();
+        } else if (delta > 6 && y > 90) {
+          hideNav();
+        } else if (delta < -6) {
+          showNav();
+        }
+
         lastScrollY = y;
-        return;
-      }
-
-      if (delta > 4 && y > 80) {
-        hideNav();
-      } else if (delta < -4) {
-        showNav();
-      }
-
-      lastScrollY = y;
+        ticking = false;
+      });
     };
 
     const unsubscribe = subscribeScroll(onScroll);
 
     return () => {
       unsubscribe();
-      gsap.set(nav, { clearProps: 'y' });
+      gsap.killTweensOf(nav);
+      gsap.set(nav, { clearProps: 'yPercent,pointerEvents,transform' });
     };
   }, [location.pathname]);
 
@@ -159,10 +166,12 @@ const Navbar = () => {
     }
   };
 
-  return (
+  // Rendered through a portal: Locomotive transforms [data-scroll-container],
+  // and a transformed ancestor breaks position: fixed for its descendants.
+  return createPortal(
     <nav
       ref={navRef}
-      className="fixed top-0 left-0 right-0 z-50 px-6 md:px-10 lg:px-16 py-5 will-change-transform"
+      className="fixed top-0 left-0 right-0 z-[60] px-6 md:px-10 lg:px-16 py-5 will-change-transform"
       style={{
         background:
           'linear-gradient(180deg, rgba(3,7,18,0.98) 0%, rgba(3,7,18,0.95) 60%, rgba(3,7,18,0.85) 100%)',
@@ -259,7 +268,8 @@ const Navbar = () => {
           </a>
         </div>
       </div>
-    </nav>
+    </nav>,
+    document.body
   );
 };
 
