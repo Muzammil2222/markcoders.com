@@ -184,7 +184,7 @@ const WhyChooseUs = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative z-20 py-20 w-full overflow-hidden">
+    <section ref={sectionRef} data-snap-section className="relative z-20 py-20 w-full overflow-hidden">
       <div className="max-w-[1400px] mx-auto w-full px-6 md:px-10 lg:px-16 mb-20">
         <h2
           ref={headingRef}

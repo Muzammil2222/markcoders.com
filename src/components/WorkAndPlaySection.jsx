@@ -90,7 +90,7 @@ const WorkAndPlaySection = () => {
   }, []);
 
   return (
-    <section className="w-full bg-[#f5f5f5]">
+    <section data-snap-section className="w-full bg-[#f5f5f5]">
       <div
         ref={containerRef}
         className="relative w-full lg:h-[100vh] min-h-[100vh] h-auto flex flex-col items-center justify-start pt-16 md:pt-[20vh] pb-24 lg:pb-0 lg:overflow-hidden"

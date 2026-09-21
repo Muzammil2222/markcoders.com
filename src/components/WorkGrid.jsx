@@ -188,6 +188,7 @@ const WorkGrid = ({ heroImageRef }) => {
     <section
       ref={sectionRef}
       id="work-grid"
+      data-snap-section
       className="relative z-20 pt-16 pb-8 px-6 md:px-10 lg:px-16 max-w-[1400px] mx-auto"
 
     >

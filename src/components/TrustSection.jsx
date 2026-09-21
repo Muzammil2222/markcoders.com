@@ -228,6 +228,7 @@ const TrustSection = () => {
   return (
     <section
       ref={sectionRef}
+      data-snap-section
       className="w-full max-w-[100%] overflow-x-hidden px-4 sm:px-6 md:px-12 lg:px-20 py-16 sm:py-24 md:py-32"
       style={{ backgroundColor: '#ffffff' }}
     >

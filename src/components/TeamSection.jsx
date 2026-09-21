@@ -183,6 +183,7 @@ const TeamSection = ({ roundedTop = false }) => {
   return (
     <section
       ref={sectionRef}
+      data-snap-section
       className={`relative w-full py-24 md:py-32 ${roundedTop ? 'rounded-t-[40px] md:rounded-t-[80px]' : ''}`}
       style={{
         background: '#f5f5f5', // Matches previous section perfectly

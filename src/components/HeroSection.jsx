@@ -8,6 +8,7 @@ const HeroSection = ({ heroImageRef }) => {
   return (
     <section
       id="home"
+      data-snap-section
       className="relative min-h-[100svh] flex flex-col justify-between overflow-visible pt-28 pb-12 px-6 md:px-10 lg:px-16 z-10"
     >
       {/* Background GIF */}

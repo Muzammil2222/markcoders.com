@@ -375,7 +375,7 @@ function Portfolio() {
       <Navbar />
       <main>
         {/* Banner Section with PageHero */}
-        <section className="relative min-h-[100svh] flex flex-col justify-between pt-28 pb-12 px-6 md:px-10 lg:px-16 overflow-visible z-10">
+        <section data-snap-section className="relative min-h-[100svh] flex flex-col justify-between pt-28 pb-12 px-6 md:px-10 lg:px-16 overflow-visible z-10">
           <img
             src={canvasBg}
             alt=""
@@ -433,6 +433,7 @@ function Portfolio() {
         <section
           ref={sectionRef}
           id="portfolio-grid"
+          data-snap-section
           className="relative z-20 pb-16 w-[95%] lg:w-[92%] max-w-[1400px] mx-auto flex flex-col items-center"
         >
           <div className="relative w-full flex flex-col items-center justify-center mb-10 mt-6">

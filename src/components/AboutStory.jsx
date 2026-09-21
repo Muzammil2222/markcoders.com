@@ -197,7 +197,7 @@ const AboutStory = ({ previewImageRef }) => {
   };
 
   return (
-    <section ref={sectionRef} className="relative z-20 py-16 px-6 md:px-10 lg:px-16 w-full mt-12 mb-20 overflow-x-hidden">
+    <section ref={sectionRef} data-snap-section className="relative z-20 py-16 px-6 md:px-10 lg:px-16 w-full mt-12 mb-20 overflow-x-hidden">
       <div className="max-w-[1400px] mx-auto w-full">
 
         {/* Heading Alone at the top */}
