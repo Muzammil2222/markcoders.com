@@ -93,9 +93,7 @@ function SmoothScroll({ children }) {
       },
       pinType: scroller.style.transform ? 'transform' : 'fixed',
     })
-
     ScrollTrigger.defaults({ scroller })
-
     const onRefresh = () => locoScroll.update()
     ScrollTrigger.addEventListener('refresh', onRefresh)
 
@@ -152,7 +150,6 @@ const App = () => {
       window.hideMarkcodersLoader()
     }
   }, [])
-
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '') || '/'}>
       <SplashCursor
