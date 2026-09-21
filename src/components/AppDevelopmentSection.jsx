@@ -141,7 +141,7 @@ const AppDevelopmentSection = ({ previewImageRef, to }) => {
   // Removed old reveal animations to replace with reel effect in parent
 
   return (
-    <section ref={sectionRef} className="w-full py-24 md:py-32 px-6 md:px-10 lg:px-16 bg-[#030712] text-white overflow-hidden">
+    <section ref={sectionRef} data-snap-section className="w-full py-24 md:py-32 px-6 md:px-10 lg:px-16 bg-[#030712] text-white overflow-hidden">
       <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center">
         
         {/* Left Side: Content & Accordion */}

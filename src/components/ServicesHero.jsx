@@ -110,7 +110,7 @@ const ServiceCard = ({ imageRef }) => (
 
 const ServicesHero = ({ previewImageRef }) => {
   return (
-    <section className="relative min-h-[100svh] flex flex-col justify-between pt-28 pb-12 px-6 md:px-10 lg:px-16 overflow-visible z-10">
+    <section data-snap-section className="relative min-h-[100svh] flex flex-col justify-between pt-28 pb-12 px-6 md:px-10 lg:px-16 overflow-visible z-10">
       {/* Background GIF */}
       <img
         src={canvasBg}

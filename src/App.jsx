@@ -5,6 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import LocomotiveScroll from 'locomotive-scroll'
 import SplashCursor from './components/SplashCursor'
 import { setLocoScroll } from './lib/scrollBus'
+import { initMagneticSnap, shouldEnableMagneticSnap } from './lib/magneticSnap'
 import 'locomotive-scroll/dist/locomotive-scroll.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -55,14 +56,25 @@ function SmoothScroll({ children }) {
     const locoScroll = new LocomotiveScroll({
       el: scroller,
       smooth: true,
-      multiplier: 2,
-      smartphone: { smooth: true },
-      tablet: { smooth: true },
+      // Lower lerp = silkier inertia; slightly lower multiplier = less jumpy wheel
+      lerp: 0.075,
+      multiplier: 1.55,
+      smartphone: { smooth: true, lerp: 0.1 },
+      tablet: { smooth: true, lerp: 0.085 },
     })
     locoRef.current = locoScroll
     setLocoScroll(locoScroll)
 
     locoScroll.on('scroll', ScrollTrigger.update)
+
+    let destroySnap = null
+    let snapTimer = null
+    if (shouldEnableMagneticSnap(location.pathname)) {
+      // Defer until layout/lazy content settles so section tops are accurate
+      snapTimer = window.setTimeout(() => {
+        destroySnap = initMagneticSnap({ offset: 88 })
+      }, 500)
+    }
 
     ScrollTrigger.scrollerProxy(scroller, {
       scrollTop(value) {
@@ -111,6 +123,8 @@ function SmoothScroll({ children }) {
       window.clearTimeout(t1)
       window.clearTimeout(t2)
       window.clearTimeout(t3)
+      if (snapTimer != null) window.clearTimeout(snapTimer)
+      destroySnap?.()
       ro.disconnect()
       ScrollTrigger.removeEventListener('refresh', onRefresh)
       ScrollTrigger.scrollerProxy(scroller) // clear proxy for this element

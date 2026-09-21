@@ -142,6 +142,7 @@ const WhatWeDo = () => {
   return (
     <section
       ref={sectionRef}
+      data-snap-section
       className="relative w-full overflow-hidden"
       style={{
         background: '#f5f5f0',

@@ -181,6 +181,7 @@ const ToolsSection = () => {
   return (
     <section
       ref={sectionRef}
+      data-snap-section
       className="relative w-full py-24 md:py-32"
       style={{
         background: '#f5f5f5', // Ultra light gray to match screenshot perfectly

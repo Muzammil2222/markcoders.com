@@ -146,6 +146,7 @@ const AboutAndVideo = () => {
     <div
       ref={containerRef}
       id="about-us"
+      data-snap-section
       className="relative z-10 w-full bg-transparent overflow-hidden pt-10 md:pt-16 pb-24 md:pb-40"
     >
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16 mb-24 md:mb-32">
