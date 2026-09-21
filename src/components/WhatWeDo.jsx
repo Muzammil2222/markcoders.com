@@ -10,10 +10,10 @@ import img4 from '../assets/3.png';
 gsap.registerPlugin(ScrollTrigger);
 
 const services = [
-  { num: '01', title: 'Branding', color: '#E84E3A', img: img1, to: '/services/branding' },
-  { num: '02', title: 'UI/UX Design', color: '#6C5CE7', img: img2, to: '/services/ui-ux' },
-  { num: '03', title: 'Web & Development', color: '#00B894', img: img3, to: '/services/web-development' },
-  { num: '04', title: 'SEO', color: '#FDCB6E', img: img4, to: '/services/web-development' },
+  { num: '01', title: 'UI/UX Design', color: '#E84E3A', img: img1, to: '/services/ui-ux' },
+  { num: '02', title: 'CMS Development', color: '#6C5CE7', img: img2, to: '/services/cms-development' },
+  { num: '03', title: 'App Development', color: '#00B894', img: img3, to: '/services/app-development' },
+  { num: '04', title: 'API Integration And Automation', color: '#FDCB6E', img: img4, to: '/services/api-integration' },
 ];
 
 const WhatWeDo = () => {

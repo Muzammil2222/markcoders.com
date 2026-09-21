@@ -63,6 +63,45 @@ body {
   color: #ffffff;
 }
 
+/* ===== Buttons: pointer + slight lift (nav / footer excluded) ===== */
+:where(button, [type='button'], [type='submit']):not(:disabled) {
+  cursor: pointer;
+  transition: translate 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:where(button, [type='button'], [type='submit']):not(:disabled):hover {
+  translate: 0 -4px;
+}
+
+/* CTA-style links in page content (not nav/footer) */
+main :where(a.inline-flex, a.flex):is(
+  [class*='rounded-full'],
+  [class*='rounded-[15'],
+  [class*='rounded-[12'],
+  [class*='rounded-[8']
+) {
+  cursor: pointer;
+  transition: translate 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+main :where(a.inline-flex, a.flex):is(
+  [class*='rounded-full'],
+  [class*='rounded-[15'],
+  [class*='rounded-[12'],
+  [class*='rounded-[8']
+):hover {
+  translate: 0 -4px;
+}
+
+nav :where(button, a, [type='button'], [type='submit']),
+nav :where(button, a, [type='button'], [type='submit']):hover,
+footer :where(button, a, [type='button'], [type='submit']),
+footer :where(button, a, [type='button'], [type='submit']):hover,
+.footer :where(button, a, [type='button'], [type='submit']),
+.footer :where(button, a, [type='button'], [type='submit']):hover {
+  translate: none;
+}
+
 /* ===== Marquee Slider ===== */
 @keyframes marquee-slider {
   0% { transform: translateX(0); }

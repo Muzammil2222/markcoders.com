@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -149,7 +150,7 @@ const TrustSection = () => {
     return () => ctx.revert();
   }, []);
 
-  const goToSlide = (nextIndex) => {
+  const goToSlide = (nextIndex, direction = 1) => {
     if (
       nextIndex === activeIndexRef.current ||
       !slideContentRef.current ||
@@ -160,23 +161,28 @@ const TrustSection = () => {
 
     isAnimatingRef.current = true;
     const el = slideContentRef.current;
+    const dir = direction >= 0 ? 1 : -1;
 
     gsap.to(el, {
-      opacity: 0,
-      y: 12,
+      autoAlpha: 0,
+      xPercent: -12 * dir,
       duration: 0.28,
       ease: 'power2.in',
+      force3D: true,
+      overwrite: 'auto',
       onComplete: () => {
         activeIndexRef.current = nextIndex;
         setActiveIndex(nextIndex);
         gsap.fromTo(
           el,
-          { opacity: 0, y: -12 },
+          { autoAlpha: 0, xPercent: 12 * dir },
           {
-            opacity: 1,
-            y: 0,
+            autoAlpha: 1,
+            xPercent: 0,
             duration: 0.35,
             ease: 'power2.out',
+            force3D: true,
+            overwrite: 'auto',
             onComplete: () => {
               isAnimatingRef.current = false;
             },
@@ -189,7 +195,7 @@ const TrustSection = () => {
   const startAutoplay = () => {
     clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
-      goToSlide((activeIndexRef.current + 1) % testimonials.length);
+      goToSlide((activeIndexRef.current + 1) % testimonials.length, 1);
     }, SLIDE_INTERVAL_MS);
   };
 
@@ -199,7 +205,21 @@ const TrustSection = () => {
   }, []);
 
   const handleDotClick = (i) => {
-    goToSlide(i);
+    const dir = i > activeIndexRef.current ? 1 : -1;
+    goToSlide(i, dir);
+    startAutoplay();
+  };
+
+  const handlePrev = () => {
+    const prev =
+      (activeIndexRef.current - 1 + testimonials.length) % testimonials.length;
+    goToSlide(prev, -1);
+    startAutoplay();
+  };
+
+  const handleNext = () => {
+    const next = (activeIndexRef.current + 1) % testimonials.length;
+    goToSlide(next, 1);
     startAutoplay();
   };
 
@@ -287,97 +307,123 @@ const TrustSection = () => {
 
           {/* ── Right: Testimonial slider (dark) ── */}
           <div
-            className="relative w-full lg:flex-1 min-w-0 min-h-[280px] sm:min-h-[340px] md:min-h-[400px] flex flex-col justify-between overflow-hidden"
+            className="relative w-full lg:flex-1 min-w-0 min-h-[320px] sm:min-h-[360px] md:min-h-[400px] flex flex-col overflow-hidden"
             style={{
               backgroundColor: '#151515',
               borderRadius: '20px',
-              padding: 'clamp(24px, 4vw, 40px)',
+              padding: 'clamp(20px, 3.5vw, 36px)',
             }}
           >
-            {/* Dots */}
-            <div className="flex items-center gap-[6px]" role="tablist" aria-label="Testimonials">
-              {testimonials.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  role="tab"
-                  aria-selected={i === activeIndex}
-                  aria-label={`Show testimonial ${i + 1}`}
-                  onClick={() => handleDotClick(i)}
-                  style={{
-                    width: '7px',
-                    height: '7px',
-                    borderRadius: '50%',
-                    border: 'none',
-                    padding: 0,
-                    cursor: 'pointer',
-                    backgroundColor:
-                      i === activeIndex
-                        ? 'rgba(255,255,255,0.95)'
-                        : 'rgba(255,255,255,0.22)',
-                    transition: 'background-color 0.25s ease',
-                  }}
-                />
-              ))}
+            {/* Main content: avatar + text — fixed min height prevents layout shake */}
+            <div className="relative flex-1 min-h-[210px] sm:min-h-[230px] md:min-h-[250px] overflow-hidden">
+              <div
+                ref={slideContentRef}
+                className="flex h-full w-full flex-col sm:flex-row items-center sm:items-stretch gap-5 sm:gap-6 md:gap-8 min-w-0 will-change-transform"
+                style={{ backfaceVisibility: 'hidden' }}
+              >
+                {/* Circular profile image */}
+                <div className="shrink-0 flex items-center justify-center">
+                  <img
+                    src={current.avatar}
+                    alt={current.name}
+                    className="rounded-full object-cover border border-white/10"
+                    style={{
+                      width: 'clamp(110px, 18vw, 168px)',
+                      height: 'clamp(110px, 18vw, 168px)',
+                    }}
+                  />
+                </div>
+
+                {/* Quote text panel — transparent bg */}
+                <div className="flex-1 min-w-0 flex flex-col justify-center w-full bg-transparent px-0 py-1 sm:py-2">
+                  <p
+                    className="text-white/90 font-normal break-words"
+                    style={{
+                      fontFamily: 'Switzer, sans-serif',
+                      fontSize: 'clamp(15px, 2.2vw, 24px)',
+                      lineHeight: 1.55,
+                      letterSpacing: '-0.01em',
+                      minHeight: '4.8em',
+                    }}
+                  >
+                    {current.quote}
+                  </p>
+                  <div className="mt-5 sm:mt-6 min-w-0">
+                    <p
+                      className="text-white font-medium truncate"
+                      style={{
+                        fontFamily: 'Switzer, sans-serif',
+                        fontSize: 'clamp(14px, 1.5vw, 16px)',
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      {current.name}
+                    </p>
+                    <p
+                      className="truncate"
+                      style={{
+                        fontFamily: 'Switzer, sans-serif',
+                        fontSize: 'clamp(12px, 1.3vw, 14px)',
+                        lineHeight: 1.3,
+                        color: 'rgba(255,255,255,0.45)',
+                        marginTop: '3px',
+                      }}
+                    >
+                      {current.role}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Slide content */}
-            <div
-              ref={slideContentRef}
-              className="flex flex-col justify-between flex-1 min-w-0"
-              style={{ marginTop: 'clamp(20px, 3vw, 36px)' }}
-            >
-              {/* Quote */}
-              <p
-                className="text-white/90 font-normal break-words"
-                style={{
-                  fontFamily: 'Switzer, sans-serif',
-                  fontSize: 'clamp(16px, 2.8vw, 26px)',
-                  lineHeight: 1.55,
-                  letterSpacing: '-0.01em',
-                  marginBottom: 'clamp(24px, 4vw, 48px)',
-                }}
-              >
-                {current.quote}
-              </p>
+            {/* Bottom: pagination (center) + arrows (right) */}
+            <div className="mt-6 sm:mt-8 flex items-center justify-between gap-3">
+              <div className="hidden sm:block flex-1" aria-hidden />
 
-              {/* Author */}
-              <div className="flex items-center gap-3 min-w-0 mt-auto">
-                <img
-                  src={current.avatar}
-                  alt={current.name}
-                  style={{
-                    width: '42px',
-                    height: '42px',
-                    borderRadius: '10px',
-                    objectFit: 'cover',
-                    flexShrink: 0,
-                  }}
-                />
-                <div className="min-w-0">
-                  <p
-                    className="text-white font-medium truncate"
+              <div
+                className="flex flex-1 sm:flex-none items-center justify-start sm:justify-center gap-2.5"
+                role="tablist"
+                aria-label="Testimonials"
+              >
+                {testimonials.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    role="tab"
+                    aria-selected={i === activeIndex}
+                    aria-label={`Show testimonial ${i + 1}`}
+                    onClick={() => handleDotClick(i)}
+                    className="rounded-full border-0 p-0 transition-[background-color,width,height] duration-250"
                     style={{
-                      fontFamily: 'Switzer, sans-serif',
-                      fontSize: '15px',
-                      lineHeight: 1.3,
+                      width: i === activeIndex ? '10px' : '8px',
+                      height: i === activeIndex ? '10px' : '8px',
+                      cursor: 'pointer',
+                      backgroundColor:
+                        i === activeIndex
+                          ? 'rgba(255,255,255,0.95)'
+                          : 'rgba(255,255,255,0.28)',
                     }}
-                  >
-                    {current.name}
-                  </p>
-                  <p
-                    className="truncate"
-                    style={{
-                      fontFamily: 'Switzer, sans-serif',
-                      fontSize: '13px',
-                      lineHeight: 1.3,
-                      color: 'rgba(255,255,255,0.45)',
-                      marginTop: '2px',
-                    }}
-                  >
-                    {current.role}
-                  </p>
-                </div>
+                  />
+                ))}
+              </div>
+
+              <div className="flex flex-1 items-center justify-end gap-2">
+                <button
+                  type="button"
+                  aria-label="Previous testimonial"
+                  onClick={handlePrev}
+                  className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-[10px] border border-white/15 bg-black text-white transition-colors duration-300 hover:bg-white hover:text-black hover:border-white"
+                >
+                  <ArrowLeft size={24} strokeWidth={2} className="pointer-events-none" />
+                </button>
+                <button
+                  type="button"
+                  aria-label="Next testimonial"
+                  onClick={handleNext}
+                  className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-[10px] border border-white/15 bg-black text-white transition-colors duration-300 hover:bg-white hover:text-black hover:border-white"
+                >
+                  <ArrowRight size={24} strokeWidth={2} className="pointer-events-none" />
+                </button>
               </div>
             </div>
           </div>

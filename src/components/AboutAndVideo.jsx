@@ -146,11 +146,11 @@ const AboutAndVideo = () => {
     <div
       ref={containerRef}
       id="about-us"
-      className="relative z-10 w-full bg-transparent overflow-hidden pt-20 md:pt-32 pb-24 md:pb-40"
+      className="relative z-10 w-full bg-transparent overflow-hidden pt-10 md:pt-16 pb-24 md:pb-40"
     >
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16 mb-24 md:mb-32">
         {/* (All Work) Label */}
-        <div className="w-full text-center mb-[120px] sm:mb-[180px] md:mb-[220px] lg:mb-[260px]">
+        <div className="w-full text-center mb-[60px] sm:mb-[90px] md:mb-[110px] lg:mb-[130px]">
           <h2
             className="text-[#25A9E0] inline-block cursor-pointer transition-transform duration-300 hover:scale-95"
             onClick={() => navigate('/portfolio')}
@@ -210,7 +210,7 @@ const AboutAndVideo = () => {
                 href="https://calendly.com/jared-dean-techdejure"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center justify-center gap-2.5 text-white transition-all duration-300 hover:scale-[1.03] hover:shadow-xl cursor-pointer no-underline"
+                className="group inline-flex items-center justify-center gap-2.5 rounded-[15px] text-white transition-all duration-300 hover:scale-[1.03] hover:shadow-xl cursor-pointer no-underline"
                 style={{
                   width: '223.65px',
                   height: '52.88px',

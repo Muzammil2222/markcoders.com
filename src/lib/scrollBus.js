@@ -1,10 +1,18 @@
 /** Shared access to Locomotive Scroll for fixed UI (Navbar, etc.) */
 
 let locoInstance = null
-const listeners = new Set()
+const scrollListeners = new Set()
+const locoReadyListeners = new Set()
 
 export function setLocoScroll(instance) {
   locoInstance = instance
+  locoReadyListeners.forEach((fn) => {
+    try {
+      fn(instance)
+    } catch {
+      /* ignore */
+    }
+  })
 }
 
 export function getLocoScroll() {
@@ -40,7 +48,7 @@ export function getScrollY() {
 
 /** Subscribe to scroll from Locomotive (preferred) or window. */
 export function subscribeScroll(callback) {
-  listeners.add(callback)
+  scrollListeners.add(callback)
 
   const locoHandler = (args) => {
     const y = args?.scroll?.y ?? getScrollY()
@@ -49,39 +57,37 @@ export function subscribeScroll(callback) {
 
   let attachedLoco = null
 
-  const attach = () => {
-    if (locoInstance && locoInstance !== attachedLoco) {
-      if (attachedLoco) {
-        try {
-          attachedLoco.off('scroll', locoHandler)
-        } catch {
-          /* ignore */
-        }
-      }
-      locoInstance.on('scroll', locoHandler)
-      attachedLoco = locoInstance
+  const detachLoco = () => {
+    if (!attachedLoco) return
+    try {
+      attachedLoco.off('scroll', locoHandler)
+    } catch {
+      /* ignore */
     }
+    attachedLoco = null
   }
 
-  attach()
-  // Loco may init after Navbar mounts — poll briefly
-  const poll = window.setInterval(attach, 100)
-  const stopPoll = window.setTimeout(() => clearInterval(poll), 2000)
+  const attachLoco = (instance) => {
+    if (!instance) {
+      detachLoco()
+      return
+    }
+    if (instance === attachedLoco) return
+    detachLoco()
+    instance.on('scroll', locoHandler)
+    attachedLoco = instance
+  }
+
+  attachLoco(locoInstance)
+  locoReadyListeners.add(attachLoco)
 
   const onWindowScroll = () => callback(getScrollY())
   window.addEventListener('scroll', onWindowScroll, { passive: true })
 
   return () => {
-    listeners.delete(callback)
-    clearInterval(poll)
-    clearTimeout(stopPoll)
+    scrollListeners.delete(callback)
+    locoReadyListeners.delete(attachLoco)
     window.removeEventListener('scroll', onWindowScroll)
-    if (attachedLoco) {
-      try {
-        attachedLoco.off('scroll', locoHandler)
-      } catch {
-        /* ignore */
-      }
-    }
+    detachLoco()
   }
 }
