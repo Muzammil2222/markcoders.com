@@ -1,0 +1,17 @@
+# Render Blueprint — Vite SPA as a Static Site
+# Docs: https://render.com/docs/blueprint-spec
+#
+# After pushing: Dashboard → New → Blueprint → select this repo
+# (or update your existing service to match the settings below)
+
+services:
+  - type: web
+    name: markcoders-web
+    runtime: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    routes:
+      # React Router — send all paths to index.html
+      - type: rewrite
+        source: /*
+        destination: /index.html
