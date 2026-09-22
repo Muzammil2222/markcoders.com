@@ -1,7 +1,7 @@
 import PageHero from './landing/PageHero';
 import { useNavigate } from 'react-router-dom';
 import cardImage from '../assets/vantage.webp';
-import canvasBg from '../assets/canvasbg.gif';
+import canvasBg from '../assets/canvasbg.webp';
 
 const HeroSection = ({ heroImageRef }) => {
   const navigate = useNavigate();
@@ -40,13 +40,13 @@ const HeroSection = ({ heroImageRef }) => {
       />
       <div className="relative z-10 w-full flex-1 flex flex-col">
         <PageHero
-          title="MarkCoders/>"
+          title="MarkCoders"
           titleSize="xl"
           layout="split"
           spread
           showDot
           className="flex-1"
-          subtitle="We work with startups, scaleups, and established brands to launch digital products that stand out and convert."
+          subtitle="Custom Software, Web & Mobile App Development That Moves Businesses Forward"
           subtitleClassName="text-[22px] sm:text-[28px] md:text-[35px] leading-[32px] sm:leading-[38px] md:leading-[45px] font-[500] tracking-[-1px] text-white/90"
           subtitleContainerClassName="max-w-xl lg:max-w-2xl"
           subtitleStyle={{
@@ -91,7 +91,7 @@ const HeroSection = ({ heroImageRef }) => {
                     verticalAlign: 'middle',
                   }}
                 >
-                  Our work
+                  Featured Work
                 </span>
                 <h3
                   className="mt-2.5 select-none"
@@ -105,9 +105,7 @@ const HeroSection = ({ heroImageRef }) => {
                     color: '#FFFFFF66',
                   }}
                 >
-                  Designing a bold voice
-                  <br />
-                  for thought leadership
+                  Digital products built for performance, usability and measurable growth.
                 </h3>
               </div>
 

@@ -1,5 +1,5 @@
 import PageHero from './landing/PageHero';
-import canvasBg from '../assets/canvasbg.gif';
+import canvasBg from '../assets/canvasbg.webp';
 import appDevImg from '../assets/services/AppDevelopment-BC7DxIEZ.webp';
 
 const ServiceCard = ({ imageRef }) => (

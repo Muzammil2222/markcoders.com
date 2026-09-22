@@ -2,23 +2,46 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+import saarangBw from '../assets/B&W HEADSHOTS/SAARANG.jpg';
+import shameekBw from '../assets/B&W HEADSHOTS/SHAHMEEK.jpg';
+import muzammilBw from '../assets/B&W HEADSHOTS/MUZAMMIL.jpg';
+import affanBw from '../assets/B&W HEADSHOTS/Affan.jpg';
+import amanBw from '../assets/B&W HEADSHOTS/AMAN.jpg';
+import ammarBw from '../assets/B&W HEADSHOTS/AMMAR.jpg';
+import shahzaibBw from '../assets/B&W HEADSHOTS/SHAHZAIB.jpg';
+import hassnainBw from '../assets/B&W HEADSHOTS/HASSNAIN.jpg';
+
+import saarangColor from '../assets/COLORFUL HEADSHOTS/SAARANG.jpg';
+import shameekColor from '../assets/COLORFUL HEADSHOTS/SHAHMEEK.jpg';
+import muzammilColor from '../assets/COLORFUL HEADSHOTS/MUZAMMIL.jpg';
+import affanColor from '../assets/COLORFUL HEADSHOTS/AFFAN.jpg';
+import amanColor from '../assets/COLORFUL HEADSHOTS/AMAN.jpg';
+import ammarColor from '../assets/COLORFUL HEADSHOTS/AMMAR.jpg';
+import shahzaibColor from '../assets/COLORFUL HEADSHOTS/SHAHZAIB.jpg';
+import hassnainColor from '../assets/COLORFUL HEADSHOTS/HASSNAIN.jpg';
+
 gsap.registerPlugin(ScrollTrigger);
 
 const baseMembers = [
-  { name: "Saarang Ali", title: "Co-Founder & CEO", img: "https://i.pravatar.cc/300?img=12" },
-  { name: "Syed Shamekh Hussain", title: "Co-Founder & COO", img: "https://i.pravatar.cc/300?img=13" },
+  { name: "Saarang Ali", title: "Co-Founder & CEO", imgBw: saarangBw, imgColor: saarangColor },
+  { name: "Syed Shamekh Hussain", title: "Co-Founder & COO", imgBw: shameekBw, imgColor: shameekColor },
   { name: "Bilal", title: "Co-Founder & CTO" }, // no photo
-  { name: "Muzammil Ahmed", title: "Co-Founder & CAO", img: "https://i.pravatar.cc/300?img=15" },
-  { name: "Affan Abdullah", title: "Director Of Sales", img: "https://i.pravatar.cc/300?img=33" },
-  { name: "Aman Raza", title: "Creative Director", img: "https://i.pravatar.cc/300?img=52" },
-  { name: "Ammar Sheikh", title: "Project Manager", img: "https://i.pravatar.cc/300?img=57" },
-  { name: "Shahzaib Ali", title: "Senior Developer", img: "https://i.pravatar.cc/300?img=60" },
+  { name: "Muzammil Ahmed", title: "Co-Founder & CAO", imgBw: muzammilBw, imgColor: muzammilColor },
+  { name: "Affan Abdullah", title: "Director Of Sales", imgBw: affanBw, imgColor: affanColor },
+  { name: "Aman Raza", title: "Creative Director", imgBw: amanBw, imgColor: amanColor },
+  { name: "Ammar Sheikh", title: "Project Manager", imgBw: ammarBw, imgColor: ammarColor },
+  { name: "Shahzaib Ali", title: "Senior Developer", imgBw: shahzaibBw, imgColor: shahzaibColor },
 ];
 
 const displayMembers = baseMembers;
 
+// Hassnain: photo only (no name/title in the list)
+const photoOnly = [
+  { name: "Hassnain", imgBw: hassnainBw, imgColor: hassnainColor },
+];
+
 // Members with photos only — duplicated for the horizontal scroll scrub
-const photoMembers = baseMembers.filter((m) => m.img);
+const photoMembers = [...baseMembers.filter((m) => m.imgBw), ...photoOnly];
 const teamMembers = [...photoMembers, ...photoMembers, ...photoMembers, ...photoMembers, ...photoMembers, ...photoMembers];
 
 const TeamSection = ({ roundedTop = false }) => {
@@ -111,7 +134,7 @@ const TeamSection = ({ roundedTop = false }) => {
     return () => ctx.revert();
   }, []);
 
-  const textPart = "As a distributed team across North America and Europe, we bring together diverse talent to design and build world-class digital experiences.";
+  const textPart = "We are a multidisciplinary team of 35+ professionals across project management, UI/UX, web and software engineering, mobile development, QA, SEO and hosting - working together from Karachi to deliver reliable digital products for clients worldwide.";
 
   const renderAnimText = (text, className) => {
     const words = text.split(' ');
@@ -130,7 +153,6 @@ const TeamSection = ({ roundedTop = false }) => {
   return (
     <section
       ref={sectionRef}
-      data-snap-section
       className={`relative w-full py-24 md:py-32 overflow-hidden ${roundedTop ? 'rounded-t-[40px] md:rounded-t-[80px]' : ''}`}
       style={{
         background: '#F5F5F5',
@@ -145,7 +167,7 @@ const TeamSection = ({ roundedTop = false }) => {
           className="text-[#111111] font-medium text-center mb-16 md:mb-24 will-change-transform px-6"
           style={{ fontFamily: 'Switzer, sans-serif', fontSize: 'clamp(48px, 7vw, 91px)', letterSpacing: '-2px' }}
         >
-          Team / Specialists
+          Meet the Team Behind MarkCoders
         </h2>
 
         {/* Content Grid - Full width, but left text respects 1400px container */}
@@ -169,11 +191,20 @@ const TeamSection = ({ roundedTop = false }) => {
             <div className="w-full overflow-hidden">
               <div ref={sliderRef} className="flex gap-4 md:gap-6 w-max pr-[max(1.5rem,calc((100vw-1400px)/2+1.5rem))] will-change-transform">
                 {teamMembers.map((member, i) => (
-                  <div key={i} className="w-[140px] md:w-[180px] lg:w-[205px] h-[190px] md:h-[240px] lg:h-[282px] rounded-[15px] overflow-hidden shrink-0">
+                  <div
+                    key={i}
+                    className="group relative w-[140px] md:w-[180px] lg:w-[205px] h-[190px] md:h-[240px] lg:h-[282px] rounded-[15px] overflow-hidden shrink-0"
+                  >
                     <img
-                      src={member.img}
+                      src={member.imgBw}
                       alt={member.name}
-                      className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <img
+                      src={member.imgColor}
+                      alt=""
+                      aria-hidden="true"
+                      className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                     />
                   </div>
                 ))}

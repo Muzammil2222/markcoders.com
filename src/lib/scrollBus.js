@@ -32,11 +32,17 @@ export function scrollToTarget(target, options = {}) {
       offset: options.offset ?? -96,
       duration: options.duration ?? 800,
       disableLerp: options.disableLerp ?? false,
+      ...(typeof options.callback === 'function'
+        ? { callback: options.callback }
+        : {}),
     })
     return
   }
 
   el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  if (typeof options.callback === 'function') {
+    window.setTimeout(options.callback, options.duration ?? 800)
+  }
 }
 
 export function getScrollY() {

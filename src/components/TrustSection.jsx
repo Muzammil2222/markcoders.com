@@ -12,33 +12,21 @@ const testimonials = [
     quote:
       'Pleasure to work with from start to finish. They translated complex flows into something intuitive a rare balance between aesthetics and functionality.',
     name: 'Emma Watson',
-    role: 'VISENTA, Photo & Video',
-    avatar:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80',
   },
   {
     quote:
-      'Markcoders delivered beyond expectations. Clear communication, sharp design sense, and a product our team actually loves using every day.',
-    name: 'James Carter',
-    role: 'NEXORA, Product Lead',
-    avatar:
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80',
+      'Saarang was very quick to respond to feedback and worked with us to get the design just right.',
+    name: 'Cassandra Sigmon',
   },
   {
     quote:
       'They took our messy brief and turned it into a polished experience. Fast iterations, thoughtful UX, and zero drama throughout the build.',
     name: 'Sofia Reyes',
-    role: 'LUMINA Studio, Founder',
-    avatar:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=120&q=80',
   },
   {
     quote:
       'A rare team that cares about both craft and shipping. Our launch felt smooth, and the final product still looks fresh months later.',
     name: 'Daniel Okonkwo',
-    role: 'Forge Labs, CEO',
-    avatar:
-      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=120&q=80',
   },
 ];
 
@@ -242,7 +230,7 @@ const TrustSection = () => {
             fontSize: 'clamp(32px, 7.5vw, 91px)',
           }}
         >
-          A partner you can trust.
+          A technology partner you can rely on.
           <br />
           High standards. Reliable
           <br />
@@ -287,22 +275,20 @@ const TrustSection = () => {
                   fontSize: 'clamp(24px, 5vw, 30px)',
                 }}
               >
-                Trusted by 20+
+                300+ websites.
                 <br />
-                companies.
+                70+ applications.
               </p>
-              <a
-                href="#why-clients"
-                className="text-white/80 hover:text-white transition-colors inline-block"
+              <p
+                className="text-white/80"
                 style={{
                   fontFamily: 'Switzer, sans-serif',
                   fontSize: 'clamp(13px, 1.6vw, 22px)',
                   fontWeight: 500,
-                  textUnderlineOffset: '3px',
                 }}
               >
-                Why clients rely on us
-              </a>
+                Built for businesses across industries and markets.
+              </p>
             </div>
           </div>
 
@@ -322,17 +308,24 @@ const TrustSection = () => {
                 className="flex h-full w-full flex-col sm:flex-row items-center sm:items-stretch gap-5 sm:gap-6 md:gap-8 min-w-0 will-change-transform"
                 style={{ backfaceVisibility: 'hidden' }}
               >
-                {/* Circular profile image */}
+                {/* Letter avatar */}
                 <div className="shrink-0 flex items-center justify-center">
-                  <img
-                    src={current.avatar}
-                    alt={current.name}
-                    className="rounded-full object-cover border border-white/10"
+                  <div
+                    className="rounded-full border border-white/10 flex items-center justify-center select-none"
                     style={{
                       width: 'clamp(110px, 18vw, 168px)',
                       height: 'clamp(110px, 18vw, 168px)',
+                      backgroundColor: '#1B75BB',
+                      fontFamily: 'Switzer, sans-serif',
+                      fontWeight: 600,
+                      fontSize: 'clamp(40px, 7vw, 64px)',
+                      color: '#ffffff',
+                      letterSpacing: '-0.02em',
                     }}
-                  />
+                    aria-hidden
+                  >
+                    {current.name.charAt(0).toUpperCase()}
+                  </div>
                 </div>
 
                 {/* Quote text panel — transparent bg */}
@@ -359,18 +352,6 @@ const TrustSection = () => {
                       }}
                     >
                       {current.name}
-                    </p>
-                    <p
-                      className="truncate"
-                      style={{
-                        fontFamily: 'Switzer, sans-serif',
-                        fontSize: 'clamp(12px, 1.3vw, 14px)',
-                        lineHeight: 1.3,
-                        color: 'rgba(255,255,255,0.45)',
-                        marginTop: '3px',
-                      }}
-                    >
-                      {current.role}
                     </p>
                   </div>
                 </div>

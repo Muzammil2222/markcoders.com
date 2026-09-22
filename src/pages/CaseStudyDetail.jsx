@@ -160,7 +160,7 @@ const CaseStudyDetail = () => {
                     Explore Case Study
                   </button>
                   <a
-                    href="https://calendly.com/jared-dean-techdejure"
+                    href="https://calendly.com/saarang-markcoders/30min"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex w-full items-center justify-center rounded-full border border-white/80 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-white hover:text-black sm:w-auto sm:px-7 sm:py-3.5 sm:text-base no-underline cursor-pointer"

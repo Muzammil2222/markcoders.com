@@ -179,8 +179,8 @@ const AboutStory = ({ previewImageRef }) => {
     return () => ctx.revert();
   }, []);
 
-  const textPart1 = "MarkCoders was founded out of a passion for creativity and innovation in the digital space.";
-  const textPart2 = "This dynamic agency specializes in SEO, digital marketing, video production, and branding, seamlessly merging artistic vision with strategic insight.";
+  const textPart1 = "Founded in 2020, MarkCoders began with a simple goal: help businesses solve real problems through technology.";
+  const textPart2 = "Today, we deliver custom software, web applications, mobile apps, eCommerce platforms and digital experiences by bringing strategy, design, engineering and quality assurance together under one team.";
 
   const renderAnimText = (text, className) => {
     const words = text.split(' ');
@@ -211,8 +211,8 @@ const AboutStory = ({ previewImageRef }) => {
             letterSpacing: 'clamp(-1.5px, -0.3vw, -3.4px)'
           }}
         >
-          <span className="block pl-30">Where we started</span>
-          <span className="block">and our story</span>
+          <span className="block pl-30">Where we started </span>
+          <span className="block">and where we are going.</span>
         </h2>
 
         {/* Two-column layout */}
@@ -260,13 +260,14 @@ const AboutStory = ({ previewImageRef }) => {
                   className="w-[170px] shrink-0 font-medium text-white"
                   style={{ fontFamily: 'Switzer, sans-serif', fontSize: 'clamp(22px, 2.5vw, 30px)', letterSpacing: '-1.4px' }}
                 >
-                  The Scale
+                  The Team
                 </h4>
                 <p
                   className="text-white/40 font-medium max-w-[445px]"
                   style={{ fontFamily: 'Switzer, sans-serif', fontSize: 'clamp(18px, 2vw, 26px)', lineHeight: 'clamp(26px, 3vw, 36px)', letterSpacing: '-1px' }}
                 >
-                  80+ Campaigns delivered with precision, strategy, and care
+                 35+ specialists across project management, UI/UX, engineering, mobile
+                 development, QA, SEO and hosting
                 </p>
               </div>
 
@@ -281,7 +282,8 @@ const AboutStory = ({ previewImageRef }) => {
                   className="text-white/40 font-medium max-w-[445px]"
                   style={{ fontFamily: 'Switzer, sans-serif', fontSize: 'clamp(18px, 2vw, 26px)', lineHeight: 'clamp(26px, 3vw, 36px)', letterSpacing: '-1px' }}
                 >
-                  25+ Unique industries served, from local startups to global brands
+                  Clients across 28 countries, supporting startups and established
+                  businesses in diverse global markets.
                 </p>
               </div>
 
@@ -290,13 +292,14 @@ const AboutStory = ({ previewImageRef }) => {
                   className="w-[170px] shrink-0 font-medium text-white"
                   style={{ fontFamily: 'Switzer, sans-serif', fontSize: 'clamp(22px, 2.5vw, 30px)', letterSpacing: '-1.4px' }}
                 >
-                  The Result
+                  The Work
                 </h4>
                 <p
                   className="text-white/40 font-medium max-w-[445px]"
                   style={{ fontFamily: 'Switzer, sans-serif', fontSize: 'clamp(18px, 2vw, 26px)', lineHeight: 'clamp(26px, 3vw, 36px)', letterSpacing: '-1px' }}
                 >
-                  $2M+ In verified client revenue generated to date
+                  300+ websites and 70+ applications delivered across industries and
+                  business models.
                 </p>
               </div>
 
