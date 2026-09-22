@@ -1,5 +1,5 @@
 import PageHero from './landing/PageHero';
-import canvasBg from '../assets/canvasbg.gif';
+import canvasBg from '../assets/canvasbg.webp';
 import cardImage from '../assets/team.webp';
 
 const StoryCard = ({ imageRef }) => (
@@ -51,7 +51,8 @@ const StoryCard = ({ imageRef }) => (
             color: '#FFFFFF66',
           }}
         >
-          Designing a bold voice for thought leadership
+          Building technology that turns business ideas into scalable digital
+          products.
         </h3>
       </div>
 
@@ -140,8 +141,8 @@ const AboutHero = ({ previewImageRef }) => {
       />
       <div className="relative z-10 w-full flex-1 flex flex-col">
         <PageHero
-          title="About us"
-          subtitle="MarkCoders is founded with a clear mission: to create digital design that is purposeful, strategic, and measurable."
+          title={"About us\nMarkCoders"}
+          subtitle="MarkCoders is a custom software development company built to turn ambitious business ideas into reliable, scalable digital products."
           layout="split"
           spread
           showDot

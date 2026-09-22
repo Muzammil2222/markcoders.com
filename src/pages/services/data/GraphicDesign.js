@@ -1,4 +1,4 @@
-import image14 from '../../../assets/image 14.png';
+import image14 from '../../../assets/image 14.webp';
 import image15 from '../../../assets/image 15.png';
 import vantageImg from '../../../assets/vantage.webp';
 import saucedImg from '../../../assets/sauced.webp';

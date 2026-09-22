@@ -1,39 +1,33 @@
-import { getLocoScroll, getScrollY, subscribeScroll } from './scrollBus'
+import { getScrollY, scrollToTarget, subscribeScroll } from './scrollBus'
 
-/** Routes where soft magnetic section snap is enabled */
-export const MAGNETIC_SNAP_PATHS = new Set([
+/** Routes where soft section snap is enabled */
+export const SECTION_SNAP_PATHS = new Set([
   '/',
   '/about',
   '/services',
   '/portfolio',
 ])
 
-export function shouldEnableMagneticSnap(pathname) {
-  return MAGNETIC_SNAP_PATHS.has(pathname)
+export function shouldEnableSectionSnap(pathname) {
+  return SECTION_SNAP_PATHS.has(pathname)
 }
 
 /**
- * Soft magnetic snap: free-scroll while moving; after the user settles,
- * ease to the nearest [data-snap-section] top (if close enough).
- * Works with Locomotive via scrollBus; native fallback otherwise.
+ * Soft section snap via scrollBus.
+ * Free scroll while moving; after settle, scrollToTarget nearest [data-snap-section].
+ * Locomotive already provides the smooth motion — we only pick the target.
  */
-export function initMagneticSnap({
+export function initSectionSnap({
   selector = '[data-snap-section]',
-  /** Distance from viewport top to treat as “section top” (navbar clearance). */
   offset = 88,
-  /** Quiet time after last scroll before snapping. */
-  settleMs = 170,
-  /** Only snap if nearest section top is within this distance (px or fn). */
+  settleMs = 180,
   maxDistance = () => Math.min(window.innerHeight * 0.4, 420),
-  /** Skip snap when already this close. */
-  deadZone = 14,
-  /** Locomotive scrollTo duration (ms). */
-  duration = 900,
+  deadZone = 16,
 } = {}) {
   if (typeof window === 'undefined') return () => {}
-
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
-  if (reduced.matches) return () => {}
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return () => {}
+  }
 
   let settleTimer = null
   let snapping = false
@@ -47,7 +41,7 @@ export function initMagneticSnap({
     }
   }
 
-  const findNearest = () => {
+  const nearestSection = () => {
     const nodes = Array.from(document.querySelectorAll(selector))
     if (!nodes.length) return null
 
@@ -59,14 +53,27 @@ export function initMagneticSnap({
 
     for (const el of nodes) {
       const rect = el.getBoundingClientRect()
-      // Ignore zero-size / display:none
-      if (rect.height < 8 && rect.width < 8) continue
+      if (rect.height < 8) continue
 
-      const deltaFromTarget = rect.top - offset
-      const dist = Math.abs(deltaFromTarget)
-      // Slight bias toward the section in the scroll direction
+      const delta = rect.top - offset
+      const dist = Math.abs(delta)
+
+      // Never yank back to a section top you've already passed while
+      // scrolling down. Tall sections (Team, story blocks) were snapping
+      // to their start after a short pause mid-scroll.
+      if (delta < -deadZone && lastDir >= 0) continue
+
+      // Skip tall sections once you're clearly inside them — free scroll.
+      if (
+        rect.height > window.innerHeight * 1.05 &&
+        rect.top < offset - deadZone &&
+        rect.bottom > window.innerHeight * 0.35
+      ) {
+        continue
+      }
+
       const bias =
-        lastDir !== 0 && Math.sign(deltaFromTarget) === lastDir ? -18 : 0
+        lastDir !== 0 && Math.sign(delta) === lastDir ? -16 : 0
       const score = dist + bias
 
       if (score < bestScore) {
@@ -75,43 +82,22 @@ export function initMagneticSnap({
       }
     }
 
-    if (!best) return null
-    if (best.dist <= deadZone) return null
-    if (best.dist > maxDist) return null
+    if (!best || best.dist <= deadZone || best.dist > maxDist) return null
     return best.el
   }
 
   const snap = () => {
     if (snapping) return
-    const el = findNearest()
+    const el = nearestSection()
     if (!el) return
 
-    const loco = getLocoScroll()
     snapping = true
+    scrollToTarget(el, { offset: -offset, duration: 800 })
 
-    if (loco) {
-      loco.scrollTo(el, {
-        offset: -offset,
-        duration,
-        disableLerp: false,
-        callback: () => {
-          snapping = false
-          lastY = getScrollY()
-        },
-      })
-      // Safety if callback never fires
-      window.setTimeout(() => {
-        snapping = false
-      }, duration + 200)
-      return
-    }
-
-    const top = window.scrollY + el.getBoundingClientRect().top - offset
-    window.scrollTo({ top, behavior: 'smooth' })
     window.setTimeout(() => {
       snapping = false
       lastY = getScrollY()
-    }, duration)
+    }, 850)
   }
 
   const schedule = () => {
@@ -124,21 +110,19 @@ export function initMagneticSnap({
     if (snapping) return
     const cy = typeof y === 'number' ? y : getScrollY()
     const delta = cy - lastY
-    if (Math.abs(delta) > 1) {
-      lastDir = Math.sign(delta)
-    }
+    if (Math.abs(delta) > 1) lastDir = Math.sign(delta)
     lastY = cy
     schedule()
   }
 
   const unsub = subscribeScroll(onScroll)
-  window.addEventListener('wheel', schedule, { passive: true })
-  window.addEventListener('touchend', schedule, { passive: true })
 
   return () => {
     unsub()
     clearSettle()
-    window.removeEventListener('wheel', schedule)
-    window.removeEventListener('touchend', schedule)
   }
 }
+
+// Back-compat aliases used by App.jsx
+export const shouldEnableMagneticSnap = shouldEnableSectionSnap
+export const initMagneticSnap = initSectionSnap

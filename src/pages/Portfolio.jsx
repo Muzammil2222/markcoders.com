@@ -6,7 +6,7 @@ import TrustSection from '../components/TrustSection';
 import WorkAndPlaySection from '../components/WorkAndPlaySection';
 import TeamSection from '../components/TeamSection.jsx';
 import PageHero from '../components/landing/PageHero';
-import canvasBg from '../assets/canvasbg.gif';
+import canvasBg from '../assets/canvasbg.webp';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 

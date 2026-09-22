@@ -22,7 +22,7 @@ const AboutAndVideo = () => {
       // 1. Heading Char Reveal
       const headingElement = headingRef.current;
       if (headingElement) {
-        const text = "We craft design that turns ambitious ideas into products people trust.";
+        const text = "We turn ambitious ideas into scalable digital products businesses rely on.";
         headingElement.innerHTML = '';
 
         // Spacer for first line indent
@@ -74,8 +74,7 @@ const AboutAndVideo = () => {
 
         const segments = [
           { text: 'About us. ', isBold: true },
-          { text: 'MarkCoders is a research-driven design studio that treats every project like its own product. We go deep into your market and your users before designing a single screen. ', isBold: false },
-          { text: "The result: digital experiences that don't just look sharp, they perform.", isBold: true },
+          { text: 'MarkCoders is a custom software development company helping businesses plan, design and build web applications, mobile apps, eCommerce platforms and digital products. We combine strategy, UI/UX, engineering and quality assurance to deliver reliable solutions from concept to launch.', isBold: false },
         ];
 
         segments.forEach((seg) => {
@@ -153,7 +152,7 @@ const AboutAndVideo = () => {
         {/* (All Work) Label */}
         <div className="w-full text-center mb-[60px] sm:mb-[90px] md:mb-[110px] lg:mb-[130px]">
           <h2
-            className="text-[#25A9E0] inline-block cursor-pointer transition-transform duration-300 hover:scale-95"
+            className="text-[#25A9E0] inline-block transition-transform duration-300 hover:scale-95"
             onClick={() => navigate('/portfolio')}
             style={{
               fontFamily: 'Switzer, sans-serif',
@@ -161,9 +160,10 @@ const AboutAndVideo = () => {
               fontSize: 'clamp(42px, 6.5vw, 91px)',
               lineHeight: '1.13',
               letterSpacing: '-3.4px',
+              cursor: 'pointer',
             }}
           >
-            (All Projects)
+            View All Projects
           </h2>
         </div>
 
@@ -180,7 +180,7 @@ const AboutAndVideo = () => {
           }}
         >
           <span className="inline-block w-12 sm:w-20 md:w-28 lg:w-36" aria-hidden="true" />
-          We craft design that turns ambitious ideas into products people trust.
+          We turn ambitious ideas into scalable digital products businesses rely on.
         </h3>
 
         {/* Bottom Split Description Grid */}
@@ -199,16 +199,13 @@ const AboutAndVideo = () => {
               }}
             >
               <span className="inline-block w-8 sm:w-12 md:w-16" aria-hidden="true" />
-              <strong className="text-white font-bold">About us.</strong> Markcoders is a research-driven design studio that treats every project like its own product. We go deep into your market and your users before designing a single screen.{' '}
-              <strong className="text-white font-bold">
-                The result: digital experiences that don't just look sharp, they perform.
-              </strong>
+              <strong className="text-white font-bold">About us.</strong> MarkCoders is a custom software development company helping businesses plan, design and build web applications, mobile apps, eCommerce platforms and digital products. We combine strategy, UI/UX, engineering and quality assurance to deliver reliable solutions from concept to launch.
             </div>
 
             {/* Figma Pixel-Perfect Button */}
             <div>
               <a
-                href="https://calendly.com/jared-dean-techdejure"
+                href="https://calendly.com/saarang-markcoders/30min"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group inline-flex items-center justify-center gap-2.5 rounded-[15px] text-white transition-all duration-300 hover:scale-[1.03] hover:shadow-xl cursor-pointer no-underline"
@@ -259,7 +256,9 @@ const AboutAndVideo = () => {
                 letterSpacing: '-0.02em',
               }}
             >
-              We design intuitive interfaces for web and mobile products, from first wireframe to development-ready files.
+              From responsive websites and SaaS platforms to APIs and mobile
+applications, we build intuitive, secure and high-performance products
+ready to scale.
             </p>
           </div>
         </div>

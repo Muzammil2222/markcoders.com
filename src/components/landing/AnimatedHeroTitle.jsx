@@ -21,21 +21,25 @@ const AnimatedHeroTitle = forwardRef(function AnimatedHeroTitle(
         fontSize: TITLE_SIZES[size] || size || TITLE_SIZES.lg,
       }}
     >
-      {text.split('').map((char, i) => (
-        <span
-          key={`${char}-${i}`}
-          className="inline-block font-semibold cursor-default transition-[font-weight] duration-[350ms] ease-[cubic-bezier(0.25,0.1,0.25,1)]"
-          style={{ fontWeight: 600 }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.fontWeight = '800';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.fontWeight = '600';
-          }}
-        >
-          {char === ' ' ? '\u00A0' : char}
-        </span>
-      ))}
+      {text.split('').map((char, i) =>
+        char === '\n' ? (
+          <br key={`br-${i}`} />
+        ) : (
+          <span
+            key={`${char}-${i}`}
+            className="inline-block font-semibold cursor-default transition-[font-weight] duration-[350ms] ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+            style={{ fontWeight: 600 }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.fontWeight = '800';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.fontWeight = '600';
+            }}
+          >
+            {char === ' ' ? '\u00A0' : char}
+          </span>
+        )
+      )}
     </h1>
   );
 });

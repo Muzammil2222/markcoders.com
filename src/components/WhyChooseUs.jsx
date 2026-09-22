@@ -6,9 +6,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 const cards = [
   {
-    title: "200+",
-    subtitle: "Projects delivered",
-    desc: "From landing pages to full SaaS platforms, we ship work that looks sharp and performs.",
+    title: "70+",
+    subtitle: "Applications Developed",
+    desc: "Custom web and mobile applications built for performance, security and scale.",
   },
   {
     title: "5.0",
@@ -16,22 +16,22 @@ const cards = [
     desc: "Most clients do not leave, and the ones who review us on Clutch tell you exactly why.",
   },
   {
-    title: "10+",
-    subtitle: "Years of experience",
-    desc: "A decade of building digital products that drive growth and create lasting value.",
+    title: "6+",
+    subtitle: "Years in Technology",
+    desc: "Building software, websites and digital products since 2020.",
   },
   {
-    title: "98%",
-    subtitle: "Retention rate",
-    desc: "Our partners stay with us because we consistently deliver exceptional results.",
+    title: "28",
+    subtitle: "Countries Reached",
+    desc: "Serving clients across 28 countries and diverse industries.",
   },
   {
-    title: "15+",
-    subtitle: "Awards won",
-    desc: "Recognized internationally for excellence in digital design and robust engineering.",
+    title: "35+",
+    subtitle: "Websites Built",
+    desc: "Responsive, high-performing websites and platforms designed around real business needs.",
   },
   {
-    title: "24/7",
+    title: "300+",
     subtitle: "Dedicated support",
     desc: "We are always online, ensuring your digital platforms run smoothly around the clock.",
   }
@@ -196,7 +196,7 @@ const WhyChooseUs = () => {
             letterSpacing: 'clamp(-1.5px, -0.3vw, -3.4px)'
           }}
         >
-          Why brands choose MarkCoders<br className="hidden md:block" /> for design & development?
+         Why businesses choose MarkCoders<br className="hidden md:block" /> for software development?
         </h2>
       </div>
 

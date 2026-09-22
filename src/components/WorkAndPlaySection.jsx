@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import workAndPlay1 from '../assets/WorkAndPLayImage1.jpg';
 import workAndPlay2 from '../assets/WorkAndPLayImage2.jpg';
 import workAndPlay3 from '../assets/WorkAndPLayImage3.jpg';
-import workAndPlay4 from '../assets/WorkAndPLayImage4.png';
+import workAndPlay4 from '../assets/WorkAndPLayImage4.webp.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 

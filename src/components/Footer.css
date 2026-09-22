@@ -1,10 +1,10 @@
-/* Footer.css - canvasbg.gif background + gradient overlay */
+/* Footer.css - canvasbg.webp background + gradient overlay */
 
 .footer-bg {
   position: relative;
 
   /* Background GIF */
-  background-image: url('../assets/canvasbg.gif');
+  background-image: url('../assets/canvasbg.webp');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
