@@ -163,7 +163,7 @@ const AboutAndVideo = () => {
               cursor: 'pointer',
             }}
           >
-            View All Projects
+            Our Work
           </h2>
         </div>
 
