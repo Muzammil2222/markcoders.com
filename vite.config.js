@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import viteCompression from 'vite-plugin-compression'
 
 // bunny.net pull zone (origin: markcoderscom-rho.vercel.app)
-const BUNNY_CDN = (process.env.VITE_CDN_URL || 'https://Markcoders.b-cdn.net').replace(/\/$/, '')
+const BUNNY_CDN = (process.env.VITE_CDN_URL || 'https://markcoders.b-cdn.net').replace(/\/$/, '')
 
 function resolveBase(command) {
   // GitHub Pages project site
