@@ -15,6 +15,11 @@ export default defineConfig(({ command }) => ({
     // Allow ngrok tunnels when testing on other devices
     allowedHosts: ['.ngrok-free.dev', '.ngrok.io'],
   },
+  preview: {
+    host: '0.0.0.0',
+    // Render / any reverse-proxy host (vite preview blocks unknown Host headers)
+    allowedHosts: true,
+  },
   plugins: [
     react(), 
     tailwindcss(),
