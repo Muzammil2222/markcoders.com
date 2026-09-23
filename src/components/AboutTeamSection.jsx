@@ -2,26 +2,23 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import { asset } from '../lib/cdn';
+import saarangBw from '../assets/B&W HEADSHOTS/SAARANG.jpg';
+import shameekBw from '../assets/B&W HEADSHOTS/SHAHMEEK.jpg';
+import muzammilBw from '../assets/B&W HEADSHOTS/MUZAMMIL.jpg';
+import affanBw from '../assets/B&W HEADSHOTS/Affan.jpg';
+import amanBw from '../assets/B&W HEADSHOTS/AMAN.jpg';
+import ammarBw from '../assets/B&W HEADSHOTS/AMMAR.jpg';
+import shahzaibBw from '../assets/B&W HEADSHOTS/SHAHZAIB.jpg';
+import hassnainBw from '../assets/B&W HEADSHOTS/HASSNAIN.jpg';
 
-// Flat CDN filenames: https://markcoders-media.b-cdn.net/AMMAN.jpg
-const saarangBw = asset('SAARANG.jpg');
-const shameekBw = asset('SHAHMEEK.jpg');
-const muzammilBw = asset('MUZAMMIL.jpg');
-const affanBw = asset('Affan.jpg');
-const amanBw = asset('AMAN.jpg');
-const ammarBw = asset('AMMAR.jpg');
-const shahzaibBw = asset('SHAHZAIB.jpg');
-const hassnainBw = asset('HASSNAIN.jpg');
-
-const saarangColor = asset('SAARANG_COLORED.jpg');
-const shameekColor = asset('SHAHMEEK_COLORED.jpg');
-const muzammilColor = asset('MUZAMMIL_COLORED.jpg');
-const affanColor = asset('AFFAN_COLORED.jpg');
-const amanColor = asset('AMAN_COLORED.jpg');
-const ammarColor = asset('AMMAR_COLORED.jpg');
-const shahzaibColor = asset('SHAHZAIB_COLORED.jpg');
-const hassnainColor = asset('HASSNAIN_COLORED.jpg');
+import saarangColor from '../assets/COLORFUL HEADSHOTS/SAARANG.jpg';
+import shameekColor from '../assets/COLORFUL HEADSHOTS/SHAHMEEK.jpg';
+import muzammilColor from '../assets/COLORFUL HEADSHOTS/MUZAMMIL.jpg';
+import affanColor from '../assets/COLORFUL HEADSHOTS/AFFAN.jpg';
+import amanColor from '../assets/COLORFUL HEADSHOTS/AMAN.jpg';
+import ammarColor from '../assets/COLORFUL HEADSHOTS/AMMAR.jpg';
+import shahzaibColor from '../assets/COLORFUL HEADSHOTS/SHAHZAIB.jpg';
+import hassnainColor from '../assets/COLORFUL HEADSHOTS/HASSNAIN.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 

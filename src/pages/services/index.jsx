@@ -12,13 +12,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-import { asset } from '../../lib/cdn';
-
-const websiteDevImg = asset('services/WebsiteDevelopment-CsTaI-wB.webp');
-const cmsDevImg = asset('services/CMSDevelopment-BqtLsmuH.webp');
-const uiuxImg = asset('services/UIUXDesign-Drsg_a-L.webp');
-const graphicDesignImg = asset('services/GraphicDesign-DhYkR5Ad.webp');
-const apiImg = asset('services/api.png');
+// Assets
+import websiteDevImg from '../../assets/services/WebsiteDevelopment-CsTaI-wB.webp';
+import cmsDevImg from '../../assets/services/CMSDevelopment-BqtLsmuH.webp';
+import uiuxImg from '../../assets/services/UIUXDesign-Drsg_a-L.webp';
+import graphicDesignImg from '../../assets/services/GraphicDesign-DhYkR5Ad.webp';
+import apiImg from '../../assets/services/api.png';
 
 const websiteDevData = [
   { title: 'Marketing & Brand Websites', content: 'Purpose-built websites for companies, service providers, startups, and established brands that need a stronger online presence.' },
