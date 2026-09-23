@@ -2,9 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { asset } from '../lib/cdn';
-
-const videoImg = asset('videoimg.jpg');
+import videoImg from '../assets/videoimg.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 

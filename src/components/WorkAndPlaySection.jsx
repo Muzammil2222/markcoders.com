@@ -1,12 +1,10 @@
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { asset } from '../lib/cdn';
-
-const workAndPlay1 = asset('WorkAndPLayImage1.jpg');
-const workAndPlay2 = asset('WorkAndPLayImage2.jpg');
-const workAndPlay3 = asset('WorkAndPLayImage3.jpg');
-const workAndPlay4 = asset('WorkAndPLayImage4.webp.jpg');
+import workAndPlay1 from '../assets/WorkAndPLayImage1.jpg';
+import workAndPlay2 from '../assets/WorkAndPLayImage2.jpg';
+import workAndPlay3 from '../assets/WorkAndPLayImage3.jpg';
+import workAndPlay4 from '../assets/WorkAndPLayImage4.webp.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 

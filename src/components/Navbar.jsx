@@ -1,9 +1,7 @@
 import { useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
-import { asset } from '../lib/cdn';
-
-const LOGO_SRC = asset('logo.png');
+import LOGO_SRC from '../assets/logo.png';
 
 const NAV_LINKS = [
   { label: 'Home', to: '/' },

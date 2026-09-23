@@ -1,10 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import PageHero from './landing/PageHero';
 import { FEATURED_PROJECT } from '../data/projects';
-import { asset } from '../lib/cdn';
-
-const canvasBg = asset('canvasbg.webp');
-const cardImage = asset('vantage.webp');
+import canvasBg from '../assets/canvasbg.webp';
+import cardImage from '../assets/vantage.webp';
 
 const OurWorkCard = ({ imageRef, tagline, image, title, link }) => {
   const navigate = useNavigate();

@@ -1,8 +1,6 @@
 import PageHero from './landing/PageHero';
-import { asset } from '../lib/cdn';
-
-const canvasBg = asset('canvasbg.webp');
-const appDevImg = asset('services/AppDevelopment-BC7DxIEZ.webp');
+import canvasBg from '../assets/canvasbg.webp';
+import appDevImg from '../assets/services/AppDevelopment-BC7DxIEZ.webp';
 
 const ServiceCard = ({ imageRef }) => (
   <div

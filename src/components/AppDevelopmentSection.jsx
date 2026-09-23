@@ -2,9 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { asset } from '../lib/cdn';
-
-const appDevImg = asset('services/AppDevelopment-BC7DxIEZ.webp');
+import appDevImg from '../assets/services/AppDevelopment-BC7DxIEZ.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 

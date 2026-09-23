@@ -1,14 +1,12 @@
-import { asset } from '../lib/cdn';
-
-const imgSauced = asset('case studies/sauced-1_IwkNFW.webp');
-const imgAtlas = asset('case studies/atlas-CJvbMeez.jpg');
-const imgMeridian = asset('case studies/meridian-C0PfNsQw.jpg');
-const imgVantage = asset('case studies/vantage-hQQo3mBo.jpg');
-const imgAura = asset('case studies/aura-D94zrlUD.jpg');
-const imgDPacific = asset('case studies/d-pacific-BJOU6N19.jpg');
-const imgEasylife = asset('case studies/easylife-BBPFfYkg.jpg');
-const imgScanZilla = asset('case studies/scanzilla-fTga8FP5.jpg');
-const imgNexus = asset('case studies/nexus-Clf_NSag.webp');
+import imgSauced from '../assets/case studies/sauced-1_IwkNFW.webp';
+import imgAtlas from '../assets/case studies/atlas-CJvbMeez.jpg';
+import imgMeridian from '../assets/case studies/meridian-C0PfNsQw.jpg';
+import imgVantage from '../assets/case studies/vantage-hQQo3mBo.jpg';
+import imgAura from '../assets/case studies/aura-D94zrlUD.jpg';
+import imgDPacific from '../assets/case studies/d-pacific-BJOU6N19.jpg';
+import imgEasylife from '../assets/case studies/easylife-BBPFfYkg.jpg';
+import imgScanZilla from '../assets/case studies/scanzilla-fTga8FP5.jpg';
+import imgNexus from '../assets/case studies/nexus-Clf_NSag.webp';
 
 export const caseStudiesData = {
   sauced: {
