@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import teamImg from '../assets/team.webp';
+import { asset } from '../lib/cdn';
+
+const teamImg = asset('team.webp');
 
 gsap.registerPlugin(ScrollTrigger);
 

@@ -2,17 +2,38 @@ import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+import { asset } from '../lib/cdn';
+
+// Flat CDN filenames: https://markcoders-media.b-cdn.net/AMMAN.jpg
+const saarangBw = asset('SAARANG.jpg');
+const shameekBw = asset('SHAHMEEK.jpg');
+const muzammilBw = asset('MUZAMMIL.jpg');
+const affanBw = asset('Affan.jpg');
+const amanBw = asset('AMAN.jpg');
+const ammarBw = asset('AMMAR.jpg');
+const shahzaibBw = asset('SHAHZAIB.jpg');
+const hassnainBw = asset('HASSNAIN.jpg');
+
+const saarangColor = asset('SAARANG_COLORED.jpg');
+const shameekColor = asset('SHAHMEEK_COLORED.jpg');
+const muzammilColor = asset('MUZAMMIL_COLORED.jpg');
+const affanColor = asset('AFFAN_COLORED.jpg');
+const amanColor = asset('AMAN_COLORED.jpg');
+const ammarColor = asset('AMMAR_COLORED.jpg');
+const shahzaibColor = asset('SHAHZAIB_COLORED.jpg');
+const hassnainColor = asset('HASSNAIN_COLORED.jpg');
+
 gsap.registerPlugin(ScrollTrigger);
 
 const avatars = [
-  'https://i.pravatar.cc/150?img=68',
-  'https://i.pravatar.cc/150?img=59',
-  'https://i.pravatar.cc/150?img=47',
-  'https://i.pravatar.cc/150?img=33',
-  'https://i.pravatar.cc/150?img=12',
-  'https://i.pravatar.cc/150?img=61',
-  'https://i.pravatar.cc/150?img=54',
-  'https://i.pravatar.cc/150?img=32',
+  { bw: saarangBw, color: saarangColor, name: 'Saarang Ali' },
+  { bw: shameekBw, color: shameekColor, name: 'Syed Shamekh Hussain' },
+  { bw: muzammilBw, color: muzammilColor, name: 'Muzammil Ahmed' },
+  { bw: affanBw, color: affanColor, name: 'Affan Abdullah' },
+  { bw: amanBw, color: amanColor, name: 'Aman Raza' },
+  { bw: ammarBw, color: ammarColor, name: 'Ammar Sheikh' },
+  { bw: shahzaibBw, color: shahzaibColor, name: 'Shahzaib Ali' },
+  { bw: hassnainBw, color: hassnainColor, name: 'Hassnain' },
 ];
 
 const TeamSection = ({ roundedTop = false }) => {
@@ -216,16 +237,25 @@ const TeamSection = ({ roundedTop = false }) => {
 
             {/* Avatars Grid */}
             <div className="avatars-container flex flex-wrap gap-2 md:gap-[10px] max-w-[380px] mb-20">
-              {avatars.map((src, i) => (
+              {avatars.map((avatar, i) => (
                 <div
                   key={i}
                   ref={el => avatarsRef.current[i] = el}
-                  className="w-[52px] h-[52px] rounded-[10px] overflow-hidden shadow-sm"
+                  className="group relative w-[52px] h-[52px] rounded-[10px] overflow-hidden shadow-sm"
                 >
-                  <img src={src} alt="Team Member" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300" />
+                  <img
+                    src={avatar.bw}
+                    alt={avatar.name}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                  <img
+                    src={avatar.color}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  />
                 </div>
-              ))}
-              {/* +25 Box */}
+              ))}              {/* +25 Box */}
               <div
                 ref={el => avatarsRef.current[8] = el}
                 className="w-[52px] h-[52px] rounded-[10px] bg-[#23b3e8] text-white flex items-center justify-center font-bold text-[15px] shadow-sm hover:scale-105 transition-transform cursor-pointer"

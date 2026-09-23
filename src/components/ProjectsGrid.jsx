@@ -3,14 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import heroCardImg from '../assets/vantage.webp';
-import saucedImg from '../assets/sauced.webp';
-import savmontImg from '../assets/Savmont.webp';
-import jerseyImg from '../assets/jersey2.webp';
-import midasImg from '../assets/midas.webp';
-import gardenImg from '../assets/gardeninminute.webp';
-import checkMyRideImg from '../assets/checkmyride.webp';
-import dogImg from '../assets/dog.webp';
+import { asset } from '../lib/cdn';
+
+const heroCardImg = asset('vantage.webp');
+const saucedImg = asset('sauced.webp');
+const savmontImg = asset('Savmont.webp');
+const jerseyImg = asset('jersey2.webp');
+const midasImg = asset('midas.webp');
+const gardenImg = asset('gardeninminute.webp');
+const checkMyRideImg = asset('checkmyride.webp');
+const dogImg = asset('dog.webp');
 
 gsap.registerPlugin(ScrollTrigger);
 

@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import chatgptImg from "../assets/ChatGPT Logo - Black - 512x512 - zonalogo.com.png";
-import claudeImg from "../assets/Claude-AI-Icon---Colored---512x512---zonalogo.com.png";
-import codexImg from "../assets/Codex Logo - Colored - 512x512 - zonalogo.com.png";
-import cursorImg from "../assets/Cursor Icon - Black - 451x512 - zonalogo.com.png";
-import geminiImg from "../assets/Google-Gemini-Icon---Colored---512x512---zonalogo.com.png";
+import { asset } from '../lib/cdn';
+
+const chatgptImg = asset('ChatGPT Logo - Black - 512x512 - zonalogo.com.png');
+const claudeImg = asset('Claude-AI-Icon---Colored---512x512---zonalogo.com.png');
+const codexImg = asset('Codex Logo - Colored - 512x512 - zonalogo.com.png');
+const cursorImg = asset('Cursor Icon - Black - 451x512 - zonalogo.com.png');
+const geminiImg = asset('Google-Gemini-Icon---Colored---512x512---zonalogo.com.png');
 
 gsap.registerPlugin(ScrollTrigger);
 

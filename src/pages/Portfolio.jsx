@@ -6,29 +6,31 @@ import TrustSection from '../components/TrustSection';
 import WorkAndPlaySection from '../components/WorkAndPlaySection';
 import TeamSection from '../components/TeamSection.jsx';
 import PageHero from '../components/landing/PageHero';
-import canvasBg from '../assets/canvasbg.webp';
+import { asset } from '../lib/cdn';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import { FEATURED_PROJECT } from '../data/projects';
-import cardImage from '../assets/vantage.webp';
 
-import img1 from '../assets/Portfolio/Cozy101-DOKmVxsg.webp';
-import img2 from '../assets/Portfolio/Sauced-2rG--Umz.webp';
-import img3 from '../assets/Portfolio/WebApp-DOdx66z1.webp';
-import img4 from '../assets/Portfolio/alextarnava-DvmfbhVB.webp';
-import img5 from '../assets/Portfolio/checkmyride-CSxqntTt.webp';
-import img6 from '../assets/Portfolio/eko-DF8SVeeE.webp';
-import img7 from '../assets/Portfolio/farkle-C0Whz4yg.webp';
-import img8 from '../assets/Portfolio/floral-BTOLSOmw.webp';
-import img9 from '../assets/Portfolio/gardeninminutes-D0oKrHHj.webp';
-import img10 from '../assets/Portfolio/iona-CHcv-X3p.webp';
-import img11 from '../assets/Portfolio/lengo-CS8-VsFT.webp';
-import img12 from '../assets/Portfolio/monasticmail-P9g6LemY.webp';
-import img13 from '../assets/Portfolio/olaads-DROMA7a-.webp';
-import img14 from '../assets/Portfolio/thejerseydesigner-CfKkuuzt.webp';
-import img15 from '../assets/Portfolio/vantage-CmEHyY-D.webp';
-import img16 from '../assets/Portfolio/wordsmith-DpXww4zo.webp';
+const canvasBg = asset('canvasbg.webp');
+const cardImage = asset('vantage.webp');
+
+const img1 = asset('Portfolio/Cozy101-DOKmVxsg.webp');
+const img2 = asset('Portfolio/Sauced-2rG--Umz.webp');
+const img3 = asset('Portfolio/WebApp-DOdx66z1.webp');
+const img4 = asset('Portfolio/alextarnava-DvmfbhVB.webp');
+const img5 = asset('Portfolio/checkmyride-CSxqntTt.webp');
+const img6 = asset('Portfolio/eko-DF8SVeeE.webp');
+const img7 = asset('Portfolio/farkle-C0Whz4yg.webp');
+const img8 = asset('Portfolio/floral-BTOLSOmw.webp');
+const img9 = asset('Portfolio/gardeninminutes-D0oKrHHj.webp');
+const img10 = asset('Portfolio/iona-CHcv-X3p.webp');
+const img11 = asset('Portfolio/lengo-CS8-VsFT.webp');
+const img12 = asset('Portfolio/monasticmail-P9g6LemY.webp');
+const img13 = asset('Portfolio/olaads-DROMA7a-.webp');
+const img14 = asset('Portfolio/thejerseydesigner-CfKkuuzt.webp');
+const img15 = asset('Portfolio/vantage-CmEHyY-D.webp');
+const img16 = asset('Portfolio/wordsmith-DpXww4zo.webp');
 
 gsap.registerPlugin(ScrollTrigger);
 

@@ -1,6 +1,8 @@
 import PageHero from './landing/PageHero';
-import canvasBg from '../assets/canvasbg.webp';
-import cardImage from '../assets/team.webp';
+import { asset } from '../lib/cdn';
+
+const canvasBg = asset('canvasbg.webp');
+const cardImage = asset('team.webp');
 
 const StoryCard = ({ imageRef }) => (
   <div

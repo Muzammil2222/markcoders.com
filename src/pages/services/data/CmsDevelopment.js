@@ -1,9 +1,11 @@
-import image14 from '../../../assets/image 14.webp';
-import image15 from '../../../assets/image 15.png';
-import vantageImg from '../../../assets/vantage.webp';
-import saucedImg from '../../../assets/sauced.webp';
-import savmontImg from '../../../assets/Savmont.webp';
-import jerseyImg from '../../../assets/jersey2.webp';
+import { asset } from '../../../lib/cdn';
+
+const image14 = asset('image 14.webp');
+const image15 = asset('image 15.png');
+const vantageImg = asset('vantage.webp');
+const saucedImg = asset('sauced.webp');
+const savmontImg = asset('Savmont.webp');
+const jerseyImg = asset('jersey2.webp');
 
 export const CmsDevelopmentData = {
   hero: {
