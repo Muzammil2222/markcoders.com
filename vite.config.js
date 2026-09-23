@@ -21,7 +21,14 @@ function resolveBase(command) {
 
 // https://vite.dev/config/
 export default defineConfig(({ command }) => ({
-  base: resolveBase(command),
+  // Do NOT set bunny CDN as `base` — JS/CSS modules require CORS from the CDN
+  // and break the Vercel site. Serve app assets from the same origin instead.
+  // Use bunny for images/storage separately if needed.
+  // GitHub Pages project site only: https://muzammil2222.github.io/markcoders.com/
+  base:
+    command === 'build' && process.env.GITHUB_ACTIONS === 'true'
+      ? '/markcoders.com/'
+      : '/',
   server: {
     allowedHosts: ['.ngrok-free.dev', '.ngrok.io'],
   },

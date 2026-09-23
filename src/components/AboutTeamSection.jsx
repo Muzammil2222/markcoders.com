@@ -43,24 +43,38 @@ const photoOnly = [
   { name: "Hassnain", imgBw: hassnainBw, imgColor: hassnainColor },
 ];
 
-// Members with photos only — duplicated for the horizontal scroll scrub
 const photoMembers = [...baseMembers.filter((m) => m.imgBw), ...photoOnly];
-const teamMembers = [...photoMembers, ...photoMembers, ...photoMembers, ...photoMembers, ...photoMembers, ...photoMembers];
+
+const PhotoCard = ({ member }) => (
+  <div className="group relative w-[140px] md:w-[180px] lg:w-[205px] h-[190px] md:h-[240px] lg:h-[282px] rounded-[15px] overflow-hidden shrink-0">
+    <img
+      src={member.imgBw}
+      alt={member.name}
+      className="absolute inset-0 w-full h-full object-cover"
+      draggable={false}
+    />
+    <img
+      src={member.imgColor}
+      alt=""
+      aria-hidden="true"
+      className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+      draggable={false}
+    />
+  </div>
+);
 
 const TeamSection = ({ roundedTop = false }) => {
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
   const descRef = useRef(null);
   const rightSideRef = useRef(null);
-  const sliderRef = useRef(null);
+  const trackRef = useRef(null);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
     let ctx = gsap.context(() => {
-
-      // 1. Heading Animation (Fade & Slide up on scroll scrub)
       if (headingRef.current) {
         gsap.fromTo(headingRef.current,
           { y: 60, opacity: 0 },
@@ -78,7 +92,6 @@ const TeamSection = ({ roundedTop = false }) => {
         );
       }
 
-      // 2. Left Text Letter-by-Letter Scrub
       const chars = descRef.current?.querySelectorAll('.team-desc-char');
       if (chars && chars.length) {
         gsap.to(chars, {
@@ -94,7 +107,6 @@ const TeamSection = ({ roundedTop = false }) => {
         });
       }
 
-      // 3. Right Side Entrance (Comes from right)
       if (rightSideRef.current) {
         gsap.fromTo(rightSideRef.current,
           { x: 150, opacity: 0 },
@@ -111,30 +123,53 @@ const TeamSection = ({ roundedTop = false }) => {
           }
         );
       }
-
-      // 4. Horizontal Slider Scrub
-      // It slides to the left as the user scrolls down through the section
-      if (sliderRef.current && sliderRef.current.parentElement) {
-        // Calculate the maximum scroll distance
-        const scrollDistance = sliderRef.current.scrollWidth - sliderRef.current.parentElement.clientWidth;
-
-        if (scrollDistance > 0) {
-          gsap.to(sliderRef.current, {
-            x: -scrollDistance,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top 30%', // start moving when section is somewhat in view
-              end: 'bottom top', // finish moving when section leaves viewport
-              scrub: 1,
-            }
-          });
-        }
-      }
-
     }, section);
 
     return () => ctx.revert();
+  }, []);
+
+  // Auto-marquee (same pattern as WhyChooseUs) — not page-scroll scrub
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    let x = 0;
+    let rafId = 0;
+    let hoverPaused = false;
+
+    const SPEED = () => {
+      const half = track.scrollWidth / 2;
+      return half > 0 ? half / (45 * 60) : 0.6;
+    };
+
+    const wrap = (val) => {
+      const half = track.scrollWidth / 2;
+      if (!half) return val;
+      while (val <= -half) val += half;
+      while (val > 0) val -= half;
+      return val;
+    };
+
+    const tick = () => {
+      if (!hoverPaused) {
+        x = wrap(x - SPEED());
+        gsap.set(track, { x });
+      }
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+
+    const onEnter = () => { hoverPaused = true; };
+    const onLeave = () => { hoverPaused = false; };
+
+    track.addEventListener('pointerenter', onEnter);
+    track.addEventListener('pointerleave', onLeave);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      track.removeEventListener('pointerenter', onEnter);
+      track.removeEventListener('pointerleave', onLeave);
+    };
   }, []);
 
   const textPart = "We are a multidisciplinary team of 35+ professionals across project management, UI/UX, web and software engineering, mobile development, QA, SEO and hosting - working together from Karachi to deliver reliable digital products for clients worldwide.";
@@ -164,7 +199,6 @@ const TeamSection = ({ roundedTop = false }) => {
     >
       <div className="w-full flex flex-col items-center">
 
-        {/* Heading */}
         <h2
           ref={headingRef}
           className="text-[#111111] font-medium text-center mb-16 md:mb-24 will-change-transform px-6"
@@ -173,10 +207,8 @@ const TeamSection = ({ roundedTop = false }) => {
           Meet the Team Behind MarkCoders
         </h2>
 
-        {/* Content Grid - Full width, but left text respects 1400px container */}
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-0 items-start">
 
-          {/* Left Side: Description (Padding left calculates to match max-w-1400px) */}
           <div className="lg:col-span-5 flex flex-col pt-4 px-6 md:px-10 lg:pr-10" style={{ paddingLeft: 'max(1.5rem, calc((100vw - 1400px) / 2 + 1.5rem))' }}>
             <p
               ref={descRef}
@@ -187,34 +219,27 @@ const TeamSection = ({ roundedTop = false }) => {
             </p>
           </div>
 
-          {/* Right Side: Carousel and Names */}
           <div ref={rightSideRef} className="lg:col-span-7 flex flex-col will-change-transform pl-6 md:pl-10 lg:pl-12 w-full">
 
-            {/* Top: Horizontal Images Slider (Bleeds to the right edge) */}
+            {/* Original horizontal strip — auto-scrolls (pauses on hover) */}
             <div className="w-full overflow-hidden">
-              <div ref={sliderRef} className="flex gap-4 md:gap-6 w-max pr-[max(1.5rem,calc((100vw-1400px)/2+1.5rem))] will-change-transform">
-                {teamMembers.map((member, i) => (
-                  <div
-                    key={i}
-                    className="group relative w-[140px] md:w-[180px] lg:w-[205px] h-[190px] md:h-[240px] lg:h-[282px] rounded-[15px] overflow-hidden shrink-0"
-                  >
-                    <img
-                      src={member.imgBw}
-                      alt={member.name}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                    <img
-                      src={member.imgColor}
-                      alt=""
-                      aria-hidden="true"
-                      className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                    />
-                  </div>
-                ))}
+              <div
+                ref={trackRef}
+                className="flex w-max will-change-transform"
+              >
+                <div className="flex gap-4 md:gap-6 pr-4 md:pr-6">
+                  {photoMembers.map((member) => (
+                    <PhotoCard key={`a-${member.name}`} member={member} />
+                  ))}
+                </div>
+                <div className="flex gap-4 md:gap-6 pr-4 md:pr-6" aria-hidden="true">
+                  {photoMembers.map((member) => (
+                    <PhotoCard key={`b-${member.name}`} member={member} />
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* Bottom: Vertical List of Names */}
             <div className="flex flex-col gap-6 mt-12 md:mt-16 w-full pr-6 md:pr-10 lg:pr-[max(1.5rem,calc((100vw-1400px)/2+1.5rem))]">
               {displayMembers.map((member, i) => (
                 <div key={`name-${i}`} className="flex flex-col">
