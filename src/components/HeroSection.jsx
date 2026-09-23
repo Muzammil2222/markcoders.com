@@ -1,7 +1,9 @@
 import PageHero from './landing/PageHero';
 import { useNavigate } from 'react-router-dom';
-import cardImage from '../assets/vantage.webp';
-import canvasBg from '../assets/canvasbg.webp';
+import { asset } from '../lib/cdn';
+
+const cardImage = asset('vantage.webp');
+const canvasBg = asset('canvasbg.webp');
 
 const HeroSection = ({ heroImageRef }) => {
   const navigate = useNavigate();

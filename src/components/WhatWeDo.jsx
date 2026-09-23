@@ -2,10 +2,12 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import img1 from '../assets/hero-card.webp';
-import img2 from '../assets/4.webp';
-import img3 from '../assets/2.webp';
-import img4 from '../assets/3.webp';
+import { asset } from '../lib/cdn';
+
+const img1 = asset('hero-card.webp');
+const img2 = asset('4.webp');
+const img3 = asset('2.webp');
+const img4 = asset('3.webp');
 
 gsap.registerPlugin(ScrollTrigger);
 
