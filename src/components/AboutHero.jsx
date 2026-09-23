@@ -141,7 +141,7 @@ const AboutHero = ({ previewImageRef }) => {
       />
       <div className="relative z-10 w-full flex-1 flex flex-col">
         <PageHero
-          title={"About us\nMarkCoders"}
+          title={"About us"}
           subtitle="MarkCoders is a custom software development company built to turn ambitious business ideas into reliable, scalable digital products."
           layout="split"
           spread
