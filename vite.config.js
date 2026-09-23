@@ -5,7 +5,9 @@ import viteCompression from 'vite-plugin-compression'
 
 // https://vite.dev/config/
 export default defineConfig(({ command }) => ({
-  // Vercel / local: site is served from domain root → base `/`
+  // Do NOT set bunny CDN as `base` — JS/CSS modules require CORS from the CDN
+  // and break the Vercel site. Serve app assets from the same origin instead.
+  // Use bunny for images/storage separately if needed.
   // GitHub Pages project site only: https://muzammil2222.github.io/markcoders.com/
   base:
     command === 'build' && process.env.GITHUB_ACTIONS === 'true'
@@ -21,10 +23,10 @@ export default defineConfig(({ command }) => ({
     allowedHosts: true,
   },
   plugins: [
-    react(), 
+    react(),
     tailwindcss(),
     viteCompression({ algorithm: 'gzip', ext: '.gz' }),
-    viteCompression({ algorithm: 'brotliCompress', ext: '.br' })
+    viteCompression({ algorithm: 'brotliCompress', ext: '.br' }),
   ],
   build: {
     rollupOptions: {
@@ -32,19 +34,19 @@ export default defineConfig(({ command }) => ({
         manualChunks: (id) => {
           if (id.includes('node_modules')) {
             if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
-              return 'vendor-react';
+              return 'vendor-react'
             }
             if (id.includes('gsap')) {
-              return 'vendor-gsap';
+              return 'vendor-gsap'
             }
             if (id.includes('three') || id.includes('@react-three')) {
-              return 'vendor-three';
+              return 'vendor-three'
             }
-            return 'vendor';
+            return 'vendor'
           }
         },
       },
     },
     chunkSizeWarningLimit: 1000,
-  }
+  },
 }))
