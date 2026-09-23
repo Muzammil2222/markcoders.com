@@ -151,16 +151,7 @@ const App = () => {
     }
   }, [])
   return (
-    <BrowserRouter
-      basename={
-        (() => {
-          const base = import.meta.env.BASE_URL || '/'
-          // Absolute CDN base must not become the router basename
-          if (/^https?:\/\//i.test(base)) return '/'
-          return base.replace(/\/$/, '') || '/'
-        })()
-      }
-    >
+    <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '') || '/'}>
       <SplashCursor
         DENSITY_DISSIPATION={2.5}
         VELOCITY_DISSIPATION={1.5}
