@@ -30,7 +30,41 @@ export default defineConfig(({ command }) => ({
       ? '/markcoders.com/'
       : '/',
   server: {
+<<<<<<< Updated upstream
     allowedHosts: ['.ngrok-free.dev', '.ngrok.io'],
+=======
+    host: true,
+    // Allow any tunnel Host header (ngrok free domain changes each session)
+    allowedHosts: true,
+    /*
+     * Through ngrok, the browser page is HTTPS on :443 but Vite HMR is on :5173.
+     * Set NGROK=1 (or NGROK_URL=https://….ngrok-free.dev) when tunneling so the
+     * client opens wss against the public host instead of localhost.
+     * Leave unset for normal local dev — otherwise local HMR breaks.
+     */
+    hmr:
+      process.env.NGROK || process.env.NGROK_URL
+        ? {
+            protocol: 'wss',
+            clientPort: 443,
+            ...(process.env.NGROK_URL
+              ? {
+                  host: process.env.NGROK_URL.replace(/^https?:\/\//, '').replace(
+                    /\/$/,
+                    ''
+                  ),
+                }
+              : {}),
+          }
+        : undefined,
+  },
+  // Keep a single React copy so createRoot always resolves (esp. through tunnels)
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-dom/client', 'react-router-dom'],
+  },
+  resolve: {
+    dedupe: ['react', 'react-dom'],
+>>>>>>> Stashed changes
   },
   preview: {
     host: '0.0.0.0',
