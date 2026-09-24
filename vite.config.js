@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import viteCompression from 'vite-plugin-compression'
 
+
 // https://vite.dev/config/
 export default defineConfig(({ command }) => ({
   // Vercel / local: site is served from domain root → base `/`
@@ -11,10 +12,6 @@ export default defineConfig(({ command }) => ({
     command === 'build' && process.env.GITHUB_ACTIONS === 'true'
       ? '/markcoders.com/'
       : '/',
-  server: {
-    // Allow ngrok tunnels when testing on other devices
-    allowedHosts: ['.ngrok-free.dev', '.ngrok.io'],
-  },
   preview: {
     host: '0.0.0.0',
     // Render / any reverse-proxy host (vite preview blocks unknown Host headers)

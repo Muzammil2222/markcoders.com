@@ -16,7 +16,6 @@ const CaseStudyDetail = lazy(() => import('./pages/CaseStudyDetail'))
 const Portfolio = lazy(() => import('./pages/Portfolio'))
 const About = lazy(() => import('./pages/About'))
 const Services = lazy(() => import('./pages/services'))
-const Branding = lazy(() => import('./pages/services/Branding'))
 const UiUx = lazy(() => import('./pages/services/UiUx'))
 const WebDevelopment = lazy(() => import('./pages/services/WebDevelopment'))
 const ApiIntegration = lazy(() => import('./pages/services/ApiIntegration'))
@@ -79,7 +78,12 @@ function SmoothScroll({ children }) {
     ScrollTrigger.scrollerProxy(scroller, {
       scrollTop(value) {
         if (arguments.length) {
-          locoScroll.scrollTo(value, { duration: 0, disableLerp: true })
+          // Refresh jumps must update scroll state and the DOM synchronously.
+          // Locomotive v4's zero-duration scrollTo can defer to the next frame.
+          locoScroll.setScroll(0, value)
+          // Smooth scrolling transforms this container (no data-scroll-section).
+          scroller.style.transform = `matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,${-value},0,1)`
+          return
         }
         return locoScroll.scroll.instance.scroll.y
       },
@@ -91,7 +95,10 @@ function SmoothScroll({ children }) {
           height: window.innerHeight,
         }
       },
-      pinType: scroller.style.transform ? 'transform' : 'fixed',
+      // Locomotive always drives scroll via a transform on this element in
+      // smooth mode. Never use 'fixed' here — it pins against the transformed
+      // container and cards just scroll away (looks like sticky is broken).
+      pinType: 'transform',
     })
     ScrollTrigger.defaults({ scroller })
     const onRefresh = () => locoScroll.update()
@@ -177,7 +184,6 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/services">
               <Route index element={<Services />} />
-              <Route path="branding" element={<Branding />} />
               <Route path="ui-ux" element={<UiUx />} />
               <Route path="web-development" element={<WebDevelopment />} />
               <Route path="api-integration" element={<ApiIntegration />} />

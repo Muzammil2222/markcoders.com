@@ -25,13 +25,14 @@ export const GraphicDesignData = {
     collageImage: image15,
     collageAlt: 'Graphic design collage',
     items: [
-      'Brand identity and logo design',
-      'Marketing and sales materials',
-      'Social media and advertising design',
-      'Presentations and pitch decks',
-      'Website, app and print graphics',
-      'Illustration, icons and visual assets',
-    ],
+      'Creative Brief & Direction',
+      'Brand & Audience Research',
+      'Concepts & Visual Exploration',
+      'Design Development',
+      'Review & Refinement',
+      'Final Artwork & File Preparation',
+      'Ongoing Brand Support'
+    ]
   },
   framework: {
     headingLine1: 'A framework that',
@@ -42,29 +43,29 @@ export const GraphicDesignData = {
         title: 'DISCOVER',
         number: '01',
         description:
-          'Uncover opportunities by diving deep into your business, market, and customers.',
-        items: ['Market research', 'Competitive analysis', 'Stakeholder interviews'],
+          'Understand your brand, audience, message, campaign goals, and visual requirements before creative work begins.',
+        items: ['Brand review', 'Audience & market research', 'Creative direction'],
       },
       {
-        title: 'DEFINE',
+        title: 'CONCEPTUALIZE',
         number: '02',
         description:
-          'Craft a unique brand identity that resonates with your audience and sets you apart.',
-        items: ['Brand strategy', 'Positioning statement', 'Messaging framework'],
+          'Translate strategy into focused visual concepts aligned with your brand identity and communication goals.',
+        items: ['Moodboards & concepts', 'Visual direction', 'Design exploration'],
       },
       {
         title: 'DESIGN',
         number: '03',
         description:
-          "Elevate your brand's visuals with logos, fonts, colors for use across all platforms.",
-        items: ['Logo suite', 'Visual system', 'Brand assets'],
+          'Develop polished visual assets with consistent typography, imagery, layout, and brand application.',
+        items: ['Brand & marketing collateral', 'Social & campaign creatives', 'Digital & print design'],
       },
       {
-        title: 'DELIVER',
+        title: 'REFINE & DELIVER',
         number: '04',
         description:
-          'Deliverables include brand guidelines and asset libraries for smooth execution.',
-        items: ['Brand guidelines', 'Asset library', 'Team training'],
+          'Refine approved concepts and prepare production-ready assets for every required platform and format.',
+        items: ['Design revisions', 'Format adaptation', 'Production-ready assets'],
       },
     ],
   },

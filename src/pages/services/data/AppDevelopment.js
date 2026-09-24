@@ -42,29 +42,29 @@ export const AppDevelopmentData = {
         title: 'DISCOVER',
         number: '01',
         description:
-          'Uncover opportunities by diving deep into your business, market, and customers.',
-        items: ['Market research', 'Competitive analysis', 'Stakeholder interviews'],
+          'Define app goals, target users, core features, and technical requirements before development begins.',
+        items: ['Product requirements', 'User & feature research', 'Technical feasibility'],
       },
       {
-        title: 'DEFINE',
+        title: 'ARCHITECT',
         number: '02',
         description:
-          'Craft a unique brand identity that resonates with your audience and sets you apart.',
-        items: ['Brand strategy', 'Positioning statement', 'Messaging framework'],
+          'Plan a scalable mobile app architecture, user flows, APIs, database structure, and technology stack.',
+        items: ['Application architecture', 'API & database planning', 'Technology selection'],
       },
       {
-        title: 'DESIGN',
+        title: 'DEVELOP',
         number: '03',
         description:
-          "Elevate your brand's visuals with logos, fonts, colors for use across all platforms.",
-        items: ['Logo suite', 'Visual system', 'Brand assets'],
+          'Build secure, high-performance iOS and Android applications with clean, maintainable code.',
+        items: ['Front-end & back-end development', 'API & third-party integrations', 'Scalable codebase'],
       },
       {
-        title: 'DELIVER',
+        title: 'TEST & LAUNCH',
         number: '04',
         description:
-          'Deliverables include brand guidelines and asset libraries for smooth execution.',
-        items: ['Brand guidelines', 'Asset library', 'Team training'],
+          'Validate quality, performance, and security before releasing a production-ready mobile application.',
+        items: ['QA & device testing', 'Performance optimization', 'App Store & Play Store deployment'],
       },
     ],
   },

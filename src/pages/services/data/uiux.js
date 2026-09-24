@@ -26,12 +26,13 @@ export const uiuxData = {
     collageImage: image15,
     collageAlt: 'UI/UX work collage',
     items: [
-      'Brand identity and logo systems',
-      'Brand positioning and messaging',
-      'Visual language and design systems',
-      'Brand guideline development',
-      'Campaign branding and creative direction',
-      'Brand refresh and rebranding projects',
+      'Discovery & Kickoff',
+      'Research & UX Strategy',
+      'Wireframing & Experience Mapping',
+      'UI Design & Prototyping',
+      'Usability Testing & Refinement',
+      'Developer Handoff',
+      'Launch Support',
     ],
   },
   framework: {
@@ -40,32 +41,32 @@ export const uiuxData = {
     ctaLabel: 'Discuss Our Approach',
     cards: [
       {
-        title: 'DISCOVER',
+        title: 'RESEARCH',
         number: '01',
         description:
-          'Uncover opportunities by diving deep into your business, market, and customers.',
-        items: ['Market research', 'Competitive analysis', 'Stakeholder interviews'],
+          'Understand users, business goals, pain points, behaviors, and product opportunities through focused discovery.',
+        items: ['User research', 'Competitor analysis', 'Product & usability insights'],
       },
       {
         title: 'DEFINE',
         number: '02',
         description:
-          'Craft a unique brand identity that resonates with your audience and sets you apart.',
-        items: ['Brand strategy', 'Positioning statement', 'Messaging framework'],
+          'Turn research into clear user journeys, information architecture, and experience priorities.',
+        items: ['User flows', 'Information architecture', 'Wireframes'],
       },
       {
         title: 'DESIGN',
         number: '03',
         description:
-          "Elevate your brand's visuals with logos, fonts, colors for use across all platforms.",
-        items: ['Logo suite', 'Visual system', 'Brand assets'],
+          'Create intuitive, high-fidelity interfaces supported by reusable components and a consistent visual system.',
+        items: ['High-fidelity UI design', 'Design systems', 'Interactive prototypes'],
       },
       {
-        title: 'DELIVER',
+        title: 'VALIDATE & HANDOFF',
         number: '04',
         description:
-          'Deliverables include brand guidelines and asset libraries for smooth execution.',
-        items: ['Brand guidelines', 'Asset library', 'Team training'],
+          'Test the experience, refine key interactions, and prepare development-ready design specifications.',
+        items: ['Usability testing', 'Design refinement', 'Developer handoff'],
       },
     ],
   },

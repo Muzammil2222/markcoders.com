@@ -26,12 +26,13 @@ export const apiIntegrationData = {
     collageImage: image15,
     collageAlt: 'API integration collage',
     items: [
-      'Custom API development',
-      'Third-party platform integrations',
-      'Workflow automation',
-      'CRM, payment and booking connections',
-      'Data synchronization and monitoring',
-      'Secure authentication and access control',
+      'Workflow & System Review',
+      'Integration Planning',
+      'Data Mapping & Security',
+      'API & Automation Development',
+      'Testing & Error Handling',
+      'Deployment & Documentation',
+      'Monitoring & Support',
     ],
   },
   framework: {
@@ -40,32 +41,32 @@ export const apiIntegrationData = {
     ctaLabel: 'Discuss Our Approach',
     cards: [
       {
-        title: 'DISCOVER',
+        title: 'ANALYZE',
         number: '01',
         description:
-          'Uncover opportunities by diving deep into your business, market, and customers.',
-        items: ['Market research', 'Competitive analysis', 'Stakeholder interviews'],
+          'Map workflows, systems, repetitive tasks, data movement, and integration opportunities across your operations.',
+        items: ['Workflow audit', 'System & data mapping', 'Automation opportunities'],
       },
       {
-        title: 'DEFINE',
+        title: 'ARCHITECT',
         number: '02',
         description:
-          'Craft a unique brand identity that resonates with your audience and sets you apart.',
-        items: ['Brand strategy', 'Positioning statement', 'Messaging framework'],
+          'Design secure automation flows and API connections that keep systems reliable and data synchronized.',
+        items: ['Integration architecture', 'API & webhook planning', 'Security & error handling'],
       },
       {
-        title: 'DESIGN',
+        title: 'INTEGRATE & AUTOMATE',
         number: '03',
         description:
-          "Elevate your brand's visuals with logos, fonts, colors for use across all platforms.",
-        items: ['Logo suite', 'Visual system', 'Brand assets'],
+          'Build custom API integrations and automated workflows that reduce manual work and connect your tools.',
+        items: ['API & third-party integrations', 'Workflow automation', 'Data synchronization'],
       },
       {
-        title: 'DELIVER',
+        title: 'TEST & OPTIMIZE',
         number: '04',
         description:
-          'Deliverables include brand guidelines and asset libraries for smooth execution.',
-        items: ['Brand guidelines', 'Asset library', 'Team training'],
+          'Validate reliability, monitor failures, and optimize automations for stable long-term performance.',
+        items: ['End-to-end testing', 'Logging & monitoring', 'Performance optimization'],
       },
     ],
   },
