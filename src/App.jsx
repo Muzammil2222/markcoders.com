@@ -4,6 +4,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import LocomotiveScroll from 'locomotive-scroll'
 import SplashCursor from './components/SplashCursor'
+import DocumentTitle from './components/DocumentTitle'
 import { setLocoScroll } from './lib/scrollBus'
 import { initMagneticSnap, shouldEnableMagneticSnap } from './lib/magneticSnap'
 import 'locomotive-scroll/dist/locomotive-scroll.css'
@@ -159,6 +160,7 @@ const App = () => {
   }, [])
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '') || '/'}>
+      <DocumentTitle />
       <SplashCursor
         DENSITY_DISSIPATION={2.5}
         VELOCITY_DISSIPATION={1.5}
