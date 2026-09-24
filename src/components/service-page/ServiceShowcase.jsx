@@ -1,106 +1,35 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { createImageMorph } from '../../lib/imageMorph';
 
 const ServiceShowcase = ({ previewImageRef, imageSrc, imageAlt = 'Showcase' }) => {
   const sectionRef = useRef(null);
   const targetImageContainerRef = useRef(null);
-  const cloneRef = useRef(null);
   const [morphComplete, setMorphComplete] = useState(false);
 
   useEffect(() => {
-    if (!previewImageRef?.current || !targetImageContainerRef.current || !imageSrc) return;
+    if (!previewImageRef?.current || !targetImageContainerRef.current || !sectionRef.current || !imageSrc) return;
 
     const heroImg = previewImageRef.current;
-    const targetContainer = targetImageContainerRef.current;
     const mm = gsap.matchMedia();
-
-    document.querySelectorAll('.service-morph-clone').forEach((el) => el.remove());
 
     mm.add('(min-width: 640px)', () => {
       setMorphComplete(false);
       heroImg.style.opacity = '1';
 
-      let st;
-      const timer = setTimeout(() => {
-        const clone = document.createElement('img');
-        clone.src = imageSrc;
-        clone.alt = imageAlt;
-        clone.className = 'service-morph-clone';
-        clone.style.cssText = `
-          position: fixed;
-          pointer-events: none;
-          z-index: 9999;
-          border-radius: 15px;
-          object-fit: cover;
-          will-change: transform, width, height, top, left;
-          transition: none;
-        `;
-        document.body.appendChild(clone);
-        cloneRef.current = clone;
-
-        const positionClone = () => {
-          const r = heroImg.getBoundingClientRect();
-          clone.style.top = `${r.top}px`;
-          clone.style.left = `${r.left}px`;
-          clone.style.width = `${r.width}px`;
-          clone.style.height = `${r.height}px`;
-        };
-        positionClone();
-        gsap.set(clone, { opacity: 0 });
-
-        st = ScrollTrigger.create({
-          trigger: sectionRef.current,
-          start: 'top 95%',
-          end: 'top 15%',
-          scrub: 0.6,
-          onUpdate: (self) => {
-            const progress = self.progress;
-            const heroRect = heroImg.getBoundingClientRect();
-            const targetRect = targetContainer.getBoundingClientRect();
-
-            const currentTop = heroRect.top + (targetRect.top - heroRect.top) * progress;
-            const currentLeft = heroRect.left + (targetRect.left - heroRect.left) * progress;
-            const currentWidth = heroRect.width + (targetRect.width - heroRect.width) * progress;
-            const currentHeight = heroRect.height + (targetRect.height - heroRect.height) * progress;
-            const currentRadius = 15 + (24 - 15) * progress;
-
-            clone.style.top = `${currentTop}px`;
-            clone.style.left = `${currentLeft}px`;
-            clone.style.width = `${currentWidth}px`;
-            clone.style.height = `${currentHeight}px`;
-            clone.style.borderRadius = `${currentRadius}px`;
-
-            if (progress > 0.02) {
-              clone.style.opacity = '1';
-              heroImg.style.opacity = '0';
-            } else {
-              clone.style.opacity = '0';
-              heroImg.style.opacity = '1';
-            }
-
-            if (progress > 0.95) {
-              setMorphComplete(true);
-              clone.style.opacity = '0';
-            } else {
-              setMorphComplete(false);
-            }
-          },
-        });
-      }, 300);
-
-      return () => {
-        clearTimeout(timer);
-        st?.kill();
-        if (cloneRef.current) {
-          cloneRef.current.remove();
-          cloneRef.current = null;
-        }
-        heroImg.style.opacity = '1';
-        setMorphComplete(false);
-      };
+      return createImageMorph({
+        heroImg,
+        targetEl: targetImageContainerRef.current,
+        triggerEl: sectionRef.current,
+        cloneClass: 'service-morph-clone',
+        src: imageSrc,
+        alt: imageAlt,
+        start: 'top 95%',
+        end: 'top 15%',
+        startRadius: 15,
+        endRadius: 24,
+        onCompleteChange: setMorphComplete,
+      });
     });
 
     mm.add('(max-width: 639px)', () => {
@@ -113,10 +42,7 @@ const ServiceShowcase = ({ previewImageRef, imageSrc, imageAlt = 'Showcase' }) =
 
     return () => {
       mm.revert();
-      if (cloneRef.current) {
-        cloneRef.current.remove();
-        cloneRef.current = null;
-      }
+      heroImg.style.opacity = '1';
     };
   }, [previewImageRef, imageSrc, imageAlt]);
 

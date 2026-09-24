@@ -1,6 +1,6 @@
 import PageHero from '../landing/PageHero';
 import { useNavigate } from 'react-router-dom';
-import canvasBg from '../../assets/canvasbg.webp';
+import BlueWaves from '../BlueWaves';
 
 const StoryCard = ({ imageRef, cardImage, cardTitle, cardSubtitle, cardImageAlt }) => {
   const navigate = useNavigate();
@@ -126,14 +126,9 @@ const ServiceHero = ({
 }) => {
   return (
     <section className="relative min-h-[100svh] flex flex-col justify-between pt-28 pb-12 px-6 md:px-10 lg:px-16 overflow-visible z-10">
-      <img
-        src={canvasBg}
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none z-0 opacity-80"
-        style={{
-          filter: 'brightness(0.9) contrast(1.1)',
-        }}
-      />
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-80">
+        <BlueWaves color={[0.0, 0.37, 0.97]} level={0.42} />
+      </div>
 
       <div
         className="absolute inset-0 pointer-events-none z-0"

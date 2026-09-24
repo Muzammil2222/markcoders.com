@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { createImageMorph } from '../lib/imageMorph';
 import teamImg from '../assets/team.webp';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -9,110 +10,27 @@ const AboutStory = ({ previewImageRef }) => {
   const sectionRef = useRef(null);
   const targetImageContainerRef = useRef(null);
   const targetImageRef = useRef(null);
-  const cloneRef = useRef(null);
   const paragraphRef = useRef(null);
   const headingRef = useRef(null);
   const statsRef = useRef(null);
   const [morphComplete, setMorphComplete] = useState(false);
 
   useEffect(() => {
-    if (!previewImageRef?.current || !targetImageContainerRef.current) return;
+    if (!previewImageRef?.current || !targetImageContainerRef.current || !sectionRef.current) return;
 
-    const heroImg = previewImageRef.current;
-    const targetContainer = targetImageContainerRef.current;
-
-    document.querySelectorAll('.about-morph-clone').forEach((el) => el.remove());
-
-    const timer = setTimeout(() => {
-      const clone = document.createElement('img');
-      clone.src = teamImg;
-      clone.alt = 'Team';
-      clone.className = 'about-morph-clone';
-      clone.style.cssText = `
-        position: fixed;
-        pointer-events: none;
-        z-index: 9999;
-        border-radius: 15px;
-        object-fit: cover;
-        will-change: transform, width, height, top, left;
-        transition: none;
-      `;
-      document.body.appendChild(clone);
-      cloneRef.current = clone;
-
-      const positionClone = () => {
-        const r = heroImg.getBoundingClientRect();
-        clone.style.top = r.top + 'px';
-        clone.style.left = r.left + 'px';
-        clone.style.width = r.width + 'px';
-        clone.style.height = r.height + 'px';
-      };
-      positionClone();
-
-      gsap.set(clone, { opacity: 0 });
-
-      const st = ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: 'top 95%',
-        end: 'top 20%',
-        scrub: 0.6,
-        onUpdate: (self) => {
-          const progress = self.progress;
-
-          const heroRect = heroImg.getBoundingClientRect();
-          const targetRect = targetContainer.getBoundingClientRect();
-
-          const startTop = heroRect.top;
-          const startLeft = heroRect.left;
-          const startWidth = heroRect.width;
-          const startHeight = heroRect.height;
-
-          const endTop = targetRect.top;
-          const endLeft = targetRect.left;
-          const endWidth = targetRect.width;
-          const endHeight = targetRect.height;
-
-          const currentTop = startTop + (endTop - startTop) * progress;
-          const currentLeft = startLeft + (endLeft - startLeft) * progress;
-          const currentWidth = startWidth + (endWidth - startWidth) * progress;
-          const currentHeight = startHeight + (endHeight - startHeight) * progress;
-          const currentRadius = 15 + (20 - 15) * progress;
-
-          clone.style.top = currentTop + 'px';
-          clone.style.left = currentLeft + 'px';
-          clone.style.width = currentWidth + 'px';
-          clone.style.height = currentHeight + 'px';
-          clone.style.borderRadius = currentRadius + 'px';
-
-          if (progress > 0.02) {
-            clone.style.opacity = '1';
-            heroImg.style.opacity = '0';
-          } else {
-            clone.style.opacity = '0';
-            heroImg.style.opacity = '1';
-          }
-
-          if (progress > 0.95) {
-            setMorphComplete(true);
-            clone.style.opacity = '0';
-          } else {
-            setMorphComplete(false);
-          }
-        },
-      });
-
-      return () => {
-        st.kill();
-        clone.remove();
-      };
-    }, 300);
-
-    return () => {
-      clearTimeout(timer);
-      if (cloneRef.current) {
-        cloneRef.current.remove();
-      }
-    };
+    return createImageMorph({
+      heroImg: previewImageRef.current,
+      targetEl: targetImageContainerRef.current,
+      triggerEl: sectionRef.current,
+      cloneClass: 'about-morph-clone',
+      src: teamImg,
+      alt: 'Team',
+      start: 'top 95%',
+      end: 'top 20%',
+      startRadius: 15,
+      endRadius: 20,
+      onCompleteChange: setMorphComplete,
+    });
   }, [previewImageRef]);
 
   // Entrance Animations

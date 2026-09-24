@@ -81,9 +81,8 @@
 
 .markcoders-fill--blue {
   -webkit-text-stroke: 1px #009cff;
-  text-shadow:
-    0 0 12px rgba(0, 156, 255, 0.5),
-    0 0 32px rgba(0, 156, 255, 0.25);
+  /* Glow kept light — full dual-layer shadows re-paint while Locomotive scrolls the footer */
+  text-shadow: 0 0 10px rgba(0, 156, 255, 0.35);
 }
 
 .markcoders-reveal--blue {

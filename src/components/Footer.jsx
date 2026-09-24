@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import MarkcodersText from "./MarkcodersText";
+import BlueWaves from "./BlueWaves";
 
 import "../App.css";
 import "./Footer.css";
@@ -139,6 +140,9 @@ const Footer = () => {
 
   return (
     <footer ref={rootRef} className="footer footer-bg">
+      <div className="footer-bg__waves" aria-hidden="true">
+        <BlueWaves color={[0.0, 0.37, 0.97]} level={0.38} amplitude={0.08} />
+      </div>
       <div className="footer__inner mx-auto w-[90%] sm:w-[92%] lg:w-[95%] max-w-[1440px] pt-16 sm:pt-20 lg:pt-24 pb-40">
         <div className="footer__top flex flex-col gap-14 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
           <div className="footer__intro max-w-md">
