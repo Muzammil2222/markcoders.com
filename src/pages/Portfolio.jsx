@@ -66,7 +66,6 @@ const OurWorkCard = ({ tagline, image, title, link }) => {
       background: '#00060B',
       border: '1px solid #FFFFFF66',
       borderRadius: '15px',
-      backdropFilter: 'blur(20px)',
       opacity: 1,
     }}
     onClick={() => navigate('/portfolio')}

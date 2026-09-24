@@ -174,10 +174,11 @@ const Navbar = () => {
       ref={navRef}
       className="fixed top-0 left-0 right-0 z-[60] px-6 md:px-10 lg:px-16 py-5 will-change-transform"
       style={{
+        // No backdrop-filter: a full-width blur re-rasterizes on every scrolled
+        // frame. The gradient is the page background colour, so a near-opaque
+        // fill reads the same without the per-frame cost.
         background:
-          'linear-gradient(180deg, rgba(3,7,18,0.98) 0%, rgba(3,7,18,0.95) 60%, rgba(3,7,18,0.85) 100%)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
+          'linear-gradient(180deg, rgba(3,7,18,1) 0%, rgba(3,7,18,0.98) 60%, rgba(3,7,18,0.92) 100%)',
       }}
     >
       <div className="max-w-[1400px] mx-auto flex items-center justify-between">
