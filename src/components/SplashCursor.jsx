@@ -1,5 +1,18 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+/**
+ * A fullscreen WebGL fluid sim costs a frame budget every frame it runs, and a
+ * slow frame during scroll is what reads as "rough scrolling". So: never run it
+ * where it has no purpose (no cursor on touch), and never run it when the user
+ * has asked for less motion.
+ */
+function shouldRenderFluid() {
+  if (typeof window === 'undefined' || !window.matchMedia) return false;
+  if (window.matchMedia('(pointer: coarse)').matches) return false;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+  return true;
+}
 
 function SplashCursor({
   SIM_RESOLUTION = 128,
@@ -21,8 +34,10 @@ function SplashCursor({
 }) {
   const canvasRef = useRef(null);
   const animationFrameId = useRef(null);
+  const [enabled] = useState(shouldRenderFluid);
 
   useEffect(() => {
+    if (!enabled) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -63,6 +78,19 @@ function SplashCursor({
     };
 
     let pointers = [new pointerPrototype()];
+
+    // Integrated GPUs choke on a 1440px dye texture with 20 pressure
+    // iterations. Scale the simulation down there rather than dropping the
+    // effect — it looks near-identical at this size and costs a fraction.
+    const lowPower =
+      (navigator.hardwareConcurrency || 8) <= 4 ||
+      (navigator.deviceMemory || 8) <= 4;
+    if (lowPower) {
+      config.DYE_RESOLUTION = Math.min(config.DYE_RESOLUTION, 512);
+      config.SIM_RESOLUTION = Math.min(config.SIM_RESOLUTION, 96);
+      config.PRESSURE_ITERATIONS = Math.min(config.PRESSURE_ITERATIONS, 12);
+      config.SHADING = false;
+    }
 
     const { gl, ext } = getWebGLContext(canvas);
     if (!ext.supportLinearFiltering) {
@@ -678,6 +706,29 @@ function SplashCursor({
     let lastUpdateTime = Date.now();
     let colorUpdateTimer = 0.0;
 
+    // Once the pointer stops, the dye dissipates within ~1s — every frame after
+    // that simulates nothing at full cost, right while the user is scrolling.
+    const IDLE_MS = 1500;
+    let lastPointerActivity = Date.now();
+    let idle = false;
+
+    function markPointerActivity() {
+      lastPointerActivity = Date.now();
+      if (!idle || !isActive) return;
+      idle = false;
+      lastUpdateTime = Date.now();
+      animationFrameId.current = requestAnimationFrame(updateFrame);
+    }
+
+    function goIdle() {
+      idle = true;
+      animationFrameId.current = null;
+      // Don't leave the last frame frozen on screen
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+    }
+
     function updateFrame() {
       if (!isActive) return;
       const dt = calcDeltaTime();
@@ -686,6 +737,11 @@ function SplashCursor({
       applyInputs();
       step(dt);
       render(null);
+
+      if (Date.now() - lastPointerActivity > IDLE_MS) {
+        goIdle();
+        return;
+      }
       animationFrameId.current = requestAnimationFrame(updateFrame);
     }
 
@@ -1036,6 +1092,13 @@ function SplashCursor({
     window.addEventListener('touchmove', handleTouchMove, false);
     window.addEventListener('touchend', handleTouchEnd);
 
+    // Separate passive listeners so the idle loop restarts without touching
+    // the pointer handlers above
+    window.addEventListener('mousedown', markPointerActivity, { passive: true });
+    window.addEventListener('mousemove', markPointerActivity, { passive: true });
+    window.addEventListener('touchstart', markPointerActivity, { passive: true });
+    window.addEventListener('touchmove', markPointerActivity, { passive: true });
+
     updateFrame();
 
     // Cleanup function
@@ -1054,9 +1117,16 @@ function SplashCursor({
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchend', handleTouchEnd);
+
+      window.removeEventListener('mousedown', markPointerActivity);
+      window.removeEventListener('mousemove', markPointerActivity);
+      window.removeEventListener('touchstart', markPointerActivity);
+      window.removeEventListener('touchmove', markPointerActivity);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [enabled]);
+
+  if (!enabled) return null;
 
   return (
     <div

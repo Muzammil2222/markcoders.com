@@ -12,7 +12,6 @@ const ServiceCard = ({ imageRef }) => (
       background: '#00060B',
       border: '1px solid #FFFFFF66',
       borderRadius: '15px',
-      backdropFilter: 'blur(20px)',
       opacity: 1,
     }}
   >
