@@ -52,12 +52,7 @@ const SocialIcon = ({ name }) => {
 
 const SOCIAL_LINKS = [
   {
-    label: "Instagram",
-    href: "https://www.instagram.com/markcoders.official/",
-    icon: "instagram",
-  },
-  {
-    label: "Linkedin",
+    label: "LinkedIn",
     href: "https://www.linkedin.com/company/markcoders",
     icon: "linkedin",
   },
@@ -66,6 +61,11 @@ const SOCIAL_LINKS = [
     href: "https://www.facebook.com/markcodersofficial/",
     icon: "facebook",
   },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/markcoders.official/",
+    icon: "instagram",
+  }
 ];
 
 const HEADING_LINES = [

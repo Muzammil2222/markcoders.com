@@ -11,6 +11,10 @@ import 'locomotive-scroll/dist/locomotive-scroll.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// Scroll-linked tweens should follow the scroll position, not be time-corrected
+// after a dropped frame — that correction is what shows up as a small lurch.
+gsap.ticker.lagSmoothing(0)
+
 const Home = lazy(() => import('./pages/Home'))
 const CaseStudies = lazy(() => import('./pages/CaseStudies'))
 const CaseStudyDetail = lazy(() => import('./pages/CaseStudyDetail'))
@@ -56,11 +60,17 @@ function SmoothScroll({ children }) {
     const locoScroll = new LocomotiveScroll({
       el: scroller,
       smooth: true,
-      // Lower lerp = silkier inertia; slightly lower multiplier = less jumpy wheel
-      lerp: 0.075,
-      multiplier: 1.55,
-      smartphone: { smooth: true, lerp: 0.1 },
-      tablet: { smooth: true, lerp: 0.085 },
+      // lerp = how fast it catches up to the target (lower = longer glide).
+      // multiplier = how far one wheel notch travels; high values make the
+      // target jump far ahead, which reads as "jumpy" no matter how low the
+      // lerp is. Keep the notch small and let the easing do the work.
+      lerp: 0.085,
+      multiplier: 1.0,
+      // Firefox reports wheel deltas in lines, not pixels
+      firefoxMultiplier: 40,
+      touchMultiplier: 2.2,
+      smartphone: { smooth: true, lerp: 0.1, multiplier: 1 },
+      tablet: { smooth: true, lerp: 0.09, multiplier: 1 },
     })
     locoRef.current = locoScroll
     setLocoScroll(locoScroll)
@@ -119,9 +129,13 @@ function SmoothScroll({ children }) {
     const t2 = window.setTimeout(refresh, 400)
     const t3 = window.setTimeout(refresh, 1000)
 
+    // Pinned sections resize the container constantly while scrolling, and a
+    // ScrollTrigger.refresh() mid-scroll reverts/remeasures every trigger —
+    // that is the hitch you feel. Debounce so it only runs once things settle.
+    let roTimer = null
     const ro = new ResizeObserver(() => {
-      locoScroll.update()
-      ScrollTrigger.refresh()
+      if (roTimer != null) window.clearTimeout(roTimer)
+      roTimer = window.setTimeout(refresh, 180)
     })
     ro.observe(scroller)
 
@@ -130,6 +144,7 @@ function SmoothScroll({ children }) {
       window.clearTimeout(t2)
       window.clearTimeout(t3)
       if (snapTimer != null) window.clearTimeout(snapTimer)
+      if (roTimer != null) window.clearTimeout(roTimer)
       destroySnap?.()
       ro.disconnect()
       ScrollTrigger.removeEventListener('refresh', onRefresh)

@@ -2,17 +2,35 @@ import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+import saarangBw from '../assets/B&W HEADSHOTS/SAARANG.jpg';
+import shameekBw from '../assets/B&W HEADSHOTS/SHAHMEEK.jpg';
+import muzammilBw from '../assets/B&W HEADSHOTS/MUZAMMIL.jpg';
+import affanBw from '../assets/B&W HEADSHOTS/Affan.jpg';
+import amanBw from '../assets/B&W HEADSHOTS/AMAN.jpg';
+import ammarBw from '../assets/B&W HEADSHOTS/AMMAR.jpg';
+import shahzaibBw from '../assets/B&W HEADSHOTS/SHAHZAIB.jpg';
+import hassnainBw from '../assets/B&W HEADSHOTS/HASSNAIN.jpg';
+
+import saarangColor from '../assets/COLORFUL HEADSHOTS/SAARANG.jpg';
+import shameekColor from '../assets/COLORFUL HEADSHOTS/SHAHMEEK.jpg';
+import muzammilColor from '../assets/COLORFUL HEADSHOTS/MUZAMMIL.jpg';
+import affanColor from '../assets/COLORFUL HEADSHOTS/AFFAN.jpg';
+import amanColor from '../assets/COLORFUL HEADSHOTS/AMAN.jpg';
+import ammarColor from '../assets/COLORFUL HEADSHOTS/AMMAR.jpg';
+import shahzaibColor from '../assets/COLORFUL HEADSHOTS/SHAHZAIB.jpg';
+import hassnainColor from '../assets/COLORFUL HEADSHOTS/HASSNAIN.jpg';
+
 gsap.registerPlugin(ScrollTrigger);
 
 const avatars = [
-  'https://i.pravatar.cc/150?img=68',
-  'https://i.pravatar.cc/150?img=59',
-  'https://i.pravatar.cc/150?img=47',
-  'https://i.pravatar.cc/150?img=33',
-  'https://i.pravatar.cc/150?img=12',
-  'https://i.pravatar.cc/150?img=61',
-  'https://i.pravatar.cc/150?img=54',
-  'https://i.pravatar.cc/150?img=32',
+  { bw: saarangBw, color: saarangColor, name: 'Saarang Ali' },
+  { bw: shameekBw, color: shameekColor, name: 'Syed Shamekh Hussain' },
+  { bw: muzammilBw, color: muzammilColor, name: 'Muzammil Ahmed' },
+  { bw: affanBw, color: affanColor, name: 'Affan Abdullah' },
+  { bw: amanBw, color: amanColor, name: 'Aman Raza' },
+  { bw: ammarBw, color: ammarColor, name: 'Ammar Sheikh' },
+  { bw: shahzaibBw, color: shahzaibColor, name: 'Shahzaib Ali' },
+  { bw: hassnainBw, color: hassnainColor, name: 'Hassnain' },
 ];
 
 const TeamSection = ({ roundedTop = false }) => {
@@ -216,13 +234,25 @@ const TeamSection = ({ roundedTop = false }) => {
 
             {/* Avatars Grid */}
             <div className="avatars-container flex flex-wrap gap-2 md:gap-[10px] max-w-[380px] mb-20">
-              {avatars.map((src, i) => (
+              {avatars.map((avatar, i) => (
                 <div
-                  key={i}
+                  key={avatar.name}
                   ref={el => avatarsRef.current[i] = el}
-                  className="w-[52px] h-[52px] rounded-[10px] overflow-hidden shadow-sm"
+                  className="group relative w-[52px] h-[52px] rounded-[10px] overflow-hidden shadow-sm"
                 >
-                  <img src={src} alt="Team Member" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300" />
+                  <img
+                    src={avatar.bw}
+                    alt={avatar.name}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    draggable={false}
+                  />
+                  <img
+                    src={avatar.color}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    draggable={false}
+                  />
                 </div>
               ))}
               {/* +25 Box */}
