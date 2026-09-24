@@ -146,14 +146,17 @@
 
 .footer__social-link {
   display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
+  align-items: flex-start;
+  gap: 0.6rem;
 }
 
 .footer__social-icon {
   flex-shrink: 0;
-  width: 1.05em;
-  height: 1.05em;
+  display: block;
+  width: 20px;
+  height: 20px;
+  /* Optical center with the first text line (line-height ≈ 1.5 × font-size) */
+  margin-top: 0.28em;
   color: #ffffff;
   transition: color 0.3s ease, filter 0.3s ease;
 }
@@ -186,16 +189,6 @@
 .footer__contact-link--mail:hover .footer__social-icon,
 .footer__contact-link--mail:focus-visible .footer__social-icon {
   color: #25a9e0;
-}
-
-.footer__address.footer__social-link {
-  display: inline-flex;
-  align-items: flex-start;
-  gap: 0.55rem;
-}
-
-.footer__address.footer__social-link .footer__social-icon {
-  margin-top: 0.2em;
 }
 
 .footer__address {
