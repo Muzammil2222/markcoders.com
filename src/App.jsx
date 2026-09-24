@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import LocomotiveScroll from 'locomotive-scroll'
-import SplashCursor from './components/SplashCursor'
 import DocumentTitle from './components/DocumentTitle'
 import { setLocoScroll } from './lib/scrollBus'
 import { initMagneticSnap, shouldEnableMagneticSnap } from './lib/magneticSnap'
@@ -176,18 +175,6 @@ const App = () => {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '') || '/'}>
       <DocumentTitle />
-      <SplashCursor
-        DENSITY_DISSIPATION={2.5}
-        VELOCITY_DISSIPATION={1.5}
-        PRESSURE={0.1}
-        CURL={2}
-        SPLAT_RADIUS={0.2}
-        SPLAT_FORCE={6000}
-        COLOR_UPDATE_SPEED={12}
-        SHADING
-        RAINBOW_MODE={false}
-        COLOR="#005ef7"
-      />
       <Suspense
         fallback={
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#030712]">
