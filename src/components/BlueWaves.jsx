@@ -85,9 +85,9 @@ function compile(gl, type, src) {
 
 export default function BlueWaves({
   speed = 0.25,
-  frequency = 2,
+  frequency = 1,
   amplitude = 0.1,
-  level = 0.45,
+  level =   0.7,
   color = [0.0, 0.45, 1.0],
   className = '',
   style = {},
