@@ -5,6 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ReactLenis, useLenis } from 'lenis/react'
 import DocumentTitle from './components/DocumentTitle'
 import ScrollToTopButton from './components/ScrollToTopButton'
+import SplashCursor from './components/SplashCursor'
 import { setLenis } from './lib/scrollBus'
 import { initSectionSnap, shouldEnableSectionSnap } from './lib/magneticSnap'
 
@@ -126,6 +127,18 @@ const App = () => {
         <DocumentTitle />
         <ScrollRig />
         <ScrollToTopButton />
+        <SplashCursor
+          DENSITY_DISSIPATION={1.8}
+          VELOCITY_DISSIPATION={1.1}
+          PRESSURE={0.1}
+          CURL={3}
+          SPLAT_RADIUS={0.2}
+          SPLAT_FORCE={6000}
+          COLOR_UPDATE_SPEED={10}
+          SHADING
+          RAINBOW_MODE={false}
+          COLOR="#00008B"
+        />
         <Suspense
           fallback={
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#030712]">
