@@ -18,6 +18,11 @@ const EXPLORE_LINKS = [
   { label: "Portfolio", to: "/portfolio" },
 ];
 
+const LEGAL_LINKS = [
+  { label: "Terms & Conditions", to: "/terms" },
+  { label: "Privacy Policy", to: "/privacy" },
+];
+
 const SocialIcon = ({ name }) => {
   const common = {
     width: 20,
@@ -143,7 +148,7 @@ const Footer = () => {
       <div className="footer-bg__waves" aria-hidden="true">
         <BlueWaves color={[0.0, 0.37, 0.97]} level={0.38} amplitude={0.08} />
       </div>
-      <div className="footer__inner mx-auto w-[90%] sm:w-[92%] lg:w-[95%] max-w-[1440px] pt-16 sm:pt-20 lg:pt-24 pb-40">
+      <div className="footer__inner mx-auto w-[90%] sm:w-[92%] lg:w-[95%] max-w-[1440px] pt-16 sm:pt-20 lg:pt-24 pb-12 sm:pb-16 lg:pb-20">
         <div className="footer__top flex flex-col gap-14 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
           <div className="footer__intro max-w-md">
             <h2
@@ -298,7 +303,22 @@ const Footer = () => {
             </div>
           </nav>
         </div>
+      </div>
 
+      {/* Full-bleed legal bar */}
+      <hr className="footer__legal-hr" aria-hidden="true" />
+      <div className="footer__legal relative z-[5]">
+        <div className="mx-auto w-[90%] sm:w-[92%] lg:w-[95%] max-w-[1440px] py-5 sm:py-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end sm:gap-x-8 sm:gap-y-2">
+          {LEGAL_LINKS.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className="footer__legal-link"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
       </div>
 
       <div className="js-brand footer__brand-wrap">

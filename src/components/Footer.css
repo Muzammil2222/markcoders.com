@@ -3,7 +3,8 @@
 .footer-bg {
   position: relative;
   background-color: #000000;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .footer-bg__waves {

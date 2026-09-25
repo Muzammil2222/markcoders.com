@@ -16,6 +16,8 @@ const STATIC_TITLES = {
   '/services/graphic-design': `Graphic Design - ${BRAND}`,
   '/case-studies': `Case Studies - ${BRAND}`,
   '/portfolio': `Portfolio - ${BRAND}`,
+  '/terms': `Terms and Conditions - ${BRAND}`,
+  '/privacy': `Privacy Policy - ${BRAND}`,
 }
 
 function resolveTitle(pathname) {
@@ -28,7 +30,8 @@ function resolveTitle(pathname) {
     return `${name} - ${BRAND}`
   }
 
-  return BRAND
+  // Unknown routes → 404
+  return `404 - ${BRAND}`
 }
 
 /** Sets document.title from the current route. */

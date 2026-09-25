@@ -18,6 +18,9 @@ const CaseStudies = lazy(() => import('./pages/CaseStudies'))
 const CaseStudyDetail = lazy(() => import('./pages/CaseStudyDetail'))
 const Portfolio = lazy(() => import('./pages/Portfolio'))
 const About = lazy(() => import('./pages/About'))
+const Terms = lazy(() => import('./pages/Terms'))
+const Privacy = lazy(() => import('./pages/Privacy'))
+const NotFound = lazy(() => import('./pages/NotFound'))
 const Services = lazy(() => import('./pages/services'))
 const UiUx = lazy(() => import('./pages/services/UiUx'))
 const WebDevelopment = lazy(() => import('./pages/services/WebDevelopment'))
@@ -145,6 +148,9 @@ const App = () => {
               <Route path=":slug" element={<CaseStudyDetail />} />
             </Route>
             <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </ReactLenis>
