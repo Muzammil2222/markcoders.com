@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { initSectionBgTransition } from "../lib/sectionBgTransition";
 
 import chatgptImg from "../assets/ChatGPT Logo - Black - 512x512 - zonalogo.com.png";
 import claudeImg from "../assets/Claude-AI-Icon---Colored---512x512---zonalogo.com.png";
@@ -100,6 +101,20 @@ const ServiceCard = ({ card }) => (
 const ToolsSection = () => {
   const sectionRef = useRef(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+
+  useEffect(() => {
+    return initSectionBgTransition(sectionRef.current, {
+      from: "#f5f5f0",
+      to: "#030712",
+      start: "top bottom",
+      end: "top 55%",
+      scrub: 1.2,
+      colorTargets: [
+        { selector: ".tools-heading", from: "#111111", to: "#ffffff" },
+        { selector: ".bottom-intro p", from: "#222222", to: "#a3a3a3" },
+      ],
+    });
+  }, []);
 
   useEffect(() => {
     const root = sectionRef.current;
@@ -201,23 +216,24 @@ const ToolsSection = () => {
       data-snap-section
       className="relative w-full py-24 md:py-32"
       style={{
-        background: "#f5f5f5", // Ultra light gray to match screenshot perfectly
-        color: "#111",
+        backgroundColor: "#f5f5f0",
       }}
     >
       <div className="max-w-[1200px] mx-auto px-6 md:px-10 lg:px-12">
         {/* Top Heading with Tools */}
-        <div className="flex flex-col mb-24 md:mb-32 overflow-hidden">
-          <h2
-            className="tools-heading font-medium tracking-tight leading-[1] mb-6 md:mb-8"
-            style={{
-              fontFamily: "Switzer, sans-serif",
-              fontSize: "clamp(56px, 9vw, 110px)",
-              letterSpacing: "-0.04em",
-            }}
-          >
-            Our technology &
-          </h2>
+        <div className="flex flex-col mb-24 md:mb-32">
+          <div className="overflow-hidden mb-6 md:mb-8">
+            <h2
+              className="tools-heading font-medium tracking-tight leading-[1.05] pb-[0.12em]"
+              style={{
+                fontFamily: "Switzer, sans-serif",
+                fontSize: "clamp(56px, 9vw, 110px)",
+                letterSpacing: "-0.04em",
+              }}
+            >
+              Our technology &
+            </h2>
+          </div>
 
           {/* Tools Row */}
           <div
@@ -246,16 +262,16 @@ const ToolsSection = () => {
                   className="tool-icon relative group flex flex-col items-center justify-end h-full"
                   onMouseEnter={() => setHoveredIndex(index)}
                 >
-                  {/* Icon Box */}
+                  {/* Icon Box — light tile so black logos stay readable on dark */}
                   <div
-                    className={`${currentSizeClass} rounded-[12px] md:rounded-[22px] flex items-center justify-center cursor-pointer overflow-hidden`}
+                    className={`${currentSizeClass} rounded-[12px] md:rounded-[22px] flex items-center justify-center cursor-pointer overflow-hidden bg-[#f5f5f5]`}
                     style={{
-                      transition: "all 0.6s cubic-bezier(0.16, 1, 0.3, 1)", // Ultra smooth, soft framer-like spring
+                      transition: "all 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
                       boxShadow: isHovered
-                        ? "0 16px 32px rgba(0,0,0,0.15)"
+                        ? "0 16px 32px rgba(0,0,0,0.45)"
                         : isAdjacent
-                          ? "0 8px 20px rgba(0,0,0,0.1)"
-                          : "0 4px 12px rgba(0,0,0,0.08)",
+                          ? "0 8px 20px rgba(0,0,0,0.35)"
+                          : "0 4px 12px rgba(0,0,0,0.25)",
                       transform: isHovered
                         ? "translateY(-12px)"
                         : isAdjacent
@@ -281,7 +297,7 @@ const ToolsSection = () => {
                         : "translateY(-10px) scale(0.95)",
                     }}
                   >
-                    <span className="bg-white text-black text-[11px] font-bold py-[6px] px-[12px] rounded-full shadow-[0_4px_14px_rgba(0,0,0,0.1)] whitespace-nowrap tracking-wide">
+                    <span className="bg-[#1a1a1a] text-white text-[11px] font-bold py-[6px] px-[12px] rounded-full shadow-[0_4px_14px_rgba(0,0,0,0.4)] border border-white/10 whitespace-nowrap tracking-wide">
                       {tool.name}
                     </span>
                   </div>
@@ -290,9 +306,9 @@ const ToolsSection = () => {
             })}
           </div>
 
-          <div className="overflow-hidden flex justify-end w-full">
+          <div className="overflow-hidden flex justify-end w-full mt-6 md:mt-8">
             <h2
-              className="tools-heading font-medium tracking-tight leading-[1] mt-6 md:mt-8"
+              className="tools-heading font-medium tracking-tight leading-[1.05] pb-[0.12em]"
               style={{
                 fontFamily: "Switzer, sans-serif",
                 fontSize: "clamp(56px, 9vw, 110px)",
@@ -308,7 +324,7 @@ const ToolsSection = () => {
         <div className="mt-16 md:mt-24">
           {/* Top Intro Text & Button */}
           <div className="bottom-intro max-w-[480px] mb-20 md:mb-32">
-            <p className="text-[#222] text-[16px] md:text-[26px] leading-[1.4] mb-8 font-medium tracking-[-0.02em]">
+            <p className="text-[16px] md:text-[26px] leading-[1.4] mb-8 font-medium tracking-[-0.02em]">
               We use modern frameworks, cloud platforms and proven engineering
               practices to build secure, scalable digital products. From custom
               software and APIs to eCommerce and mobile apps, every technology

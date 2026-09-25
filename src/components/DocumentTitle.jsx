@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useLocation, matchPath } from 'react-router-dom'
 import { caseStudiesData } from '../data/caseStudiesData'
 
-const BRAND = 'Markcoders'
+const BRAND = 'MarkCoders'
 
 const STATIC_TITLES = {
   '/': BRAND,

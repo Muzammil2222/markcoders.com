@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { initSectionBgTransition } from '../lib/sectionBgTransition';
 
 import saarangBw from '../assets/B&W HEADSHOTS/SAARANG.jpg';
 import shameekBw from '../assets/B&W HEADSHOTS/SHAHMEEK.jpg';
@@ -40,6 +41,20 @@ const TeamSection = ({ roundedTop = false }) => {
   const counter1Ref = useRef(null);
   const counter2Ref = useRef(null);
   const counter3Ref = useRef(null);
+
+  useEffect(() => {
+    return initSectionBgTransition(sectionRef.current, {
+      from: '#030712',
+      to: '#f5f5f5',
+      start: 'top 95%',
+      end: 'top 45%',
+      scrub: 1.2,
+      colorTargets: [
+        { selector: '.team-heading', from: '#ffffff', to: '#111111' },
+        { selector: '.team-desc', from: '#a3a3a3', to: '#222222' },
+      ],
+    });
+  }, []);
 
   useEffect(() => {
     const root = sectionRef.current;
@@ -204,8 +219,8 @@ const TeamSection = ({ roundedTop = false }) => {
       data-snap-section
       className={`relative w-full py-24 md:py-32 ${roundedTop ? 'rounded-t-[40px] md:rounded-t-[80px]' : ''}`}
       style={{
-        background: '#f5f5f5', // Matches previous section perfectly
-        zIndex: roundedTop ? 20 : 1, // ensure it overlaps nicely if needed
+        backgroundColor: '#030712',
+        zIndex: roundedTop ? 20 : 1,
       }}
     >
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 lg:px-12">
@@ -213,13 +228,13 @@ const TeamSection = ({ roundedTop = false }) => {
         {/* Heading */}
         <div className="flex flex-col mb-20 md:mb-32 max-w-[800px] mx-auto">
           <h2
-            className="team-heading font-medium tracking-[-0.04em] leading-[1.1] text-[#111]"
+            className="team-heading font-medium tracking-[-0.04em] leading-[1.1]"
             style={{ fontFamily: 'Switzer, sans-serif', fontSize: 'clamp(48px, 7vw, 84px)' }}
           >
             An Ambitious Team
           </h2>
           <h2
-            className="team-heading font-medium tracking-[-0.04em] leading-[1.1] text-[#111] self-end md:pr-12 mt-2 md:mt-4"
+            className="team-heading font-medium tracking-[-0.04em] leading-[1.1] self-end md:pr-12 mt-2 md:mt-4"
             style={{ fontFamily: 'Switzer, sans-serif', fontSize: 'clamp(48px, 7vw, 84px)' }}
           >
             for Your Vision.
@@ -269,7 +284,7 @@ const TeamSection = ({ roundedTop = false }) => {
             </div>
 
             {/* Description Text */}
-            <p className="team-desc text-[#222] text-[15px] md:text-[28px] leading-[1.5] font-medium tracking-[-0.01em] max-w-[440px]">
+            <p className="team-desc text-[15px] md:text-[28px] leading-[1.5] font-medium tracking-[-0.01em] max-w-[440px]">
               Our team of designers, strategists, and analysts works together to create digital experiences that deliver measurable results.
             </p>
           </div>

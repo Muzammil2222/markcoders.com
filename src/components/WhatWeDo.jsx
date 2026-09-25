@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { initSectionBgTransition } from '../lib/sectionBgTransition';
 import img1 from '../assets/hero-card.webp';
 import img2 from '../assets/4.webp';
 import img3 from '../assets/2.webp';
@@ -24,6 +25,20 @@ const WhatWeDo = () => {
   const rowRefs = useRef([]);
   const mouseX = useRef(0);
   const [activeIndex, setActiveIndex] = useState(null);
+
+  // Dark → light background as this section enters from About
+  useEffect(() => {
+    return initSectionBgTransition(sectionRef.current, {
+      from: '#030712',
+      to: '#f5f5f0',
+      start: 'top 95%',
+      end: 'top 45%',
+      scrub: 1.2,
+      colorTargets: [
+        { selector: '.wwd-heading', from: '#ffffff', to: '#111111' },
+      ],
+    });
+  }, []);
 
   // Scroll-triggered entrance animation
   useEffect(() => {
@@ -145,7 +160,7 @@ const WhatWeDo = () => {
       data-snap-section
       className="relative w-full overflow-hidden"
       style={{
-        background: '#f5f5f0',
+        backgroundColor: '#030712',
         borderRadius: '40px 40px 0 0',
         marginTop: '-20px',
         zIndex: 30,
@@ -155,7 +170,7 @@ const WhatWeDo = () => {
         {/* Section Heading */}
         <div ref={headingRef} className="max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16 mb-16 md:mb-24 flex justify-center">
           <h2
-            className="text-[#111] leading-[1.05] tracking-tight"
+            className="wwd-heading text-white leading-[1.05] tracking-tight"
             style={{
               fontFamily: 'Switzer, sans-serif',
               fontSize: 'clamp(48px, 11vw, 190px)',
@@ -229,39 +244,41 @@ const WhatWeDo = () => {
                 }}
               />
 
-              {/* Row content */}
-              <div
-                className="relative z-10 flex justify-center items-center gap-4 md:gap-8 py-7 md:py-9 px-2 md:px-4"
-              >
-                {/* Number */}
-                <span
-                  style={{
-                    fontFamily: 'Switzer, sans-serif',
-                    fontSize: 'clamp(11px, 1.1vw, 31px)',
-                    color: activeIndex === index ? 'rgba(255,255,255,0.7)' : '#999',
-                    fontWeight: 500,
-                    letterSpacing: '0.04em',
-                    minWidth: '32px',
-                    transition: 'color 0.35s ease',
-                  }}
-                >
-                  ({service.num})
-                </span>
+              {/* Row content — w-fit keeps long titles (e.g. #04) as a centered cluster */}
+              <div className="relative z-10 flex justify-center items-center py-7 md:py-9 px-4 md:px-8">
+                <div className="flex items-center justify-center gap-3 md:gap-8 w-fit max-w-full min-w-0">
+                  {/* Number */}
+                  <span
+                    className="shrink-0 self-center"
+                    style={{
+                      fontFamily: 'Switzer, sans-serif',
+                      fontSize: 'clamp(11px, 1.1vw, 31px)',
+                      color: activeIndex === index ? 'rgba(255,255,255,0.7)' : '#999',
+                      fontWeight: 500,
+                      letterSpacing: '0.04em',
+                      transition: 'color 0.35s ease',
+                    }}
+                  >
+                    ({service.num})
+                  </span>
 
-                {/* Service title */}
-                <span
-                  style={{
-                    fontFamily: 'Switzer, sans-serif',
-                    fontSize: 'clamp(26px, 4.5vw, 91px)',
-                    fontWeight: activeIndex === index ? 600 : 400,
-                    color: activeIndex === index ? '#fff' : '#1a1a1a',
-                    letterSpacing: '-0.02em',
-                    lineHeight: 1.2,
-                    transition: 'font-weight 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), color 0.35s ease',
-                  }}
-                >
-                  {service.title}
-                </span>
+                  {/* Service title */}
+                  <span
+                    className="min-w-0 text-center"
+                    style={{
+                      fontFamily: 'Switzer, sans-serif',
+                      fontSize: 'clamp(22px, 4.5vw, 91px)',
+                      fontWeight: activeIndex === index ? 600 : 400,
+                      color: activeIndex === index ? '#fff' : '#1a1a1a',
+                      letterSpacing: '-0.02em',
+                      lineHeight: 1.15,
+                      maxWidth: 'min(18em, calc(100vw - 5.5rem))',
+                      transition: 'font-weight 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), color 0.35s ease',
+                    }}
+                  >
+                    {service.title}
+                  </span>
+                </div>
               </div>
             </Link>
           ))}

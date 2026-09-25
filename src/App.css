@@ -146,7 +146,7 @@
 
 .footer__social-link {
   display: inline-flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.6rem;
 }
 
@@ -155,8 +155,6 @@
   display: block;
   width: 20px;
   height: 20px;
-  /* Optical center with the first text line (line-height ≈ 1.5 × font-size) */
-  margin-top: 0.28em;
   color: #ffffff;
   transition: color 0.3s ease, filter 0.3s ease;
 }

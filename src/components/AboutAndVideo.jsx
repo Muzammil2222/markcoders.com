@@ -73,7 +73,7 @@ const AboutAndVideo = () => {
         paraElement.appendChild(spacer);
 
         const segments = [
-          { text: 'About us. ', isBold: true },
+          { text: 'About us: ', isBold: true },
           { text: 'MarkCoders is a custom software development company helping businesses plan, design and build web applications, mobile apps, eCommerce platforms and digital products. We combine strategy, UI/UX, engineering and quality assurance to deliver reliable solutions from concept to launch.', isBold: false },
         ];
 
