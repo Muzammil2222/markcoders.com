@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createImageMorph } from '../lib/imageMorph';
-import teamImg from '../assets/team.webp';
+import { DESKTOP_MOTION_QUERY } from '../lib/motion';
+import teamImg from '../assets/optimized/team-1400.webp';
+import teamSmallImg from '../assets/optimized/team-800.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -38,11 +40,12 @@ const AboutStory = ({ previewImageRef }) => {
     const section = sectionRef.current;
     if (!section) return;
 
-    const ctx = gsap.context(() => {
-      // 1. Text Reveal Animation for the paragraph
-      const chars = paragraphRef.current?.querySelectorAll('.about-story-char');
-      if (chars && chars.length) {
-        gsap.to(chars, {
+    const mm = gsap.matchMedia();
+    mm.add(DESKTOP_MOTION_QUERY, () => {
+      // Reveal words instead of maintaining hundreds of character tweens.
+      const words = paragraphRef.current?.querySelectorAll('.about-story-word');
+      if (words?.length) {
+        gsap.fromTo(words, { opacity: 0.3 }, {
           opacity: 1,
           stagger: 0.05,
           ease: 'none',
@@ -94,7 +97,7 @@ const AboutStory = ({ previewImageRef }) => {
       }
     }, section);
 
-    return () => ctx.revert();
+    return () => mm.revert();
   }, []);
 
   const textPart1 = "Founded in 2020, MarkCoders began with a simple goal: help businesses solve real problems through technology.";
@@ -104,10 +107,8 @@ const AboutStory = ({ previewImageRef }) => {
     const words = text.split(' ');
     return words.map((word, wIdx) => (
       <span key={wIdx}>
-        <span className="inline-block whitespace-nowrap">
-          {word.split('').map((char, cIdx) => (
-            <span key={cIdx} className={`about-story-char opacity-30 ${className}`}>{char}</span>
-          ))}
+        <span className={`about-story-word inline-block whitespace-nowrap ${className}`}>
+          {word}
         </span>
         {wIdx !== words.length - 1 && ' '}
       </span>
@@ -121,7 +122,7 @@ const AboutStory = ({ previewImageRef }) => {
         {/* Heading Alone at the top */}
         <h2
           ref={headingRef}
-          className="font-medium will-change-transform text-white mb-16 md:mb-24"
+          className="font-medium text-white mb-16 md:mb-24"
           style={{
             fontFamily: 'Switzer, sans-serif',
             fontSize: 'clamp(42px, 6vw, 91px)',
@@ -164,7 +165,11 @@ const AboutStory = ({ previewImageRef }) => {
               <img
                 ref={targetImageRef}
                 src={teamImg}
+                srcSet={`${teamSmallImg} 800w, ${teamImg} 1400w`}
+                sizes="(max-width: 1023px) 100vw, 50vw"
                 alt="Team"
+                loading="lazy"
+                decoding="async"
                 className="absolute inset-0 w-full h-full object-cover"
                 style={{ opacity: morphComplete ? 1 : 0 }}
               />
@@ -173,7 +178,7 @@ const AboutStory = ({ previewImageRef }) => {
             {/* Stats List */}
             <div ref={statsRef} className="flex flex-col mt-4">
 
-              <div className="stat-row flex flex-col md:flex-row md:items-start gap-6 md:gap-10 py-8 border-b border-[#F5F5F5] will-change-transform">
+              <div className="stat-row flex flex-col md:flex-row md:items-start gap-6 md:gap-10 py-8 border-b border-[#F5F5F5]">
                 <h4
                   className="w-[170px] shrink-0 font-medium text-white"
                   style={{ fontFamily: 'Switzer, sans-serif', fontSize: 'clamp(22px, 2.5vw, 30px)', letterSpacing: '-1.4px' }}
@@ -189,7 +194,7 @@ const AboutStory = ({ previewImageRef }) => {
                 </p>
               </div>
 
-              <div className="stat-row flex flex-col md:flex-row md:items-start gap-6 md:gap-10 py-8 border-b border-[#F5F5F5] will-change-transform">
+              <div className="stat-row flex flex-col md:flex-row md:items-start gap-6 md:gap-10 py-8 border-b border-[#F5F5F5]">
                 <h4
                   className="w-[170px] shrink-0 font-medium text-white"
                   style={{ fontFamily: 'Switzer, sans-serif', fontSize: 'clamp(22px, 2.5vw, 30px)', letterSpacing: '-1.4px' }}
@@ -205,7 +210,7 @@ const AboutStory = ({ previewImageRef }) => {
                 </p>
               </div>
 
-              <div className="stat-row flex flex-col md:flex-row md:items-start gap-6 md:gap-10 py-8 border-b border-[#F5F5F5] will-change-transform">
+              <div className="stat-row flex flex-col md:flex-row md:items-start gap-6 md:gap-10 py-8 border-b border-[#F5F5F5]">
                 <h4
                   className="w-[170px] shrink-0 font-medium text-white"
                   style={{ fontFamily: 'Switzer, sans-serif', fontSize: 'clamp(22px, 2.5vw, 30px)', letterSpacing: '-1.4px' }}

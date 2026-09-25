@@ -3,10 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createImageMorph } from '../lib/imageMorph';
+import { DESKTOP_MOTION_QUERY } from '../lib/motion';
 import heroCardImg from '../assets/vantage.webp';
-import saucedImg from '../assets/sauced.webp';
-import jerseyImg from '../assets/jersey.jpg';
-import jersey2Img from '../assets/jersey2.webp';
+import heroCardSmallImg from '../assets/optimized/vantage-800.webp';
+import saucedImg from '../assets/optimized/sauced-1400.webp';
+import saucedSmallImg from '../assets/optimized/sauced-800.webp';
+import jerseyImg from '../assets/optimized/jersey-1400.webp';
+import jerseySmallImg from '../assets/optimized/jersey-800.webp';
+import jersey2Img from '../assets/optimized/jersey2-1400.webp';
+import jersey2SmallImg from '../assets/optimized/jersey2-800.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -38,16 +43,15 @@ const WorkGrid = ({ heroImageRef }) => {
     });
   }, [heroImageRef]);
 
-  // Scroll scrub animation: Images scale from small to large on scroll (same as ProjectsGrid)
+  // The first card is already animated by the hero handoff. Keep its target
+  // stationary, and reserve the remaining card scrubs for desktop pointers.
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
-    const ctx = gsap.context(() => {
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (reduce) return;
-
-      const cards = [card1Ref.current, card2Ref.current, card3Ref.current, card4Ref.current];
+    const mm = gsap.matchMedia();
+    mm.add(DESKTOP_MOTION_QUERY, () => {
+      const cards = [card2Ref.current, card3Ref.current, card4Ref.current];
       cards.forEach((card) => {
         if (!card) return;
 
@@ -69,24 +73,9 @@ const WorkGrid = ({ heroImageRef }) => {
       });
     }, section);
 
-    const refresh = () => ScrollTrigger.refresh(true);
-    const onLoad = () => refresh();
-
-    const images = section.querySelectorAll('img');
-    images.forEach((img) => {
-      if (!img.complete) img.addEventListener('load', onLoad, { once: true });
-    });
-
-    requestAnimationFrame(refresh);
-    const refreshTimers = [150, 600, 1200].map((ms) =>
-      window.setTimeout(refresh, ms)
-    );
-
-    return () => {
-      refreshTimers.forEach((id) => window.clearTimeout(id));
-      images.forEach((img) => img.removeEventListener('load', onLoad));
-      ctx.revert();
-    };
+    // Cards reserve their dimensions, so image decoding never needs to trigger
+    // an expensive refresh of every scroll animation on the page.
+    return () => mm.revert();
   }, []);
 
   return (
@@ -103,14 +92,18 @@ const WorkGrid = ({ heroImageRef }) => {
         {/* Card 1 (Top Left) - Vantage - Blank initially, image lands here on scroll */}
         <div
           ref={card1Ref}
-          className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center"
+          className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] origin-center"
           onClick={() => window.open("https://vantage-contractors.com/", "_blank")}
         >
           {/* This image shows ONLY when morph is complete */}
           <img
             ref={card1ImageRef}
             src={heroCardImg}
+            srcSet={`${heroCardSmallImg} 800w, ${heroCardImg} 1137w`}
+            sizes="(max-width: 767px) 100vw, 50vw"
             alt="Vantage Project"
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             style={{ opacity: morphComplete ? 1 : 0 }}
           />
@@ -119,12 +112,16 @@ const WorkGrid = ({ heroImageRef }) => {
         {/* Card 2 (Top Right) - Sauced */}
         <div
           ref={card2Ref}
-          className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center"
+          className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] origin-center"
           onClick={() => window.open("https://play.google.com/store/apps/details?id=com.sauced&pcampaignid=web_share", "_blank")}
         >
           <img
             src={saucedImg}
+            srcSet={`${saucedSmallImg} 800w, ${saucedImg} 1400w`}
+            sizes="(max-width: 767px) 100vw, 50vw"
             alt="Sauced Project"
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </div>
@@ -132,12 +129,16 @@ const WorkGrid = ({ heroImageRef }) => {
         {/* Card 3 (Bottom Left) - Jersey / Shareable vCard Platform */}
         <div
           ref={card3Ref}
-          className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center"
+          className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] origin-center"
           onClick={() => navigate("/case-studies")}
         >
           <img
             src={jerseyImg}
+            srcSet={`${jerseySmallImg} 800w, ${jerseyImg} 1400w`}
+            sizes="(max-width: 767px) 100vw, 50vw"
             alt="Shareable vCard Platform"
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </div>
@@ -145,12 +146,16 @@ const WorkGrid = ({ heroImageRef }) => {
         {/* Card 4 (Bottom Right) - The Jersey Generator */}
         <div
           ref={card4Ref}
-          className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center"
+          className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] origin-center"
           onClick={() => window.open("https://thejerseygenerator.com/", "_blank")}
         >
           <img
             src={jersey2Img}
+            srcSet={`${jersey2SmallImg} 800w, ${jersey2Img} 1400w`}
+            sizes="(max-width: 767px) 100vw, 50vw"
             alt="The Jersey Generator"
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </div>
@@ -161,4 +166,3 @@ const WorkGrid = ({ heroImageRef }) => {
 };
 
 export default WorkGrid;
-

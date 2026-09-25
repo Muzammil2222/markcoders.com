@@ -1,24 +1,25 @@
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
+import { DESKTOP_MOTION_QUERY } from '../lib/motion';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import saarangBw from '../assets/B&W HEADSHOTS/SAARANG.jpg';
-import shameekBw from '../assets/B&W HEADSHOTS/SHAHMEEK.jpg';
-import muzammilBw from '../assets/B&W HEADSHOTS/MUZAMMIL.jpg';
-import affanBw from '../assets/B&W HEADSHOTS/Affan.jpg';
-import amanBw from '../assets/B&W HEADSHOTS/AMAN.jpg';
-import ammarBw from '../assets/B&W HEADSHOTS/AMMAR.jpg';
-import shahzaibBw from '../assets/B&W HEADSHOTS/SHAHZAIB.jpg';
-import hassnainBw from '../assets/B&W HEADSHOTS/HASSNAIN.jpg';
+import saarangBw from '../assets/optimized/headshot-bw-saarang.webp';
+import shameekBw from '../assets/optimized/headshot-bw-shahmeek.webp';
+import muzammilBw from '../assets/optimized/headshot-bw-muzammil.webp';
+import affanBw from '../assets/optimized/headshot-bw-affan.webp';
+import amanBw from '../assets/optimized/headshot-bw-aman.webp';
+import ammarBw from '../assets/optimized/headshot-bw-ammar.webp';
+import shahzaibBw from '../assets/optimized/headshot-bw-shahzaib.webp';
+import hassnainBw from '../assets/optimized/headshot-bw-hassnain.webp';
 
-import saarangColor from '../assets/COLORFUL HEADSHOTS/SAARANG.jpg';
-import shameekColor from '../assets/COLORFUL HEADSHOTS/SHAHMEEK.jpg';
-import muzammilColor from '../assets/COLORFUL HEADSHOTS/MUZAMMIL.jpg';
-import affanColor from '../assets/COLORFUL HEADSHOTS/AFFAN.jpg';
-import amanColor from '../assets/COLORFUL HEADSHOTS/AMAN.jpg';
-import ammarColor from '../assets/COLORFUL HEADSHOTS/AMMAR.jpg';
-import shahzaibColor from '../assets/COLORFUL HEADSHOTS/SHAHZAIB.jpg';
-import hassnainColor from '../assets/COLORFUL HEADSHOTS/HASSNAIN.jpg';
+import saarangColor from '../assets/optimized/headshot-color-saarang.webp';
+import shameekColor from '../assets/optimized/headshot-color-shahmeek.webp';
+import muzammilColor from '../assets/optimized/headshot-color-muzammil.webp';
+import affanColor from '../assets/optimized/headshot-color-affan.webp';
+import amanColor from '../assets/optimized/headshot-color-aman.webp';
+import ammarColor from '../assets/optimized/headshot-color-ammar.webp';
+import shahzaibColor from '../assets/optimized/headshot-color-shahzaib.webp';
+import hassnainColor from '../assets/optimized/headshot-color-hassnain.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -45,7 +46,8 @@ const TeamSection = ({ roundedTop = false }) => {
     const root = sectionRef.current;
     if (!root) return;
 
-    let ctx = gsap.context(() => {
+    const mm = gsap.matchMedia();
+    mm.add(DESKTOP_MOTION_QUERY, () => {
       const headings = root.querySelectorAll('.team-heading');
       const avatarsTrigger = root.querySelector('.avatars-container');
       const desc = root.querySelector('.team-desc');
@@ -148,7 +150,8 @@ const TeamSection = ({ roundedTop = false }) => {
              if(padZero && currentVal < 10) {
                displayVal = "0" + currentVal;
              }
-             ref.current.innerText = `${prefix}${displayVal}${suffix}`;
+             const nextText = `${prefix}${displayVal}${suffix}`;
+             if (ref.current.textContent !== nextText) ref.current.textContent = nextText;
           }
         });
       };
@@ -159,13 +162,13 @@ const TeamSection = ({ roundedTop = false }) => {
 
     }, root);
 
-    return () => ctx.revert();
+    return () => mm.revert();
   }, []);
 
   // 3D Hover effect for the card
   const handleMouseMove = (e) => {
     const card = cardRef.current;
-    if (!card) return;
+    if (!card || !window.matchMedia(DESKTOP_MOTION_QUERY).matches) return;
 
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -178,6 +181,7 @@ const TeamSection = ({ roundedTop = false }) => {
     const rotateY = ((x - centerX) / centerX) * 8;
 
     gsap.to(card, {
+      overwrite: 'auto',
       rotateX: rotateX,
       rotateY: rotateY,
       duration: 0.5,
@@ -188,9 +192,10 @@ const TeamSection = ({ roundedTop = false }) => {
 
   const handleMouseLeave = () => {
     const card = cardRef.current;
-    if (!card) return;
+    if (!card || !window.matchMedia(DESKTOP_MOTION_QUERY).matches) return;
 
     gsap.to(card, {
+      overwrite: 'auto',
       rotateX: 0,
       rotateY: 0,
       duration: 0.8,
@@ -244,6 +249,8 @@ const TeamSection = ({ roundedTop = false }) => {
                     src={avatar.bw}
                     alt={avatar.name}
                     className="absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
                     draggable={false}
                   />
                   <img
@@ -251,6 +258,8 @@ const TeamSection = ({ roundedTop = false }) => {
                     alt=""
                     aria-hidden="true"
                     className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    loading="lazy"
+                    decoding="async"
                     draggable={false}
                   />
                 </div>
@@ -283,21 +292,21 @@ const TeamSection = ({ roundedTop = false }) => {
               {/* Stat Row 1 */}
               <div className="flex items-center justify-between pt-12 pb-5 ">
                 <span className="text-[#111] text-[16px] md:text-[30px] font-medium tracking-tight">Team Members</span>
-                <span ref={counter1Ref} className="text-[#23b3e8] text-[24px] md:text-[35px] font-medium min-w-[50px] text-right">0</span>
+                <span ref={counter1Ref} className="text-[#23b3e8] text-[24px] md:text-[35px] font-medium min-w-[50px] text-right">35</span>
               </div>
               <div className="w-full h-[1px] bg-[#808385]"></div>
 
               {/* Stat Row 2 */}
               <div className="flex items-center justify-between pt-12 pb-5">
                 <span className="text-[#111] text-[16px] md:text-[30px] font-medium tracking-tight">Core Disciplines</span>
-                <span ref={counter2Ref} className="text-[#23b3e8] text-[24px] md:text-[35px] font-medium min-w-[50px] text-right">00</span>
+                <span ref={counter2Ref} className="text-[#23b3e8] text-[24px] md:text-[35px] font-medium min-w-[50px] text-right">06</span>
               </div>
               <div className="w-full h-[1px] bg-[#808385]"></div>
 
               {/* Stat Row 3 */}
               <div className="flex items-center justify-between pt-12 pb-5">
                 <span className="text-[#111] text-[16px] md:text-[30px] font-medium tracking-tight">Combined years of experience</span>
-                <span ref={counter3Ref} className="text-[#23b3e8] text-[24px] md:text-[35px] font-medium min-w-[50px] text-right">0+</span>
+                <span ref={counter3Ref} className="text-[#23b3e8] text-[24px] md:text-[35px] font-medium min-w-[50px] text-right">5+</span>
               </div>
 
             </div>

@@ -39,7 +39,10 @@ export function scrollToTarget(target, options = {}) {
     return
   }
 
-  el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  window.scrollTo({
+    top: Math.max(0, window.scrollY + el.getBoundingClientRect().top + (options.offset ?? -96)),
+    behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+  })
   if (typeof options.callback === 'function') {
     window.setTimeout(options.callback, options.duration ?? 800)
   }
