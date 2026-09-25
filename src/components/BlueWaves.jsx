@@ -83,17 +83,10 @@ function compile(gl, type, src) {
   return shader
 }
 
-/**
- * A fullscreen fragment shader costs one pass per pixel per frame, and this
- * runs behind every hero plus the footer. Phones and tablets have a fraction
- * of the fill rate of a laptop GPU, so there the wave is drawn as a static CSS
- * gradient instead — same picture, zero per-frame GPU work.
- */
-function supportsLiveWaves() {
+/** Prefer a still frame when the user asks the OS to reduce motion. */
+function prefersReducedMotion() {
   if (typeof window === 'undefined' || !window.matchMedia) return false
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false
-  if (!window.matchMedia('(pointer: fine)').matches) return false
-  return true
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
 
 const hex = ([r, g, b]) =>
@@ -103,8 +96,8 @@ const hex = ([r, g, b]) =>
     .join('')
 
 /**
- * The same sine wave the shader draws, baked once into an SVG background —
- * identical picture, no GPU pass and no animation frame.
+ * Still-frame fallback when WebGL is unavailable or motion is reduced —
+ * same wave shape, zero per-frame GPU work.
  */
 function staticWaveUrl({ frequency, amplitude, level, color }) {
   const W = 1200
@@ -139,14 +132,16 @@ export default function BlueWaves({
   speed = 0.25,
   frequency = 1,
   amplitude = 0.1,
-  level =   0.7,
+  level = 0.7,
   color = [0.0, 0.45, 1.0],
   className = '',
   style = {},
 }) {
   const canvasRef = useRef(null)
   const propsRef = useRef({ speed, frequency, amplitude, level, color })
-  const [live] = useState(supportsLiveWaves)
+  // Animate on every device that can run WebGL. Only fall back to a still
+  // SVG when the user prefers reduced motion (or WebGL init fails later).
+  const [live, setLive] = useState(() => !prefersReducedMotion())
 
   useLayoutEffect(() => {
     propsRef.current = { speed, frequency, amplitude, level, color }
@@ -167,6 +162,7 @@ export default function BlueWaves({
     })
     if (!gl) {
       console.warn('WebGL is not supported in this browser.')
+      setLive(false)
       return
     }
 
@@ -178,6 +174,7 @@ export default function BlueWaves({
     gl.linkProgram(program)
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
       console.error(gl.getProgramInfoLog(program))
+      setLive(false)
       return
     }
     gl.useProgram(program)
@@ -204,10 +201,12 @@ export default function BlueWaves({
       color: gl.getUniformLocation(program, 'u_color'),
     }
 
-    // A fullscreen fragment shader costs one pass per pixel per frame. Phones
-    // report DPR 3 but have a fraction of the fill rate, and this is a soft
-    // gradient behind a dark overlay — render it at 1x there.
-    const coarse = window.matchMedia('(pointer: coarse)').matches
+    // Phones report DPR 3 but have a fraction of the fill rate — the wave is a
+    // soft gradient behind a dark overlay, so 1x looks fine and stays cheap.
+    const coarse =
+      window.matchMedia('(pointer: coarse)').matches ||
+      window.matchMedia('(any-pointer: coarse)').matches ||
+      (navigator.maxTouchPoints || 0) > 0
     const maxDpr = coarse ? 1 : 2
 
     const resize = () => {
@@ -225,10 +224,6 @@ export default function BlueWaves({
     ro.observe(canvas)
     resize()
 
-    const reduceMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches
-
     // Pause when off-screen / tab hidden so hero+footer don't burn frames during scroll
     let visible = true
     let pageVisible = document.visibilityState !== 'hidden'
@@ -240,7 +235,7 @@ export default function BlueWaves({
       if (!visible || !pageVisible) return
 
       const p = propsRef.current
-      const t = reduceMotion ? 0 : (now - start) / 1000
+      const t = (now - start) / 1000
 
       gl.uniform2f(u.res, canvas.width, canvas.height)
       gl.uniform1f(u.time, t)
