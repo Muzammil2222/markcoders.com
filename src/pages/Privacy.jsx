@@ -81,12 +81,6 @@ function Privacy() {
           className="relative w-screen min-h-[50vh] h-[50vh] flex flex-col items-center justify-center px-6"
           style={{ background: '#030712' }}
         >
-          <span
-            className="inline-flex items-center justify-center rounded-full px-5 py-1.5 mb-6 text-white text-[13px] md:text-[14px] font-medium tracking-wide"
-            style={{ background: '#25A9E0' }}
-          >
-            Support
-          </span>
           <h1
             className="text-center text-white font-medium tracking-tight leading-[1.1]"
             style={{
