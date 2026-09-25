@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { DESKTOP_MOTION_QUERY } from '../../lib/motion';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -33,8 +32,7 @@ const ServiceOfferings = ({
     const rows = list.querySelectorAll('.offering-row');
     if (!rows.length) return;
 
-    const mm = gsap.matchMedia();
-    mm.add(DESKTOP_MOTION_QUERY, () => {
+    const ctx = gsap.context(() => {
       gsap.set(rows, { x: 80, opacity: 0 });
 
       rows.forEach((row) => {
@@ -52,7 +50,7 @@ const ServiceOfferings = ({
       });
     }, section);
 
-    return () => mm.revert();
+    return () => ctx.revert();
   }, [items]);
 
   return (
@@ -81,8 +79,6 @@ const ServiceOfferings = ({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-stretch">
           <div className="w-full rounded-[28px] md:rounded-[36px] overflow-hidden border border-white/40 bg-white/5 p-2.5 sm:p-3 self-stretch">
             <img
-              loading="lazy"
-              decoding="async"
               src={collageImage}
               alt={collageAlt}
               className="w-full h-full object-cover rounded-[20px] md:rounded-[28px] block"
@@ -99,7 +95,7 @@ const ServiceOfferings = ({
                 return (
                   <li
                     key={label}
-                    className={`offering-row flex-1 flex items-center gap-4 md:gap-6 ${
+                    className={`offering-row flex-1 flex items-center gap-4 md:gap-6 will-change-transform ${
                       isLast ? '' : 'border-b border-white/25'
                     }`}
                   >

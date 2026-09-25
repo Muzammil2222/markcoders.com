@@ -4,7 +4,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import MarkcodersText from "./MarkcodersText";
 import BlueWaves from "./BlueWaves";
-import { DESKTOP_MOTION_QUERY } from "../lib/motion";
 
 import "../App.css";
 import "./Footer.css";
@@ -85,17 +84,19 @@ const Footer = () => {
 
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
+      const scroller = document.querySelector("[data-scroll-container]") || undefined;
       const lines = root.querySelectorAll(".js-line");
       const cta = root.querySelectorAll(".js-cta");
       const cols = root.querySelectorAll(".js-col");
       const brand = root.querySelectorAll(".js-brand");
 
-      mm.add(DESKTOP_MOTION_QUERY, () => {
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: root,
             start: "top 85%",
             once: true,
+            scroller,
           },
           defaults: { ease: "power3.out" },
         });

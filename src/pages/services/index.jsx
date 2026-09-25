@@ -9,7 +9,6 @@ import TeamSection from '../../components/TeamSection';
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { DESKTOP_MOTION_QUERY } from '../../lib/motion';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -72,10 +71,8 @@ function Services() {
     const main = mainRef.current;
     if (!main) return;
 
-    const mm = gsap.matchMedia();
-    mm.add(DESKTOP_MOTION_QUERY, () => {
-      // The first section receives the hero image and needs stable geometry.
-      const items = gsap.utils.toArray(main.querySelectorAll('.reel-item')).slice(1);
+    let ctx = gsap.context(() => {
+      const items = gsap.utils.toArray(main.querySelectorAll('.reel-item'));
       
       items.forEach((item) => {
         gsap.set(item, { transformPerspective: 2500, transformOrigin: 'center center' });
@@ -101,7 +98,7 @@ function Services() {
       });
     }, main);
 
-    return () => mm.revert();
+    return () => ctx.revert();
   }, []);
 
   return (

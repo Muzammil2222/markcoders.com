@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import AnimatedHeroTitle from './AnimatedHeroTitle';
-import { DESKTOP_MOTION_QUERY } from '../../lib/motion';
 
 /**
  * Reusable landing hero — same GSAP entrance as Home:
@@ -16,6 +15,7 @@ const PageHero = ({
   showDot = false,
   spread = false,
   fullWidthTitle = false,
+  animateFooter = true,
   className = '',
   titleClassName = '',
   subtitleClassName = '',
@@ -35,7 +35,6 @@ const PageHero = ({
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const ctx = gsap.context(() => {
       gsap.set(headingRef.current, { opacity: 0, y: 80, scale: 0.95 });
@@ -51,6 +50,9 @@ const PageHero = ({
       if (footerRef.current) {
         gsap.set(footerRef.current, {
           opacity: 0,
+          y: 60,
+          x: isCenter ? 0 : 30,
+          rotation: isCenter ? 0 : 2,
         });
       }
 
@@ -87,6 +89,9 @@ const PageHero = ({
           footerRef.current,
           {
             opacity: 1,
+            y: 0,
+            x: 0,
+            rotation: 0,
             duration: 1,
             ease: 'power3.out',
           },
@@ -94,34 +99,31 @@ const PageHero = ({
         );
       }
 
-      if (dotRef.current && window.matchMedia(DESKTOP_MOTION_QUERY).matches) {
-        const pulse = gsap.to(dotRef.current, {
-          opacity: 0.6,
-          scale: 0.85,
+      if (dotRef.current) {
+        gsap.to(dotRef.current, {
+          boxShadow: '0 0 20px 5px rgba(26, 122, 248, 0.6)',
           duration: 1.5,
           ease: 'sine.inOut',
           repeat: -1,
           yoyo: true,
           delay: 2,
-          paused: true,
         });
-        let visible = false;
-        const update = () => pulse.paused(!visible || document.hidden);
-        const observer = new IntersectionObserver(([entry]) => {
-          visible = entry.isIntersecting;
-          update();
+      }
+
+      if (animateFooter && footerRef.current) {
+        gsap.to(footerRef.current, {
+          y: -8,
+          duration: 3,
+          ease: 'sine.inOut',
+          repeat: -1,
+          yoyo: true,
+          delay: 2.5,
         });
-        observer.observe(section);
-        document.addEventListener('visibilitychange', update);
-        return () => {
-          observer.disconnect();
-          document.removeEventListener('visibilitychange', update);
-        };
       }
     }, section);
 
     return () => ctx.revert();
-  }, []);
+  }, [align, animateFooter, isCenter]);
 
   const subtitleEl = subtitle && (
     <p

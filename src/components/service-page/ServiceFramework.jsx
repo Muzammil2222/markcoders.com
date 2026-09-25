@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { DESKTOP_MOTION_QUERY } from '../../lib/motion';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -71,6 +70,42 @@ const ServiceFramework = ({
 
     const mm = gsap.matchMedia();
 
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        section,
+        { backgroundColor: '#000000' },
+        {
+          backgroundColor: '#ffffff',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 85%',
+            end: 'top 40%',
+            scrub: 1.2,
+          },
+        }
+      );
+
+      if (leftRef.current) {
+        gsap.fromTo(
+          leftRef.current.children,
+          { y: 32, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.75,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top 75%',
+              toggleActions: 'play none none none',
+            },
+          }
+        );
+      }
+    }, section);
+
     const setupCardStack = ({ stickLeft = false, navTop = NAV_TOP_PX } = {}) => {
       const slots = slotRefs.current;
       const cardEls = cardRefs.current;
@@ -119,49 +154,49 @@ const ServiceFramework = ({
         }
       });
 
+      return () => gsap.set(cardEls.filter(Boolean), { clearProps: 'transform,opacity' });
     };
 
-    mm.add(DESKTOP_MOTION_QUERY, () => {
-      gsap.fromTo(
-        section,
-        { backgroundColor: '#000000' },
-        {
-          backgroundColor: '#ffffff',
-          ease: 'none',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 85%',
-            end: 'top 40%',
-            scrub: 1.2,
-          },
-        }
-      );
+    mm.add('(min-width: 1024px)', () => setupCardStack({ stickLeft: true }));
 
-      if (leftRef.current) {
+    mm.add('(min-width: 768px) and (max-width: 1023px)', () =>
+      setupCardStack({ stickLeft: false, navTop: 72 })
+    );
+
+    mm.add('(max-width: 767px)', () => {
+      cardRefs.current.forEach((card) => {
+        if (!card) return;
         gsap.fromTo(
-          leftRef.current.children,
-          { y: 32, opacity: 0 },
+          card,
+          { y: 48, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.75,
-            stagger: 0.1,
+            duration: 0.7,
             ease: 'power3.out',
             scrollTrigger: {
-              trigger: section,
-              start: 'top 75%',
+              trigger: card,
+              start: 'top 88%',
               toggleActions: 'play none none none',
             },
           }
         );
-      }
+      });
+    });
 
-      setupCardStack({ stickLeft: true });
-      const refreshFrame = requestAnimationFrame(() => ScrollTrigger.refresh());
-      return () => cancelAnimationFrame(refreshFrame);
-    }, section);
+    if (typeof document !== 'undefined' && document.fonts) {
+      document.fonts.ready.then(() => ScrollTrigger.refresh());
+    }
 
-    return () => mm.revert();
+    const refresh = () => ScrollTrigger.refresh();
+    requestAnimationFrame(refresh);
+    const t = window.setTimeout(refresh, 400);
+
+    return () => {
+      window.clearTimeout(t);
+      ctx.revert();
+      mm.revert();
+    };
     // cardsKey: avoid tearing down pins when parent re-renders with a new [] default
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cardsKey]);
@@ -169,19 +204,12 @@ const ServiceFramework = ({
   return (
     <section
       ref={sectionRef}
-      className="service-framework relative z-30 w-full bg-white"
+      className="relative z-30 w-full bg-black"
       style={{
         borderTopLeftRadius: '24px',
         borderTopRightRadius: '24px',
       }}
     >
-      <style>{`
-        @media ${DESKTOP_MOTION_QUERY} {
-          .service-framework .framework-cards { padding-bottom: 30vh; }
-          .service-framework .framework-slot { margin-bottom: 50vh; }
-          .service-framework .framework-slot:last-child { margin-bottom: 35vh; }
-        }
-      `}</style>
       <div className="w-[90vw] mx-auto flex flex-col lg:flex-row justify-between items-start gap-10 lg:gap-12 pt-5 lg:pt-8 pb-24 md:pb-40">
         <div ref={leftSlotRef} className="w-full lg:w-[min(553px,38%)] shrink-0">
           <div ref={leftRef} className="flex flex-col gap-8 md:gap-10">
@@ -242,16 +270,18 @@ const ServiceFramework = ({
 
         <div
           ref={cardsWrapperRef}
-          className="framework-cards relative w-full lg:flex-1 lg:max-w-[700px]"
+          className="relative w-full lg:flex-1 lg:max-w-[700px] lg:pb-[30vh]"
         >
           {cards.map((card, index) => {
+            const isLast = index === cards.length - 1;
+
             return (
               <div
                 key={card.number}
                 ref={(el) => {
                   slotRefs.current[index] = el;
                 }}
-                className="framework-slot mb-6"
+                className={isLast ? 'mb-6 md:mb-[35vh]' : 'mb-6 md:mb-[50vh]'}
               >
                 {/* Pin target — scale/opacity stay on <article> so they don't fight the pin transform */}
                 <div

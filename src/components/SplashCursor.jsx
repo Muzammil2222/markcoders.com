@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { DESKTOP_MOTION_QUERY } from '../lib/motion';
 
 /**
  * A fullscreen WebGL fluid sim costs a frame budget every frame it runs, and a
@@ -10,12 +9,14 @@ import { DESKTOP_MOTION_QUERY } from '../lib/motion';
  */
 function shouldRenderFluid() {
   if (typeof window === 'undefined' || !window.matchMedia) return false;
-  return window.matchMedia(DESKTOP_MOTION_QUERY).matches;
+  if (window.matchMedia('(pointer: coarse)').matches) return false;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+  return true;
 }
 
 function SplashCursor({
   SIM_RESOLUTION = 128,
-  DYE_RESOLUTION = 768,
+  DYE_RESOLUTION = 1440,
   CAPTURE_RESOLUTION = 512,
   DENSITY_DISSIPATION = 3.5,
   VELOCITY_DISSIPATION = 2,
@@ -33,14 +34,7 @@ function SplashCursor({
 }) {
   const canvasRef = useRef(null);
   const animationFrameId = useRef(null);
-  const [enabled, setEnabled] = useState(shouldRenderFluid);
-
-  useEffect(() => {
-    const motion = window.matchMedia(DESKTOP_MOTION_QUERY);
-    const onChange = () => setEnabled(motion.matches);
-    motion.addEventListener('change', onChange);
-    return () => motion.removeEventListener('change', onChange);
-  }, []);
+  const [enabled] = useState(shouldRenderFluid);
 
   useEffect(() => {
     if (!enabled) return;
@@ -98,16 +92,7 @@ function SplashCursor({
       config.SHADING = false;
     }
 
-    const context = getWebGLContext(canvas);
-    // Decorative effects must not crash the page when WebGL/float targets
-    // are unavailable (common with mobile power-saving and GPU fallbacks).
-    if (!context) return;
-    const { gl, ext } = context;
-    const textures = new Set();
-    const framebuffers = new Set();
-    const shaders = new Set();
-    const programs = new Set();
-    const buffers = new Set();
+    const { gl, ext } = getWebGLContext(canvas);
     if (!ext.supportLinearFiltering) {
       config.DYE_RESOLUTION = 256;
       config.SHADING = false;
@@ -124,7 +109,6 @@ function SplashCursor({
       let gl = canvas.getContext('webgl2', params);
       const isWebGL2 = !!gl;
       if (!isWebGL2) gl = canvas.getContext('webgl', params) || canvas.getContext('experimental-webgl', params);
-      if (!gl) return null;
 
       let halfFloat;
       let supportLinearFiltering;
@@ -138,7 +122,6 @@ function SplashCursor({
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
       const halfFloatTexType = isWebGL2 ? gl.HALF_FLOAT : halfFloat && halfFloat.HALF_FLOAT_OES;
-      if (!halfFloatTexType) return null;
       let formatRGBA;
       let formatRG;
       let formatR;
@@ -153,7 +136,6 @@ function SplashCursor({
         formatR = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
       }
 
-      if (!formatRGBA || !formatRG || !formatR) return null;
       return {
         gl,
         ext: {
@@ -192,8 +174,6 @@ function SplashCursor({
       gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
       gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
       const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-      gl.deleteTexture(texture);
-      gl.deleteFramebuffer(fbo);
       return status === gl.FRAMEBUFFER_COMPLETE;
     }
 
@@ -236,7 +216,6 @@ function SplashCursor({
 
     function createProgram(vertexShader, fragmentShader) {
       let program = gl.createProgram();
-      programs.add(program);
       gl.attachShader(program, vertexShader);
       gl.attachShader(program, fragmentShader);
       gl.linkProgram(program);
@@ -257,7 +236,6 @@ function SplashCursor({
     function compileShader(type, source, keywords) {
       source = addKeywords(source, keywords);
       const shader = gl.createShader(type);
-      shaders.add(shader);
       gl.shaderSource(shader, source);
       gl.compileShader(shader);
       if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) console.trace(gl.getShaderInfoLog(shader));
@@ -569,13 +547,9 @@ function SplashCursor({
     );
 
     const blit = (() => {
-      const vertexBuffer = gl.createBuffer();
-      const indexBuffer = gl.createBuffer();
-      buffers.add(vertexBuffer);
-      buffers.add(indexBuffer);
-      gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+      gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, -1, 1, 1, 1, 1, -1]), gl.STATIC_DRAW);
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
       gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0, 1, 2, 0, 2, 3]), gl.STATIC_DRAW);
       gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
       gl.enableVertexAttribArray(0);
@@ -636,12 +610,6 @@ function SplashCursor({
           filtering
         );
 
-      disposeFBO(divergence);
-      disposeFBO(curl);
-      if (pressure) {
-        disposeFBO(pressure.read);
-        disposeFBO(pressure.write);
-      }
       divergence = createFBO(simRes.width, simRes.height, r.internalFormat, r.format, texType, gl.NEAREST);
       curl = createFBO(simRes.width, simRes.height, r.internalFormat, r.format, texType, gl.NEAREST);
       pressure = createDoubleFBO(simRes.width, simRes.height, r.internalFormat, r.format, texType, gl.NEAREST);
@@ -650,7 +618,6 @@ function SplashCursor({
     function createFBO(w, h, internalFormat, format, type, param) {
       gl.activeTexture(gl.TEXTURE0);
       let texture = gl.createTexture();
-      textures.add(texture);
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, param);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, param);
@@ -659,7 +626,6 @@ function SplashCursor({
       gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, w, h, 0, format, type, null);
 
       let fbo = gl.createFramebuffer();
-      framebuffers.add(fbo);
       gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
       gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
       gl.viewport(0, 0, w, h);
@@ -710,27 +676,17 @@ function SplashCursor({
       };
     }
 
-    function disposeFBO(target) {
-      if (!target) return;
-      gl.deleteTexture(target.texture);
-      gl.deleteFramebuffer(target.fbo);
-      textures.delete(target.texture);
-      framebuffers.delete(target.fbo);
-    }
-
     function resizeFBO(target, w, h, internalFormat, format, type, param) {
       let newFBO = createFBO(w, h, internalFormat, format, type, param);
       copyProgram.bind();
       gl.uniform1i(copyProgram.uniforms.uTexture, target.attach(0));
       blit(newFBO);
-      disposeFBO(target);
       return newFBO;
     }
 
     function resizeDoubleFBO(target, w, h, internalFormat, format, type, param) {
       if (target.width === w && target.height === h) return target;
       target.read = resizeFBO(target.read, w, h, internalFormat, format, type, param);
-      disposeFBO(target.write);
       target.write = createFBO(w, h, internalFormat, format, type, param);
       target.width = w;
       target.height = h;
@@ -746,7 +702,6 @@ function SplashCursor({
     }
 
     updateKeywords();
-    resizeCanvas();
     initFramebuffers();
     let lastUpdateTime = Date.now();
     let colorUpdateTimer = 0.0;
@@ -755,11 +710,9 @@ function SplashCursor({
     // that simulates nothing at full cost, right while the user is scrolling.
     const IDLE_MS = 1500;
     let lastPointerActivity = Date.now();
-    let idle = true;
-    let lastScrollActivity = -Infinity;
+    let idle = false;
 
     function markPointerActivity() {
-      if (document.hidden || Date.now() - lastScrollActivity < 150) return;
       lastPointerActivity = Date.now();
       if (!idle || !isActive) return;
       idle = false;
@@ -769,7 +722,6 @@ function SplashCursor({
 
     function goIdle() {
       idle = true;
-      if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
       animationFrameId.current = null;
       // Don't leave the last frame frozen on screen
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -778,7 +730,7 @@ function SplashCursor({
     }
 
     function updateFrame() {
-      if (!isActive || document.hidden || idle) return;
+      if (!isActive) return;
       const dt = calcDeltaTime();
       if (resizeCanvas()) initFramebuffers();
       updateColors(dt);
@@ -972,6 +924,10 @@ function SplashCursor({
       pointer.color = color;
     }
 
+    function updatePointerUpData(pointer) {
+      pointer.down = false;
+    }
+
     function correctDeltaX(delta) {
       let aspectRatio = canvas.width / canvas.height;
       if (aspectRatio < 1) delta *= aspectRatio;
@@ -1064,7 +1020,7 @@ function SplashCursor({
     }
 
     function scaleByPixelRatio(input) {
-      const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+      const pixelRatio = window.devicePixelRatio || 1;
       return Math.floor(input * pixelRatio);
     }
 
@@ -1080,8 +1036,6 @@ function SplashCursor({
 
     // Named event handlers for proper cleanup
     function handleMouseDown(e) {
-      markPointerActivity();
-      if (idle) return;
       let pointer = pointers[0];
       let posX = scaleByPixelRatio(e.clientX);
       let posY = scaleByPixelRatio(e.clientY);
@@ -1091,8 +1045,6 @@ function SplashCursor({
 
     let firstMouseMoveHandled = false;
     function handleMouseMove(e) {
-      markPointerActivity();
-      if (idle) return;
       let pointer = pointers[0];
       let posX = scaleByPixelRatio(e.clientX);
       let posY = scaleByPixelRatio(e.clientY);
@@ -1105,24 +1057,49 @@ function SplashCursor({
       }
     }
 
-    function handleScroll() {
-      lastScrollActivity = Date.now();
-      if (!idle) goIdle();
+    function handleTouchStart(e) {
+      const touches = e.targetTouches;
+      let pointer = pointers[0];
+      for (let i = 0; i < touches.length; i++) {
+        let posX = scaleByPixelRatio(touches[i].clientX);
+        let posY = scaleByPixelRatio(touches[i].clientY);
+        updatePointerDownData(pointer, touches[i].identifier, posX, posY);
+      }
     }
 
-    function handleVisibilityChange() {
-      if (document.hidden) goIdle();
+    function handleTouchMove(e) {
+      const touches = e.targetTouches;
+      let pointer = pointers[0];
+      for (let i = 0; i < touches.length; i++) {
+        let posX = scaleByPixelRatio(touches[i].clientX);
+        let posY = scaleByPixelRatio(touches[i].clientY);
+        updatePointerMoveData(pointer, posX, posY, pointer.color);
+      }
+    }
+
+    function handleTouchEnd(e) {
+      const touches = e.changedTouches;
+      let pointer = pointers[0];
+      for (let i = 0; i < touches.length; i++) {
+        updatePointerUpData(pointer);
+      }
     }
 
     // Add event listeners
-    window.addEventListener('mousedown', handleMouseDown, { passive: true });
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    window.addEventListener('wheel', handleScroll, { passive: true });
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchmove', handleTouchMove, false);
+    window.addEventListener('touchend', handleTouchEnd);
 
-    // Start on pointer input, not on mount while the page is loading.
-    goIdle();
+    // Separate passive listeners so the idle loop restarts without touching
+    // the pointer handlers above
+    window.addEventListener('mousedown', markPointerActivity, { passive: true });
+    window.addEventListener('mousemove', markPointerActivity, { passive: true });
+    window.addEventListener('touchstart', markPointerActivity, { passive: true });
+    window.addEventListener('touchmove', markPointerActivity, { passive: true });
+
+    updateFrame();
 
     // Cleanup function
     return () => {
@@ -1137,15 +1114,14 @@ function SplashCursor({
       // Remove event listeners
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('wheel', handleScroll);
-      window.removeEventListener('scroll', handleScroll);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
 
-      textures.forEach(texture => gl.deleteTexture(texture));
-      framebuffers.forEach(framebuffer => gl.deleteFramebuffer(framebuffer));
-      buffers.forEach(buffer => gl.deleteBuffer(buffer));
-      programs.forEach(program => gl.deleteProgram(program));
-      shaders.forEach(shader => gl.deleteShader(shader));
+      window.removeEventListener('mousedown', markPointerActivity);
+      window.removeEventListener('mousemove', markPointerActivity);
+      window.removeEventListener('touchstart', markPointerActivity);
+      window.removeEventListener('touchmove', markPointerActivity);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabled]);
