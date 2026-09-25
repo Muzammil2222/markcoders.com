@@ -4,6 +4,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ReactLenis, useLenis } from 'lenis/react'
 import DocumentTitle from './components/DocumentTitle'
+import ScrollToTopButton from './components/ScrollToTopButton'
 import { setLenis } from './lib/scrollBus'
 import { initSectionSnap, shouldEnableSectionSnap } from './lib/magneticSnap'
 
@@ -124,6 +125,7 @@ const App = () => {
       >
         <DocumentTitle />
         <ScrollRig />
+        <ScrollToTopButton />
         <Suspense
           fallback={
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#030712]">
@@ -148,7 +150,7 @@ const App = () => {
               <Route path=":slug" element={<CaseStudyDetail />} />
             </Route>
             <Route path="/portfolio" element={<Portfolio />} />
-            <Route path="/terms" element={<Terms />} />
+            <Route path="//terms-and-conditions" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
