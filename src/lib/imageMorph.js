@@ -1,15 +1,16 @@
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { getScrollY } from './scrollBus'
 
 gsap.registerPlugin(ScrollTrigger)
 
 /**
  * Hero → next-section image handoff without layout thrashing.
  *
- * The old path rewrote top/left/width/height + dual getBoundingClientRect on
- * every scrub tick, which forces layout during Locomotive scroll. This version
- * pins the clone's box size once and drives position/scale on the compositor
- * via translate3d + scale, and only notifies React when the complete flag flips.
+ * Geometry is measured once per ScrollTrigger refresh and cached in document
+ * space; each scrub tick only interpolates those numbers and writes a
+ * transform. No getBoundingClientRect, no width/height/top/left writes, and no
+ * React state churn while scrolling.
  */
 export function createImageMorph({
   heroImg,
@@ -39,6 +40,13 @@ export function createImageMorph({
   let baseH = 1
   let complete = false
   let timer = null
+  let visible = null
+  let lastRadius = null
+
+  // Geometry cached at refresh time, in document space. Both the hero and the
+  // target scroll together, so only the shared scroll offset changes per frame
+  // — which we read from the scroll bus instead of forcing layout.
+  let geo = null
 
   const setComplete = (next) => {
     if (next === complete) return
@@ -47,28 +55,38 @@ export function createImageMorph({
   }
 
   const measureBase = () => {
-    const r = heroImg.getBoundingClientRect()
-    baseW = Math.max(r.width, 1)
-    baseH = Math.max(r.height, 1)
+    const scrollY = getScrollY()
+    const hero = heroImg.getBoundingClientRect()
+    const target = targetEl.getBoundingClientRect()
+
+    baseW = Math.max(hero.width, 1)
+    baseH = Math.max(hero.height, 1)
+
+    geo = {
+      fromX: hero.left,
+      fromY: hero.top + scrollY,
+      fromW: hero.width,
+      fromH: hero.height,
+      toX: target.left,
+      toY: target.top + scrollY,
+      toW: target.width,
+      toH: target.height,
+    }
+
     if (!clone) return
     clone.style.width = `${baseW}px`
     clone.style.height = `${baseH}px`
-    gsap.set(clone, { x: r.left, y: r.top, scaleX: 1, scaleY: 1 })
   }
 
   const applyProgress = (progress) => {
-    if (!clone) return
+    if (!clone || !geo) return
 
-    const heroRect = heroImg.getBoundingClientRect()
-    const targetRect = targetEl.getBoundingClientRect()
+    const scrollY = getScrollY()
+    const w = geo.fromW + (geo.toW - geo.fromW) * progress
+    const h = geo.fromH + (geo.toH - geo.fromH) * progress
+    const x = geo.fromX + (geo.toX - geo.fromX) * progress
+    const y = geo.fromY + (geo.toY - geo.fromY) * progress - scrollY
 
-    const w = heroRect.width + (targetRect.width - heroRect.width) * progress
-    const h = heroRect.height + (targetRect.height - heroRect.height) * progress
-    const x = heroRect.left + (targetRect.left - heroRect.left) * progress
-    const y = heroRect.top + (targetRect.top - heroRect.top) * progress
-    const radius = startRadius + (endRadius - startRadius) * progress
-
-    clone.style.borderRadius = `${radius}px`
     gsap.set(clone, {
       x,
       y,
@@ -77,20 +95,21 @@ export function createImageMorph({
       force3D: true,
     })
 
-    if (progress > 0.02) {
-      clone.style.opacity = '1'
-      heroImg.style.opacity = '0'
-    } else {
-      clone.style.opacity = '0'
-      heroImg.style.opacity = '1'
+    // Radius is a paint-triggering property; only write it when it changes.
+    const radius = Math.round(startRadius + (endRadius - startRadius) * progress)
+    if (radius !== lastRadius) {
+      lastRadius = radius
+      clone.style.borderRadius = `${radius}px`
     }
 
-    if (progress > 0.95) {
-      clone.style.opacity = '0'
-      setComplete(true)
-    } else {
-      setComplete(false)
+    const shouldShow = progress > 0.02 && progress <= 0.95
+    if (shouldShow !== visible) {
+      visible = shouldShow
+      clone.style.opacity = shouldShow ? '1' : '0'
+      heroImg.style.opacity = progress > 0.02 ? '0' : '1'
     }
+
+    setComplete(progress > 0.95)
   }
 
   timer = window.setTimeout(() => {

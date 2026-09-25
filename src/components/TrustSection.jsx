@@ -32,6 +32,7 @@ const testimonials = [
 
 const TrustSection = () => {
   const sectionRef = useRef(null);
+  const bgFadeRef = useRef(null);
   const headingRef = useRef(null);
   const cardsRef = useRef(null);
   const slideContentRef = useRef(null);
@@ -115,12 +116,17 @@ const TrustSection = () => {
         },
       });
 
-      tl.fromTo(
-        section,
-        { backgroundColor: '#ffffff' },
-        { backgroundColor: '#000000', ease: 'none', duration: 1 },
-        0
-      );
+      // Fade a black layer in rather than tweening the section's
+      // backgroundColor — colour interpolation repaints the whole full-bleed
+      // section every scrub frame, opacity on its own layer does not.
+      if (bgFadeRef.current) {
+        tl.fromTo(
+          bgFadeRef.current,
+          { opacity: 0 },
+          { opacity: 1, ease: 'none', duration: 1 },
+          0
+        );
+      }
 
       tl.to(
         cards,
@@ -217,10 +223,16 @@ const TrustSection = () => {
     <section
       ref={sectionRef}
       data-snap-section
-      className="w-full max-w-[100%] overflow-x-hidden px-4 sm:px-6 md:px-12 lg:px-20 py-16 sm:py-24 md:py-32"
+      className="relative w-full max-w-[100%] overflow-x-hidden px-4 sm:px-6 md:px-12 lg:px-20 py-16 sm:py-24 md:py-32"
       style={{ backgroundColor: '#ffffff' }}
     >
-      <div className="max-w-[1200px] mx-auto w-full min-w-0">
+      <div
+        ref={bgFadeRef}
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none"
+        style={{ backgroundColor: '#000000', opacity: 0, willChange: 'opacity' }}
+      />
+      <div className="relative z-10 max-w-[1200px] mx-auto w-full min-w-0">
         {/* ── Heading ── */}
         <h2
           ref={headingRef}

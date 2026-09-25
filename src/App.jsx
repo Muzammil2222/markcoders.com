@@ -29,6 +29,21 @@ const CmsDevelopment = lazy(() => import('./pages/services/CmsDevelopment'))
 const GraphicDesign = lazy(() => import('./pages/services/GraphicDesign'))
 
 /**
+ * Locomotive's smooth mode replaces compositor scrolling with a JS-driven
+ * transform on the container. On a phone or tablet that trades the browser's
+ * native, off-main-thread scrolling for main-thread work every frame — it is
+ * the single biggest source of scroll jank on touch. Use native scroll there.
+ */
+function prefersNativeScroll() {
+  if (typeof window === 'undefined' || !window.matchMedia) return true
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return true
+  if (window.matchMedia('(pointer: coarse)').matches) return true
+  if (window.matchMedia('(any-pointer: coarse)').matches) return true
+  if (navigator.maxTouchPoints > 0) return true
+  return false
+}
+
+/**
  * Locomotive (vertical) + GSAP ScrollTrigger — GreenSock scrollerProxy order:
  * 1) init Locomotive
  * 2) on scroll → ScrollTrigger.update
@@ -51,6 +66,30 @@ function SmoothScroll({ children }) {
     if (locoRef.current) {
       locoRef.current.destroy()
       locoRef.current = null
+    }
+
+    // ── Touch / reduced-motion: native scroll, ScrollTrigger on the window ──
+    if (prefersNativeScroll()) {
+      ScrollTrigger.defaults({ scroller: window })
+      setLocoScroll(null)
+      window.scrollTo(0, 0)
+
+      const refreshNative = () => ScrollTrigger.refresh()
+      requestAnimationFrame(refreshNative)
+      const nt = [100, 400, 1000].map((ms) => window.setTimeout(refreshNative, ms))
+
+      let nroTimer = null
+      const nro = new ResizeObserver(() => {
+        if (nroTimer != null) window.clearTimeout(nroTimer)
+        nroTimer = window.setTimeout(refreshNative, 180)
+      })
+      nro.observe(scroller)
+
+      return () => {
+        nt.forEach((t) => window.clearTimeout(t))
+        if (nroTimer != null) window.clearTimeout(nroTimer)
+        nro.disconnect()
+      }
     }
 
     // Clear leftover transform / height from a previous instance

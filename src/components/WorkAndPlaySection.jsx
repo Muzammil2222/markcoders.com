@@ -119,6 +119,8 @@ const WorkAndPlaySection = () => {
               key={index}
               src={src}
               alt={`Work and Play ${index + 1}`}
+              loading="lazy"
+              decoding="async"
               className="scatter-image relative lg:absolute lg:top-1/2 w-full max-w-[280px] sm:max-w-[400px] h-auto aspect-square lg:w-[320px] lg:h-[320px] min-[1301px]:w-[320px] min-[1301px]:h-[320px] object-cover rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] lg:rounded-none lg:shadow-none"
             />
           ))}

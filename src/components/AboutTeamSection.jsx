@@ -47,6 +47,8 @@ const PhotoCard = ({ member }) => (
     <img
       src={member.imgBw}
       alt={member.name}
+      loading="lazy"
+      decoding="async"
       className="absolute inset-0 w-full h-full object-cover"
       draggable={false}
     />
@@ -54,6 +56,8 @@ const PhotoCard = ({ member }) => (
       src={member.imgColor}
       alt=""
       aria-hidden="true"
+      loading="lazy"
+      decoding="async"
       className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
       draggable={false}
     />
@@ -134,27 +138,48 @@ const TeamSection = ({ roundedTop = false }) => {
     let rafId = 0;
     let hoverPaused = false;
 
-    const SPEED = () => {
-      const half = track.scrollWidth / 2;
-      return half > 0 ? half / (45 * 60) : 0.6;
+    // scrollWidth forces layout, so measure once rather than every frame.
+    let half = 0;
+    let speed = 0.6;
+    const measure = () => {
+      half = track.scrollWidth / 2;
+      speed = half > 0 ? half / (45 * 60) : 0.6;
     };
+    measure();
+
+    const ro = new ResizeObserver(measure);
+    ro.observe(track);
 
     const wrap = (val) => {
-      const half = track.scrollWidth / 2;
       if (!half) return val;
       while (val <= -half) val += half;
       while (val > 0) val -= half;
       return val;
     };
 
+    // Don't animate a marquee nobody can see.
+    let onScreen = true;
     const tick = () => {
+      rafId = 0;
+      if (!onScreen) return;
       if (!hoverPaused) {
-        x = wrap(x - SPEED());
+        x = wrap(x - speed);
         gsap.set(track, { x });
       }
       rafId = requestAnimationFrame(tick);
     };
-    rafId = requestAnimationFrame(tick);
+    const start = () => {
+      if (!rafId && onScreen) rafId = requestAnimationFrame(tick);
+    };
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        start();
+      },
+      { rootMargin: '120px' }
+    );
+    io.observe(track);
+    start();
 
     const onEnter = () => { hoverPaused = true; };
     const onLeave = () => { hoverPaused = false; };
@@ -163,7 +188,9 @@ const TeamSection = ({ roundedTop = false }) => {
     track.addEventListener('pointerleave', onLeave);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      if (rafId) cancelAnimationFrame(rafId);
+      io.disconnect();
+      ro.disconnect();
       track.removeEventListener('pointerenter', onEnter);
       track.removeEventListener('pointerleave', onLeave);
     };

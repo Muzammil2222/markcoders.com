@@ -84,7 +84,6 @@ const Footer = () => {
 
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
-      const scroller = document.querySelector("[data-scroll-container]") || undefined;
       const lines = root.querySelectorAll(".js-line");
       const cta = root.querySelectorAll(".js-cta");
       const cols = root.querySelectorAll(".js-col");
@@ -92,11 +91,12 @@ const Footer = () => {
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         const tl = gsap.timeline({
+          // No explicit scroller: inherit ScrollTrigger.defaults, which is the
+          // Locomotive container on desktop and the window on touch devices.
           scrollTrigger: {
             trigger: root,
             start: "top 85%",
             once: true,
-            scroller,
           },
           defaults: { ease: "power3.out" },
         });

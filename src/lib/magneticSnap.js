@@ -28,6 +28,11 @@ export function initSectionSnap({
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     return () => {}
   }
+  // On touch, a flick already has native momentum. Re-targeting it after the
+  // settle timeout fights the gesture and reads as the page getting stuck.
+  if (window.matchMedia('(pointer: coarse)').matches) {
+    return () => {}
+  }
 
   let settleTimer = null
   let snapping = false

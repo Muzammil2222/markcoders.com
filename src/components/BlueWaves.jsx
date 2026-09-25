@@ -100,7 +100,14 @@ export default function BlueWaves({
     const canvas = canvasRef.current
     if (!canvas) return
 
-    const gl = canvas.getContext('webgl', { antialias: false, alpha: false })
+    const gl = canvas.getContext('webgl', {
+      antialias: false,
+      alpha: false,
+      depth: false,
+      stencil: false,
+      preserveDrawingBuffer: false,
+      powerPreference: 'low-power',
+    })
     if (!gl) {
       console.warn('WebGL is not supported in this browser.')
       return
@@ -140,8 +147,14 @@ export default function BlueWaves({
       color: gl.getUniformLocation(program, 'u_color'),
     }
 
+    // A fullscreen fragment shader costs one pass per pixel per frame. Phones
+    // report DPR 3 but have a fraction of the fill rate, and this is a soft
+    // gradient behind a dark overlay — render it at 1x there.
+    const coarse = window.matchMedia('(pointer: coarse)').matches
+    const maxDpr = coarse ? 1 : 2
+
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const dpr = Math.min(window.devicePixelRatio || 1, maxDpr)
       const w = Math.max(1, Math.floor(canvas.clientWidth * dpr))
       const h = Math.max(1, Math.floor(canvas.clientHeight * dpr))
       if (canvas.width !== w || canvas.height !== h) {

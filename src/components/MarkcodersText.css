@@ -89,6 +89,15 @@
   --reveal-size: 220px;
 }
 
+/* Touch devices have no cursor, so the spotlight can never be revealed.
+   Drop the layer instead of compositing a masked copy of 18rem type on
+   every frame the footer is on screen. */
+@media (pointer: coarse) {
+  .markcoders-reveal {
+    display: none;
+  }
+}
+
 @media (max-width: 768px) {
   .markcoders-brand {
     font-size: clamp(2.5rem, 17.5vw, 8rem);

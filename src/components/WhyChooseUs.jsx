@@ -97,14 +97,20 @@ const WhyChooseUs = () => {
     let lastClientX = 0;
     let activePointerId = null;
 
-    // ~50s to travel one full set (matches previous CSS duration)
-    const SPEED = () => {
-      const half = track.scrollWidth / 2;
-      return half > 0 ? half / (50 * 60) : 0.8;
+    // scrollWidth forces layout, so measure it once instead of 2-3x per frame.
+    let half = 0;
+    let speed = 0.8;
+    const measure = () => {
+      half = track.scrollWidth / 2;
+      // ~50s to travel one full set (matches previous CSS duration)
+      speed = half > 0 ? half / (50 * 60) : 0.8;
     };
+    measure();
+
+    const ro = new ResizeObserver(measure);
+    ro.observe(track);
 
     const wrap = (val) => {
-      const half = track.scrollWidth / 2;
       if (!half) return val;
       while (val <= -half) val += half;
       while (val > 0) val -= half;
@@ -113,14 +119,29 @@ const WhyChooseUs = () => {
 
     const apply = () => gsap.set(track, { x });
 
+    // Don't animate a marquee nobody can see.
+    let onScreen = true;
     const tick = () => {
+      rafId = 0;
+      if (!onScreen) return;
       if (!dragging && !hoverPaused) {
-        x = wrap(x - SPEED());
+        x = wrap(x - speed);
         apply();
       }
       rafId = requestAnimationFrame(tick);
     };
-    rafId = requestAnimationFrame(tick);
+    const start = () => {
+      if (!rafId && onScreen) rafId = requestAnimationFrame(tick);
+    };
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        start();
+      },
+      { rootMargin: '120px' }
+    );
+    io.observe(track);
+    start();
 
     const onPointerDown = (e) => {
       if (e.button != null && e.button !== 0) return;
@@ -173,7 +194,9 @@ const WhyChooseUs = () => {
     track.addEventListener('pointerleave', onLeave);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      if (rafId) cancelAnimationFrame(rafId);
+      io.disconnect();
+      ro.disconnect();
       track.removeEventListener('pointerdown', onPointerDown);
       track.removeEventListener('pointermove', onPointerMove);
       track.removeEventListener('pointerup', endDrag);

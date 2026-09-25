@@ -125,6 +125,8 @@ const WorkGrid = ({ heroImageRef }) => {
           <img
             src={saucedImg}
             alt="Sauced Project"
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </div>
@@ -138,6 +140,8 @@ const WorkGrid = ({ heroImageRef }) => {
           <img
             src={jerseyImg}
             alt="Shareable vCard Platform"
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </div>
@@ -151,6 +155,8 @@ const WorkGrid = ({ heroImageRef }) => {
           <img
             src={jersey2Img}
             alt="The Jersey Generator"
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </div>

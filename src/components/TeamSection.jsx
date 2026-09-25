@@ -243,6 +243,8 @@ const TeamSection = ({ roundedTop = false }) => {
                   <img
                     src={avatar.bw}
                     alt={avatar.name}
+                    loading="lazy"
+                    decoding="async"
                     className="absolute inset-0 w-full h-full object-cover"
                     draggable={false}
                   />
@@ -250,6 +252,8 @@ const TeamSection = ({ roundedTop = false }) => {
                     src={avatar.color}
                     alt=""
                     aria-hidden="true"
+                    loading="lazy"
+                    decoding="async"
                     className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     draggable={false}
                   />
