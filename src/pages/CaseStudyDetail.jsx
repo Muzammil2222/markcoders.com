@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -8,7 +8,7 @@ import Footer from '../components/Footer';
 import TrustSection from '../components/TrustSection';
 import WorkAndPlaySection from '../components/WorkAndPlaySection';
 import TeamSection from '../components/TeamSection.jsx';
-import { getLocoScroll, scrollToTarget } from '../lib/scrollBus';
+import { scrollToTarget, scrollToTop } from '../lib/scrollBus';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -24,12 +24,7 @@ const CaseStudyDetail = () => {
   const testimonialTextRef = useRef(null);
 
   useEffect(() => {
-    // Reset to top via Locomotive (window.scrollTo alone does nothing under loco)
-    const loco = getLocoScroll();
-    if (loco) {
-      loco.scrollTo(0, { duration: 0, disableLerp: true });
-    }
-    window.scrollTo(0, 0);
+    scrollToTop();
 
     // Strip leftover hash from a previous #overview click so browser doesn't re-jump
     if (window.location.hash) {

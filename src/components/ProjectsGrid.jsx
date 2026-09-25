@@ -21,7 +21,7 @@ const ProjectsGrid = ({ previewImageRef }) => {
   const card1Ref = useRef(null);
   const card1ImageRef = useRef(null);
   const cardRefs = useRef([]);
-  const [morphComplete, setMorphComplete] = useState(false);
+  const [, setMorphComplete] = useState(false);
 
   useEffect(() => {
     if (!previewImageRef?.current || !card1Ref.current || !sectionRef.current) return;
@@ -119,7 +119,7 @@ const ProjectsGrid = ({ previewImageRef }) => {
             key={i}
             ref={(el) => setCardRef(el, i)}
             className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center"
-            onClick={(e) => {
+            onClick={() => {
               if (item.link) {
                 if (item.link.startsWith('http')) {
                   window.open(item.link, '_blank');

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 /**
  * BlueWaves
@@ -83,6 +83,58 @@ function compile(gl, type, src) {
   return shader
 }
 
+/**
+ * A fullscreen fragment shader costs one pass per pixel per frame, and this
+ * runs behind every hero plus the footer. Phones and tablets have a fraction
+ * of the fill rate of a laptop GPU, so there the wave is drawn as a static CSS
+ * gradient instead — same picture, zero per-frame GPU work.
+ */
+function supportsLiveWaves() {
+  if (typeof window === 'undefined' || !window.matchMedia) return false
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false
+  if (!window.matchMedia('(pointer: fine)').matches) return false
+  return true
+}
+
+const hex = ([r, g, b]) =>
+  '#' +
+  [r, g, b]
+    .map((c) => Math.round(Math.min(Math.max(c, 0), 1) * 255).toString(16).padStart(2, '0'))
+    .join('')
+
+/**
+ * The same sine wave the shader draws, baked once into an SVG background —
+ * identical picture, no GPU pass and no animation frame.
+ */
+function staticWaveUrl({ frequency, amplitude, level, color }) {
+  const W = 1200
+  const H = 600
+  const mid = (1 - level) * H
+  const amp = amplitude * H
+  const points = []
+  for (let i = 0; i <= 120; i++) {
+    const x = (i / 120) * W
+    const y = mid - Math.sin(2 * Math.PI * frequency * (i / 120)) * amp
+    points.push(`${x.toFixed(1)},${y.toFixed(1)}`)
+  }
+  const line = `M${points.join(' L')}`
+  const fill = hex(color)
+  const crest = hex(color.map((c) => c + (1 - c) * 0.55))
+
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" preserveAspectRatio="none" viewBox="0 0 ${W} ${H}">` +
+    `<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">` +
+    `<stop offset="0" stop-color="${fill}" stop-opacity="0.85"/>` +
+    `<stop offset="1" stop-color="${fill}" stop-opacity="0.3"/>` +
+    `</linearGradient></defs>` +
+    `<rect width="${W}" height="${H}" fill="#000000"/>` +
+    `<path d="${line} L${W},${H} L0,${H} Z" fill="url(#g)"/>` +
+    `<path d="${line}" fill="none" stroke="${crest}" stroke-width="3"/>` +
+    `</svg>`
+
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`
+}
+
 export default function BlueWaves({
   speed = 0.25,
   frequency = 1,
@@ -94,9 +146,14 @@ export default function BlueWaves({
 }) {
   const canvasRef = useRef(null)
   const propsRef = useRef({ speed, frequency, amplitude, level, color })
-  propsRef.current = { speed, frequency, amplitude, level, color }
+  const [live] = useState(supportsLiveWaves)
+
+  useLayoutEffect(() => {
+    propsRef.current = { speed, frequency, amplitude, level, color }
+  })
 
   useEffect(() => {
+    if (!live) return
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -228,7 +285,26 @@ export default function BlueWaves({
       gl.deleteShader(vs)
       gl.deleteShader(fs)
     }
-  }, [])
+  }, [live])
+
+  if (!live) {
+    return (
+      <div
+        aria-hidden="true"
+        className={className}
+        style={{
+          display: 'block',
+          width: '100%',
+          height: '100%',
+          backgroundColor: '#000',
+          backgroundImage: staticWaveUrl({ frequency, amplitude, level, color }),
+          backgroundSize: '100% 100%',
+          backgroundRepeat: 'no-repeat',
+          ...style,
+        }}
+      />
+    )
+  }
 
   return (
     <canvas

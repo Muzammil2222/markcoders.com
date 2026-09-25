@@ -5,7 +5,9 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  // `techdejure/` is a vendored reference copy of another project, not our source.
+  // The two root-level CJS files are one-off scratch scripts, not app code.
+  globalIgnores(['dist', 'techdejure', 'extract_frames.js', 'fetchAtlas.js']),
   {
     files: ['**/*.{js,jsx}'],
     extends: [
@@ -17,5 +19,9 @@ export default defineConfig([
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+  },
+  {
+    files: ['vite.config.js', 'eslint.config.js', 'scripts/**/*.mjs'],
+    languageOptions: { globals: globals.node },
   },
 ])

@@ -18,27 +18,28 @@ export default defineConfig(({ command }) => ({
     allowedHosts: true,
   },
   plugins: [
-    react(), 
+    // React Compiler memoizes components and hook results automatically, so
+    // scroll-driven state updates stop re-rendering whole sections.
+    react({
+      babel: { plugins: [['babel-plugin-react-compiler', { target: '19' }]] },
+    }),
     tailwindcss(),
     viteCompression({ algorithm: 'gzip', ext: '.gz' }),
     viteCompression({ algorithm: 'brotliCompress', ext: '.br' })
   ],
   build: {
+    target: 'es2022',
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
-              return 'vendor-react';
-            }
-            if (id.includes('gsap')) {
-              return 'vendor-gsap';
-            }
-            if (id.includes('three') || id.includes('@react-three')) {
-              return 'vendor-three';
-            }
-            return 'vendor'
+          if (!id.includes('node_modules')) return undefined;
+          if (id.includes('react-router')) return 'vendor-router';
+          if (id.includes('/react/') || id.includes('/react-dom/') || id.includes('/scheduler/')) {
+            return 'vendor-react';
           }
+          if (id.includes('/gsap/')) return 'vendor-gsap';
+          if (id.includes('/lenis/')) return 'vendor-lenis';
+          return 'vendor';
         },
       },
     },

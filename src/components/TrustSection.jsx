@@ -74,7 +74,7 @@ const TrustSection = () => {
           }
 
           const words = text.split(' ').filter(Boolean);
-          words.forEach((word, idx) => {
+          words.forEach((word) => {
             const wordSpan = document.createElement('span');
             wordSpan.className = 'inline-block mr-[0.25em] whitespace-nowrap ';
 

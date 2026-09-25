@@ -54,7 +54,7 @@ const imagesList = [
   { src: img16, title: "Wordsmith", type: "CMS Development", domain: "Personal Brands", link: "/case-studies" },
 ];
 
-const OurWorkCard = ({ tagline, image, title, link }) => {
+const OurWorkCard = ({ tagline, image, title }) => {
   const navigate = useNavigate();
   return (
   <div

@@ -1,12 +1,17 @@
-/** Shared access to Locomotive Scroll for fixed UI (Navbar, etc.) */
+/**
+ * Shared scroll access for fixed UI (Navbar, section snap, morphs).
+ *
+ * Backed by Lenis when it is running, and by the plain window otherwise.
+ * Lenis smooths the real document scroll, so `window.scrollY` stays correct
+ * either way — consumers never need to know which one is active.
+ */
 
-let locoInstance = null
-const scrollListeners = new Set()
-const locoReadyListeners = new Set()
+let lenisInstance = null
+const lenisReadyListeners = new Set()
 
-export function setLocoScroll(instance) {
-  locoInstance = instance
-  locoReadyListeners.forEach((fn) => {
+export function setLenis(instance) {
+  lenisInstance = instance
+  lenisReadyListeners.forEach((fn) => {
     try {
       fn(instance)
     } catch {
@@ -15,85 +20,93 @@ export function setLocoScroll(instance) {
   })
 }
 
-export function getLocoScroll() {
-  return locoInstance
+export function getLenis() {
+  return lenisInstance
 }
 
-/** Smooth-scroll to a selector/element via Locomotive, with native fallback. */
-export function scrollToTarget(target, options = {}) {
-  const loco = locoInstance
-  const el =
-    typeof target === 'string' ? document.querySelector(target) : target
+export function getScrollY() {
+  if (typeof window === 'undefined') return 0
+  return window.scrollY || window.pageYOffset || 0
+}
 
+/** Smooth-scroll to a selector/element, via Lenis when available. */
+export function scrollToTarget(target, options = {}) {
+  const el = typeof target === 'string' ? document.querySelector(target) : target
   if (!el) return
 
-  if (loco) {
-    loco.scrollTo(el, {
-      offset: options.offset ?? -96,
-      duration: options.duration ?? 800,
-      disableLerp: options.disableLerp ?? false,
-      ...(typeof options.callback === 'function'
-        ? { callback: options.callback }
-        : {}),
+  const offset = options.offset ?? -96
+
+  if (lenisInstance) {
+    lenisInstance.scrollTo(el, {
+      offset,
+      duration: (options.duration ?? 800) / 1000,
+      immediate: options.immediate ?? false,
     })
+    if (typeof options.callback === 'function') {
+      window.setTimeout(options.callback, options.duration ?? 800)
+    }
     return
   }
 
-  el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  const top = el.getBoundingClientRect().top + getScrollY() + offset
+  window.scrollTo({ top, behavior: options.immediate ? 'auto' : 'smooth' })
   if (typeof options.callback === 'function') {
     window.setTimeout(options.callback, options.duration ?? 800)
   }
 }
 
-export function getScrollY() {
-  if (locoInstance?.scroll?.instance?.scroll) {
-    return locoInstance.scroll.instance.scroll.y || 0
+/** Scroll straight to the top (used on route change). */
+export function scrollToTop({ immediate = true } = {}) {
+  if (lenisInstance) {
+    lenisInstance.scrollTo(0, { immediate })
+    return
   }
-  return window.scrollY || window.pageYOffset || 0
+  window.scrollTo(0, 0)
 }
 
-/** Subscribe to scroll from Locomotive (preferred) or window. */
+/**
+ * Subscribe to scroll position.
+ * Lenis emits during its own rAF; the window listener covers the rest.
+ */
 export function subscribeScroll(callback) {
-  scrollListeners.add(callback)
+  const emit = () => callback(getScrollY())
 
-  const locoHandler = (args) => {
-    const y = args?.scroll?.y ?? getScrollY()
-    callback(y)
-  }
+  const onLenisScroll = () => emit()
+  let attached = null
 
-  let attachedLoco = null
-
-  const detachLoco = () => {
-    if (!attachedLoco) return
+  const detach = () => {
+    if (!attached) return
     try {
-      attachedLoco.off('scroll', locoHandler)
+      attached.off('scroll', onLenisScroll)
     } catch {
       /* ignore */
     }
-    attachedLoco = null
+    attached = null
   }
 
-  const attachLoco = (instance) => {
+  const attach = (instance) => {
     if (!instance) {
-      detachLoco()
+      detach()
       return
     }
-    if (instance === attachedLoco) return
-    detachLoco()
-    instance.on('scroll', locoHandler)
-    attachedLoco = instance
+    if (instance === attached) return
+    detach()
+    instance.on('scroll', onLenisScroll)
+    attached = instance
   }
 
-  attachLoco(locoInstance)
-  locoReadyListeners.add(attachLoco)
+  attach(lenisInstance)
+  lenisReadyListeners.add(attach)
 
-  const onWindowScroll = () => callback(getScrollY())
-  window.addEventListener('scroll', onWindowScroll, { passive: true })
+  window.addEventListener('scroll', emit, { passive: true })
 
   return () => {
-    scrollListeners.delete(callback)
-    locoReadyListeners.delete(attachLoco)
-    window.removeEventListener('scroll', onWindowScroll)
-    detachLoco()
+    lenisReadyListeners.delete(attach)
+    window.removeEventListener('scroll', emit)
+    detach()
   }
 }
+
+// Back-compat with the previous Locomotive-based API
+export const setLocoScroll = setLenis
+export const getLocoScroll = getLenis

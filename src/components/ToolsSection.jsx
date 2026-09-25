@@ -240,12 +240,6 @@ const ToolsSection = () => {
                 : isAdjacent
                   ? adjacentSize
                   : baseSize;
-              const fontSizeClass = isHovered
-                ? "text-2xl md:text-4xl"
-                : isAdjacent
-                  ? "text-xl md:text-3xl"
-                  : "text-lg md:text-2xl";
-
               return (
                 <div
                   key={index}

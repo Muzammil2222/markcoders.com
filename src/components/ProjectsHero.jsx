@@ -4,7 +4,7 @@ import { FEATURED_PROJECT } from '../data/projects';
 import BlueWaves from './BlueWaves';
 import cardImage from '../assets/vantage.webp';
 
-const OurWorkCard = ({ imageRef, tagline, image, title, link }) => {
+const OurWorkCard = ({ imageRef, tagline, image, title }) => {
   const navigate = useNavigate();
   
   return (

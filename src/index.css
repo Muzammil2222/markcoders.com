@@ -15,16 +15,26 @@
 
 /* ===== Global Styles ===== */
 html {
-  /* Locomotive Scroll owns smooth scrolling */
+  /* Lenis owns smooth scrolling — never let the UA animate it too */
   scroll-behavior: auto;
 }
 
-html.has-scroll-smooth,
-html.has-scroll-dragging {
-  overflow: hidden;
+/* Lenis smooths the real document scroll, so the page keeps native
+   scrolling on touch and only the wheel is eased. */
+html.lenis,
+html.lenis body {
+  height: auto;
 }
 
-.has-scroll-smooth body {
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
   overflow: hidden;
 }
 
@@ -36,11 +46,6 @@ body {
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* Locomotive scroll container — vertical site (not horizontal) */
-[data-scroll-container] {
-  min-height: 100vh;
 }
 
 /* ===== Scrollbar ===== */
