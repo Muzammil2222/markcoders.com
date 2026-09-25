@@ -198,6 +198,22 @@
   letter-spacing: -1px;
 }
 
+/* Beat .footer__social-link { align-items: center } — pin sits on first line */
+.footer__social-link.footer__address {
+  align-items: flex-start;
+}
+
+.footer__address .footer__social-icon {
+  /* Optical vertical center of the first text line */
+  margin-top: calc((clamp(26px, 4vw, 36px) - 20px) / 2);
+}
+
+.footer__address-text {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
 /* giant wordmark — full width of footer, behind gradient */
 .footer__brand-wrap {
   overflow: hidden;

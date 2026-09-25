@@ -152,7 +152,7 @@ const AboutAndVideo = () => {
         {/* (All Work) Label */}
         <div className="w-full text-center mb-[60px] sm:mb-[90px] md:mb-[110px] lg:mb-[130px]">
           <h2
-            className="text-[#25A9E0] inline-block transition-transform duration-300 hover:scale-95"
+            className="group inline-flex items-center gap-[0.12em] text-[#25A9E0] transition-transform duration-300 hover:scale-95 cursor-pointer pb-[0.1em]"
             onClick={() => navigate('/portfolio')}
             style={{
               fontFamily: 'Switzer, sans-serif',
@@ -160,10 +160,31 @@ const AboutAndVideo = () => {
               fontSize: 'clamp(42px, 6.5vw, 91px)',
               lineHeight: '1.13',
               letterSpacing: '-3.4px',
-              cursor: 'pointer',
+              backgroundImage:
+                'linear-gradient(to right, rgba(37, 169, 224, 1) 0%, rgba(37, 169, 224, 0.45) 60%, rgba(37, 169, 224, 0) 100%)',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'left bottom',
+              backgroundSize: '100% 3.5px',
             }}
           >
-            Our Work
+            <span>Our Work</span>
+            <svg
+              width="1em"
+              height="1em"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              className="shrink-0 translate-y-[-0.06em] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-1"
+            >
+              <path
+                d="M7 17L17 7M17 7H7M17 7V17"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </h2>
         </div>
 

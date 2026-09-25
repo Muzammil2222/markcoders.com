@@ -31,7 +31,7 @@ const WorkAndPlaySection = () => {
         // Desktop Animation
         mm.add("(min-width: 1024px)", () => {
           gsap.set(slides, {
-            y: '10vh',
+            y: '16vh',
             xPercent: -50,
             yPercent: -50,
             left: '50%',
@@ -55,10 +55,11 @@ const WorkAndPlaySection = () => {
             .to(slides[2], { left: '60%', rotation: -1, duration: 1 }, 'line')
             .to(slides[3], { left: '80%', rotation: 2, duration: 1 }, 'line');
 
-          tl.to(slides[0], { y: '-10vh', left: '12%', scale: 1, rotation: -4, duration: 1.5 }, 'scatter')
-            .to(slides[1], { y: '30vh', left: '28%', scale: 1, rotation: 2, duration: 1.5 }, 'scatter')
-            .to(slides[2], { y: '-35vh', left: '72%', scale: 1, rotation: 5, duration: 1.5 }, 'scatter')
-            .to(slides[3], { y: '5vh', left: '88%', scale: 1, rotation: -2, duration: 1.5 }, 'scatter');
+          tl.to(slides[0], { y: '2vh', left: '12%', scale: 1, rotation: -4, duration: 1.5 }, 'scatter')
+            // Bottom-left + top-right were hitting the viewport edges — pull them ~10% inward
+            .to(slides[1], { y: '28vh', left: '30%', scale: 1, rotation: 2, duration: 1.5 }, 'scatter')
+            .to(slides[2], { y: '-8vh', left: '70%', scale: 1, rotation: 5, duration: 1.5 }, 'scatter')
+            .to(slides[3], { y: '12vh', left: '88%', scale: 1, rotation: -2, duration: 1.5 }, 'scatter');
         });
 
         // Mobile / Tablet Animation
@@ -109,11 +110,11 @@ const WorkAndPlaySection = () => {
           className="text-center font-medium leading-[1.05] tracking-tight z-10 text-[#111]"
           style={{ fontFamily: 'Switzer, sans-serif', fontSize: 'clamp(48px, 6vw, 68px)', letterSpacing: '-0.04em' }}
         >
-          There’s work and<br />there’s play
+          There’s Work &<br />There’s Play
         </h2>
 
         {/* The 4 Images */}
-        <div className="w-full flex flex-col lg:block items-center gap-8 lg:gap-0 mt-12 lg:mt-0 z-20 px-6">
+        <div className="w-full flex flex-col lg:block items-center gap-8 lg:gap-0 mt-12 lg:mt-10 z-20 px-6">
           {images.map((src, index) => (
             <img
               key={index}
@@ -121,7 +122,7 @@ const WorkAndPlaySection = () => {
               alt={`Work and Play ${index + 1}`}
               loading="lazy"
               decoding="async"
-              className="scatter-image relative lg:absolute lg:top-1/2 w-full max-w-[280px] sm:max-w-[400px] h-auto aspect-square lg:w-[320px] lg:h-[320px] min-[1301px]:w-[320px] min-[1301px]:h-[320px] object-cover rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] lg:rounded-none lg:shadow-none"
+              className="scatter-image relative lg:absolute lg:top-[calc(50%+10px)] w-full max-w-[280px] sm:max-w-[400px] h-auto aspect-square lg:w-[320px] lg:h-[320px] min-[1301px]:w-[320px] min-[1301px]:h-[320px] object-cover rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] lg:rounded-none lg:shadow-none"
             />
           ))}
         </div>

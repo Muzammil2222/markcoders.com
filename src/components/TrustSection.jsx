@@ -241,12 +241,12 @@ const TrustSection = () => {
             fontFamily: 'Switzer, sans-serif',
             fontSize: 'clamp(32px, 7.5vw, 91px)',
           }}
-        >
-          A technology partner you can rely on.
+        > 
+          A Technology Partner You Can Rely On.
           <br />
           High standards. Reliable
           <br />
-          delivery.
+          Delivery.
         </h2>
 
         {/* ── Cards row ── */}

@@ -231,7 +231,7 @@ const ToolsSection = () => {
                 letterSpacing: "-0.04em",
               }}
             >
-              Our technology &
+              Our Technology &
             </h2>
           </div>
 
@@ -315,7 +315,7 @@ const ToolsSection = () => {
                 letterSpacing: "-0.04em",
               }}
             >
-              your growth.
+              Your Growth.
             </h2>
           </div>
         </div>

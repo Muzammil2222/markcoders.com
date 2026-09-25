@@ -237,7 +237,7 @@ const TeamSection = ({ roundedTop = false }) => {
             className="team-heading font-medium tracking-[-0.04em] leading-[1.1] self-end md:pr-12 mt-2 md:mt-4"
             style={{ fontFamily: 'Switzer, sans-serif', fontSize: 'clamp(48px, 7vw, 84px)' }}
           >
-            for Your Vision.
+            For Your Vision.
           </h2>
         </div>
 
@@ -315,7 +315,7 @@ const TeamSection = ({ roundedTop = false }) => {
 
               {/* Stat Row 3 */}
               <div className="flex items-center justify-between pt-12 pb-5">
-                <span className="text-[#111] text-[16px] md:text-[30px] font-medium tracking-tight">Combined years of experience</span>
+                <span className="text-[#111] text-[16px] md:text-[30px] font-medium tracking-tight">Combined Years Of Experience</span>
                 <span ref={counter3Ref} className="text-[#23b3e8] text-[24px] md:text-[35px] font-medium min-w-[50px] text-right">0+</span>
               </div>
 
