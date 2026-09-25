@@ -19,7 +19,7 @@ const EXPLORE_LINKS = [
 ];
 
 const LEGAL_LINKS = [
-  { label: "Terms & Conditions", to: "/terms" },
+  { label: "Terms & Conditions", to: "/terms-and-conditions" },
   { label: "Privacy Policy", to: "/privacy" },
 ];
 
