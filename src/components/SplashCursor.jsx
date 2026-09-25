@@ -2,15 +2,19 @@
 import { useEffect, useRef, useState } from 'react';
 
 /**
- * A fullscreen WebGL fluid sim costs a frame budget every frame it runs, and a
- * slow frame during scroll is what reads as "rough scrolling". So: never run it
- * where it has no purpose (no cursor on touch), and never run it when the user
- * has asked for less motion.
+ * Fullscreen fluid sim is mouse-trail only. Skip it on anything with a touch
+ * surface — phone, tablet, hybrid laptop — so scroll isn't competing with WebGL.
  */
 function shouldRenderFluid() {
   if (typeof window === 'undefined' || !window.matchMedia) return false;
-  if (window.matchMedia('(pointer: coarse)').matches) return false;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+  // Coarse primary pointer (typical phones / tablets)
+  if (window.matchMedia('(pointer: coarse)').matches) return false;
+  // Any coarse pointer present (hybrids with stylus/mouse + touch)
+  if (window.matchMedia('(any-pointer: coarse)').matches) return false;
+  // Touch-capable hardware (covers iPadOS desktop-UA, Surfaces, etc.)
+  if (navigator.maxTouchPoints > 0) return false;
+  if ('ontouchstart' in window) return false;
   return true;
 }
 
