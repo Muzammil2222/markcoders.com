@@ -1,24 +1,26 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { createMarquee } from '../lib/marquee';
+import { DESKTOP_MOTION_QUERY } from '../lib/motion';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import saarangBw from '../assets/B&W HEADSHOTS/SAARANG.jpg';
-import shameekBw from '../assets/B&W HEADSHOTS/SHAHMEEK.jpg';
-import muzammilBw from '../assets/B&W HEADSHOTS/MUZAMMIL.jpg';
-import affanBw from '../assets/B&W HEADSHOTS/Affan.jpg';
-import amanBw from '../assets/B&W HEADSHOTS/AMAN.jpg';
-import ammarBw from '../assets/B&W HEADSHOTS/AMMAR.jpg';
-import shahzaibBw from '../assets/B&W HEADSHOTS/SHAHZAIB.jpg';
-import hassnainBw from '../assets/B&W HEADSHOTS/HASSNAIN.jpg';
+import saarangBw from '../assets/optimized/headshot-bw-saarang.webp';
+import shameekBw from '../assets/optimized/headshot-bw-shahmeek.webp';
+import muzammilBw from '../assets/optimized/headshot-bw-muzammil.webp';
+import affanBw from '../assets/optimized/headshot-bw-affan.webp';
+import amanBw from '../assets/optimized/headshot-bw-aman.webp';
+import ammarBw from '../assets/optimized/headshot-bw-ammar.webp';
+import shahzaibBw from '../assets/optimized/headshot-bw-shahzaib.webp';
+import hassnainBw from '../assets/optimized/headshot-bw-hassnain.webp';
 
-import saarangColor from '../assets/COLORFUL HEADSHOTS/SAARANG.jpg';
-import shameekColor from '../assets/COLORFUL HEADSHOTS/SHAHMEEK.jpg';
-import muzammilColor from '../assets/COLORFUL HEADSHOTS/MUZAMMIL.jpg';
-import affanColor from '../assets/COLORFUL HEADSHOTS/AFFAN.jpg';
-import amanColor from '../assets/COLORFUL HEADSHOTS/AMAN.jpg';
-import ammarColor from '../assets/COLORFUL HEADSHOTS/AMMAR.jpg';
-import shahzaibColor from '../assets/COLORFUL HEADSHOTS/SHAHZAIB.jpg';
-import hassnainColor from '../assets/COLORFUL HEADSHOTS/HASSNAIN.jpg';
+import saarangColor from '../assets/optimized/headshot-color-saarang.webp';
+import shameekColor from '../assets/optimized/headshot-color-shahmeek.webp';
+import muzammilColor from '../assets/optimized/headshot-color-muzammil.webp';
+import affanColor from '../assets/optimized/headshot-color-affan.webp';
+import amanColor from '../assets/optimized/headshot-color-aman.webp';
+import ammarColor from '../assets/optimized/headshot-color-ammar.webp';
+import shahzaibColor from '../assets/optimized/headshot-color-shahzaib.webp';
+import hassnainColor from '../assets/optimized/headshot-color-hassnain.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -48,6 +50,8 @@ const PhotoCard = ({ member }) => (
       src={member.imgBw}
       alt={member.name}
       className="absolute inset-0 w-full h-full object-cover"
+      loading="lazy"
+      decoding="async"
       draggable={false}
     />
     <img
@@ -55,6 +59,8 @@ const PhotoCard = ({ member }) => (
       alt=""
       aria-hidden="true"
       className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+      loading="lazy"
+      decoding="async"
       draggable={false}
     />
   </div>
@@ -71,7 +77,12 @@ const TeamSection = ({ roundedTop = false }) => {
     const section = sectionRef.current;
     if (!section) return;
 
-    let ctx = gsap.context(() => {
+    const mm = gsap.matchMedia();
+    mm.add({ desktop: DESKTOP_MOTION_QUERY, all: 'all' }, (context) => {
+      if (!context.conditions.desktop) {
+        gsap.set(descRef.current?.querySelectorAll('.team-desc-char'), { opacity: 1 });
+        return;
+      }
       if (headingRef.current) {
         gsap.fromTo(headingRef.current,
           { y: 60, opacity: 0 },
@@ -122,51 +133,12 @@ const TeamSection = ({ roundedTop = false }) => {
       }
     }, section);
 
-    return () => ctx.revert();
+    return () => mm.revert();
   }, []);
 
-  // Auto-marquee (same pattern as WhyChooseUs) — not page-scroll scrub
   useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    let x = 0;
-    let rafId = 0;
-    let hoverPaused = false;
-
-    const SPEED = () => {
-      const half = track.scrollWidth / 2;
-      return half > 0 ? half / (45 * 60) : 0.6;
-    };
-
-    const wrap = (val) => {
-      const half = track.scrollWidth / 2;
-      if (!half) return val;
-      while (val <= -half) val += half;
-      while (val > 0) val -= half;
-      return val;
-    };
-
-    const tick = () => {
-      if (!hoverPaused) {
-        x = wrap(x - SPEED());
-        gsap.set(track, { x });
-      }
-      rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
-
-    const onEnter = () => { hoverPaused = true; };
-    const onLeave = () => { hoverPaused = false; };
-
-    track.addEventListener('pointerenter', onEnter);
-    track.addEventListener('pointerleave', onLeave);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      track.removeEventListener('pointerenter', onEnter);
-      track.removeEventListener('pointerleave', onLeave);
-    };
+    if (!trackRef.current) return;
+    return createMarquee(trackRef.current, { duration: 45 });
   }, []);
 
   const textPart = "We are a multidisciplinary team of 35+ professionals across project management, UI/UX, web and software engineering, mobile development, QA, SEO and hosting - working together from Karachi to deliver reliable digital products for clients worldwide.";
@@ -176,9 +148,7 @@ const TeamSection = ({ roundedTop = false }) => {
     return words.map((word, wIdx) => (
       <span key={wIdx}>
         <span className="inline-block whitespace-nowrap">
-          {word.split('').map((char, cIdx) => (
-            <span key={cIdx} className={`team-desc-char opacity-20 ${className}`}>{char}</span>
-          ))}
+          <span className={`team-desc-char opacity-20 ${className}`}>{word}</span>
         </span>
         {wIdx !== words.length - 1 && ' '}
       </span>
@@ -222,7 +192,7 @@ const TeamSection = ({ roundedTop = false }) => {
             <div className="w-full overflow-hidden">
               <div
                 ref={trackRef}
-                className="flex w-max will-change-transform"
+                className="flex w-max"
               >
                 <div className="flex gap-4 md:gap-6 pr-4 md:pr-6">
                   {photoMembers.map((member) => (

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { DESKTOP_MOTION_QUERY } from '../lib/motion';
 import videoImg from '../assets/videoimg.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -18,7 +19,10 @@ const AboutAndVideo = () => {
     const root = containerRef.current;
     if (!root) return;
 
-    const ctx = gsap.context(() => {
+    const mm = gsap.matchMedia();
+    const headingMarkup = headingRef.current.innerHTML;
+    const paragraphMarkup = paragraphRef.current.innerHTML;
+    mm.add(DESKTOP_MOTION_QUERY, () => {
       // 1. Heading Char Reveal
       const headingElement = headingRef.current;
       if (headingElement) {
@@ -36,18 +40,13 @@ const AboutAndVideo = () => {
           const wordSpan = document.createElement('span');
           wordSpan.className = 'inline-block mr-[0.28em] whitespace-nowrap';
 
-          for (let char of word) {
-            const charSpan = document.createElement('span');
-            charSpan.textContent = char;
-            charSpan.className = 'about-heading-char';
-            charSpan.style.opacity = '0.15';
-            charSpan.style.color = '#FFFFFF';
-            wordSpan.appendChild(charSpan);
-          }
+          wordSpan.textContent = word;
+          wordSpan.classList.add('about-heading-word');
+          wordSpan.style.opacity = '0.15';
           headingElement.appendChild(wordSpan);
         });
 
-        const chars = headingElement.querySelectorAll('.about-heading-char');
+        const chars = headingElement.querySelectorAll('.about-heading-word');
         gsap.to(chars, {
           opacity: 1,
           stagger: 0.02,
@@ -83,20 +82,16 @@ const AboutAndVideo = () => {
             const wordSpan = document.createElement('span');
             wordSpan.className = 'inline-block mr-[0.28em] whitespace-nowrap';
 
-            for (let char of word) {
-              const charSpan = document.createElement('span');
-              charSpan.textContent = char;
-              charSpan.className = 'about-para-char';
-              charSpan.style.opacity = seg.isBold ? '0.35' : '0.2';
-              charSpan.style.fontWeight = seg.isBold ? '700' : '500';
-              charSpan.style.color = '#FFFFFF';
-              wordSpan.appendChild(charSpan);
-            }
+            wordSpan.textContent = word;
+            wordSpan.classList.add('about-para-word');
+            wordSpan.style.opacity = seg.isBold ? '0.35' : '0.2';
+            wordSpan.style.fontWeight = seg.isBold ? '700' : '500';
+            wordSpan.style.color = '#FFFFFF';
             paraElement.appendChild(wordSpan);
           });
         });
 
-        const paraChars = paraElement.querySelectorAll('.about-para-char');
+        const paraChars = paraElement.querySelectorAll('.about-para-word');
         gsap.to(paraChars, {
           opacity: 1,
           stagger: 0.01,
@@ -115,15 +110,10 @@ const AboutAndVideo = () => {
         gsap.fromTo(
           videoWrapperRef.current,
           {
-            width: '40%',
             scale: 0.6,
-            borderRadius: '36px',
           },
           {
-            width: 'calc(100% - 48px)',
-            maxWidth: '1350px',
             scale: 1,
-            borderRadius: '24px',
             ease: 'none',
             force3D: true,
             scrollTrigger: {
@@ -136,9 +126,13 @@ const AboutAndVideo = () => {
           }
         );
       }
+      return () => {
+        headingElement.innerHTML = headingMarkup;
+        paraElement.innerHTML = paragraphMarkup;
+      };
     }, root);
 
-    return () => ctx.revert();
+    return () => mm.revert();
   }, []);
 
   return (
@@ -268,13 +262,15 @@ ready to scale.
       <div className="w-full flex justify-center items-center py-6">
         <div
           ref={videoWrapperRef}
-          className="relative h-[55vh] md:h-[75vh] overflow-hidden mx-auto will-change-transform"
-          style={{ width: '40%', transform: 'scale(0.6)', borderRadius: '36px' }}
+          className="relative h-[55vh] md:h-[75vh] overflow-hidden mx-auto"
+          style={{ width: 'calc(100% - 48px)', maxWidth: '1350px', borderRadius: '24px' }}
         >
           <img
             ref={videoImgRef}
             src={videoImg}
             alt="Showcase Video Background"
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-black/10 pointer-events-none" />

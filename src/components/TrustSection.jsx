@@ -1,11 +1,25 @@
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { DESKTOP_MOTION_QUERY } from '../lib/motion';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const SLIDE_INTERVAL_MS = 4500;
+const HEADING_LINES = [
+  'A technology partner you can rely on.',
+  'High standards. Reliable',
+  'delivery.',
+];
+const QUOTE_STYLE = {
+  fontFamily: 'Switzer, sans-serif',
+  fontSize: 'clamp(15px, 2.2vw, 24px)',
+  lineHeight: 1.55,
+  letterSpacing: '-0.01em',
+  minHeight: '4.8em',
+  gridArea: '1 / 1',
+};
 
 const testimonials = [
   {
@@ -39,58 +53,20 @@ const TrustSection = () => {
   const activeIndexRef = useRef(0);
   const timerRef = useRef(null);
   const isAnimatingRef = useRef(false);
+  const autoplayAllowedRef = useRef(false);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
-    const ctx = gsap.context(() => {
+    const mm = gsap.matchMedia();
+    mm.add(DESKTOP_MOTION_QUERY, () => {
       const heading = headingRef.current;
       const cards = cardsRef.current?.children;
 
-      // Same scroll-scrub char opacity reveal as AboutAndVideo
       if (heading) {
-        const childNodes = Array.from(heading.childNodes);
-        heading.innerHTML = '';
-
-        let isFirstText = true;
-
-        childNodes.forEach((node) => {
-          if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
-            heading.appendChild(document.createElement('br'));
-            return;
-          }
-
-          const text = (node.textContent || '').replace(/\s+/g, ' ').trim();
-          if (!text) return;
-
-          if (isFirstText) {
-            const spacer = document.createElement('span');
-            spacer.className = 'inline-block w-[102px]';
-            spacer.setAttribute('aria-hidden', 'true');
-            heading.appendChild(spacer);
-            isFirstText = false;
-          }
-
-          const words = text.split(' ').filter(Boolean);
-          words.forEach((word, idx) => {
-            const wordSpan = document.createElement('span');
-            wordSpan.className = 'inline-block mr-[0.25em] whitespace-nowrap ';
-
-            for (const char of word) {
-              const charSpan = document.createElement('span');
-              charSpan.textContent = char;
-              charSpan.className = 'trust-heading-char';
-              charSpan.style.opacity = '0.15';
-              wordSpan.appendChild(charSpan);
-            }
-
-            heading.appendChild(wordSpan);
-          });
-        });
-
         const headingChars = heading.querySelectorAll('.trust-heading-char');
-
+        gsap.set(headingChars, { opacity: 0.15 });
         gsap.to(headingChars, {
           opacity: 1,
           stagger: 0.02,
@@ -135,15 +111,21 @@ const TrustSection = () => {
       );
     }, section);
 
-    return () => ctx.revert();
+    return () => mm.revert();
   }, []);
 
-  const goToSlide = (nextIndex, direction = 1) => {
+  const goToSlide = useCallback((nextIndex, direction = 1) => {
     if (
       nextIndex === activeIndexRef.current ||
       !slideContentRef.current ||
       isAnimatingRef.current
     ) {
+      return;
+    }
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      activeIndexRef.current = nextIndex;
+      setActiveIndex(nextIndex);
       return;
     }
 
@@ -178,19 +160,43 @@ const TrustSection = () => {
         );
       },
     });
-  };
+  }, []);
 
-  const startAutoplay = () => {
+  const startAutoplay = useCallback(() => {
     clearInterval(timerRef.current);
+    if (!autoplayAllowedRef.current) return;
     timerRef.current = setInterval(() => {
       goToSlide((activeIndexRef.current + 1) % testimonials.length, 1);
     }, SLIDE_INTERVAL_MS);
-  };
+  }, [goToSlide]);
 
   useEffect(() => {
-    startAutoplay();
-    return () => clearInterval(timerRef.current);
-  }, []);
+    const content = slideContentRef.current;
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let visible = false;
+
+    const syncAutoplay = () => {
+      autoplayAllowedRef.current = visible && !document.hidden && !motion.matches;
+      startAutoplay();
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      syncAutoplay();
+    });
+    if (content) observer.observe(content);
+    document.addEventListener('visibilitychange', syncAutoplay);
+    motion.addEventListener('change', syncAutoplay);
+
+    return () => {
+      autoplayAllowedRef.current = false;
+      clearInterval(timerRef.current);
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', syncAutoplay);
+      motion.removeEventListener('change', syncAutoplay);
+      if (content) gsap.killTweensOf(content);
+      isAnimatingRef.current = false;
+    };
+  }, [startAutoplay]);
 
   const handleDotClick = (i) => {
     const dir = i > activeIndexRef.current ? 1 : -1;
@@ -218,7 +224,7 @@ const TrustSection = () => {
       ref={sectionRef}
       data-snap-section
       className="w-full max-w-[100%] overflow-x-hidden px-4 sm:px-6 md:px-12 lg:px-20 py-16 sm:py-24 md:py-32"
-      style={{ backgroundColor: '#ffffff' }}
+      style={{ backgroundColor: '#000000' }}
     >
       <div className="max-w-[1200px] mx-auto w-full min-w-0">
         {/* ── Heading ── */}
@@ -230,11 +236,20 @@ const TrustSection = () => {
             fontSize: 'clamp(32px, 7.5vw, 91px)',
           }}
         >
-          A technology partner you can rely on.
-          <br />
-          High standards. Reliable
-          <br />
-          delivery.
+          {HEADING_LINES.map((line, lineIndex) => (
+            <Fragment key={line}>
+              {lineIndex > 0 ? <br /> : <span className="hidden lg:inline-block w-[102px]" aria-hidden="true" />}
+              {line.split(' ').map((word, wordIndex) => (
+                <Fragment key={`${lineIndex}-${wordIndex}`}>
+                  <span className="inline-block whitespace-nowrap">
+                    {Array.from(word).map((char, charIndex) => (
+                      <span key={charIndex} className="trust-heading-char">{char}</span>
+                    ))}
+                  </span>{' '}
+                </Fragment>
+              ))}
+            </Fragment>
+          ))}
         </h2>
 
         {/* ── Cards row ── */}
@@ -305,8 +320,7 @@ const TrustSection = () => {
             <div className="relative flex-1 min-h-[210px] sm:min-h-[230px] md:min-h-[250px] overflow-hidden">
               <div
                 ref={slideContentRef}
-                className="flex h-full w-full flex-col sm:flex-row items-center sm:items-stretch gap-5 sm:gap-6 md:gap-8 min-w-0 will-change-transform"
-                style={{ backfaceVisibility: 'hidden' }}
+                className="flex h-full w-full flex-col sm:flex-row items-center sm:items-stretch gap-5 sm:gap-6 md:gap-8 min-w-0"
               >
                 {/* Letter avatar */}
                 <div className="shrink-0 flex items-center justify-center">
@@ -330,18 +344,18 @@ const TrustSection = () => {
 
                 {/* Quote text panel — transparent bg */}
                 <div className="flex-1 min-w-0 flex flex-col justify-center w-full bg-transparent px-0 py-1 sm:py-2">
-                  <p
-                    className="text-white/90 font-normal break-words"
-                    style={{
-                      fontFamily: 'Switzer, sans-serif',
-                      fontSize: 'clamp(15px, 2.2vw, 24px)',
-                      lineHeight: 1.55,
-                      letterSpacing: '-0.01em',
-                      minHeight: '4.8em',
-                    }}
-                  >
-                    {current.quote}
-                  </p>
+                  <div className="grid">
+                    {/* Reserve the longest quote's height so autoplay cannot
+                        move the footer or force a page-wide scroll refresh. */}
+                    {testimonials.map(({ quote, name }) => (
+                      <p key={name} aria-hidden="true" className="invisible pointer-events-none font-normal break-words" style={QUOTE_STYLE}>
+                        {quote}
+                      </p>
+                    ))}
+                    <p className="text-white/90 font-normal break-words" style={QUOTE_STYLE}>
+                      {current.quote}
+                    </p>
+                  </div>
                   <div className="mt-5 sm:mt-6 min-w-0">
                     <p
                       className="text-white font-medium truncate"

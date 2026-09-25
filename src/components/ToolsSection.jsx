@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
+import { DESKTOP_MOTION_QUERY } from "../lib/motion";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import chatgptImg from "../assets/ChatGPT Logo - Black - 512x512 - zonalogo.com.png";
@@ -105,7 +106,8 @@ const ToolsSection = () => {
     const root = sectionRef.current;
     if (!root) return;
 
-    let ctx = gsap.context(() => {
+    const mm = gsap.matchMedia();
+    mm.add(DESKTOP_MOTION_QUERY, () => {
       const headings = root.querySelectorAll(".tools-heading");
       const icons = root.querySelectorAll(".tool-icon");
       const bottomIntro = root.querySelector(".bottom-intro");
@@ -192,7 +194,7 @@ const ToolsSection = () => {
       }
     }, root);
 
-    return () => ctx.revert();
+    return () => mm.revert();
   }, []);
 
   return (
@@ -230,47 +232,35 @@ const ToolsSection = () => {
                 hoveredIndex === index - 1 || hoveredIndex === index + 1;
               const isFar = hoveredIndex !== null && !isHovered && !isAdjacent;
 
-              // Mobile vs Desktop sizes
-              const baseSize = "w-[48px] h-[48px] md:w-[73px] md:h-[73px]";
-              const adjacentSize = "w-[56px] h-[56px] md:w-[84px] md:h-[84px]";
-              const hoveredSize = "w-[64px] h-[64px] md:w-[104px] md:h-[104px]";
-
-              const currentSizeClass = isHovered
-                ? hoveredSize
-                : isAdjacent
-                  ? adjacentSize
-                  : baseSize;
-              const fontSizeClass = isHovered
-                ? "text-2xl md:text-4xl"
-                : isAdjacent
-                  ? "text-xl md:text-3xl"
-                  : "text-lg md:text-2xl";
-
               return (
                 <div
                   key={index}
                   className="tool-icon relative group flex flex-col items-center justify-end h-full"
-                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseEnter={() => {
+                    if (window.matchMedia(DESKTOP_MOTION_QUERY).matches) setHoveredIndex(index);
+                  }}
                 >
                   {/* Icon Box */}
                   <div
-                    className={`${currentSizeClass} rounded-[12px] md:rounded-[22px] flex items-center justify-center cursor-pointer overflow-hidden`}
+                    className="w-[48px] h-[48px] md:w-[73px] md:h-[73px] rounded-[12px] md:rounded-[22px] flex items-center justify-center cursor-pointer overflow-hidden origin-bottom"
                     style={{
-                      transition: "all 0.6s cubic-bezier(0.16, 1, 0.3, 1)", // Ultra smooth, soft framer-like spring
+                      transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s, box-shadow 0.6s",
                       boxShadow: isHovered
                         ? "0 16px 32px rgba(0,0,0,0.15)"
                         : isAdjacent
                           ? "0 8px 20px rgba(0,0,0,0.1)"
                           : "0 4px 12px rgba(0,0,0,0.08)",
                       transform: isHovered
-                        ? "translateY(-12px)"
+                        ? "translateY(-12px) scale(1.42)"
                         : isAdjacent
-                          ? "translateY(-6px)"
+                          ? "translateY(-6px) scale(1.15)"
                           : "translateY(0)",
                       opacity: isFar ? 0.85 : 1,
                     }}
                   >
                     <img
+                      loading="lazy"
+                      decoding="async"
                       src={tool.img}
                       alt={tool.name}
                       className="w-full h-full object-cover"
