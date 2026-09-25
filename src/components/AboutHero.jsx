@@ -1,6 +1,6 @@
 import PageHero from './landing/PageHero';
 import BlueWaves from './BlueWaves';
-import cardImage from '../assets/optimized/team-800.webp';
+import cardImage from '../assets/team.webp';
 
 const StoryCard = ({ imageRef }) => (
   <div
@@ -95,8 +95,7 @@ const StoryCard = ({ imageRef }) => (
         ref={imageRef}
         src={cardImage}
         alt="Our Story"
-        decoding="async"
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 relative z-50 opacity-100 origin-center"
+        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 relative z-50 will-change-transform opacity-100 origin-center"
         style={{
           width: '162.16px',
           height: '197.3px',

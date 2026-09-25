@@ -1,7 +1,5 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { createMarquee } from '../lib/marquee';
-import { DESKTOP_MOTION_QUERY } from '../lib/motion';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -66,8 +64,7 @@ const WhyChooseUs = () => {
     const section = sectionRef.current;
     if (!section) return;
 
-    const mm = gsap.matchMedia();
-    mm.add(DESKTOP_MOTION_QUERY, () => {
+    const ctx = gsap.context(() => {
       if (headingRef.current) {
         gsap.fromTo(headingRef.current,
           { y: 60, opacity: 0 },
@@ -85,12 +82,105 @@ const WhyChooseUs = () => {
         );
       }
     }, section);
-    return () => mm.revert();
+    return () => ctx.revert();
   }, []);
 
+  // Auto-marquee + drag (same loop feel as CSS animate-marquee-slider)
   useEffect(() => {
-    if (!trackRef.current) return;
-    return createMarquee(trackRef.current, { duration: 50, draggable: true });
+    const track = trackRef.current;
+    if (!track) return;
+
+    let x = 0;
+    let rafId = 0;
+    let dragging = false;
+    let hoverPaused = false;
+    let lastClientX = 0;
+    let activePointerId = null;
+
+    // ~50s to travel one full set (matches previous CSS duration)
+    const SPEED = () => {
+      const half = track.scrollWidth / 2;
+      return half > 0 ? half / (50 * 60) : 0.8;
+    };
+
+    const wrap = (val) => {
+      const half = track.scrollWidth / 2;
+      if (!half) return val;
+      while (val <= -half) val += half;
+      while (val > 0) val -= half;
+      return val;
+    };
+
+    const apply = () => gsap.set(track, { x });
+
+    const tick = () => {
+      if (!dragging && !hoverPaused) {
+        x = wrap(x - SPEED());
+        apply();
+      }
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+
+    const onPointerDown = (e) => {
+      if (e.button != null && e.button !== 0) return;
+      dragging = true;
+      activePointerId = e.pointerId;
+      lastClientX = e.clientX;
+      track.setPointerCapture?.(e.pointerId);
+      track.classList.add('cursor-grabbing');
+      track.classList.remove('cursor-grab');
+    };
+
+    const onPointerMove = (e) => {
+      if (!dragging || e.pointerId !== activePointerId) return;
+      const dx = e.clientX - lastClientX;
+      lastClientX = e.clientX;
+      if (dx === 0) return;
+      x = wrap(x + dx);
+      apply();
+      // Prefer horizontal drag over page scroll when scrubbing the slider
+      e.preventDefault();
+    };
+
+    const endDrag = (e) => {
+      if (activePointerId != null && e.pointerId !== activePointerId) return;
+      dragging = false;
+      activePointerId = null;
+      track.classList.add('cursor-grab');
+      track.classList.remove('cursor-grabbing');
+      try {
+        track.releasePointerCapture?.(e.pointerId);
+      } catch {
+        /* already released */
+      }
+    };
+
+    const onEnter = () => { hoverPaused = true; };
+    const onLeave = () => {
+      hoverPaused = false;
+      if (!dragging) {
+        track.classList.add('cursor-grab');
+        track.classList.remove('cursor-grabbing');
+      }
+    };
+
+    track.addEventListener('pointerdown', onPointerDown);
+    track.addEventListener('pointermove', onPointerMove, { passive: false });
+    track.addEventListener('pointerup', endDrag);
+    track.addEventListener('pointercancel', endDrag);
+    track.addEventListener('pointerenter', onEnter);
+    track.addEventListener('pointerleave', onLeave);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      track.removeEventListener('pointerdown', onPointerDown);
+      track.removeEventListener('pointermove', onPointerMove);
+      track.removeEventListener('pointerup', endDrag);
+      track.removeEventListener('pointercancel', endDrag);
+      track.removeEventListener('pointerenter', onEnter);
+      track.removeEventListener('pointerleave', onLeave);
+    };
   }, []);
 
   return (
@@ -113,7 +203,7 @@ const WhyChooseUs = () => {
       <div className="relative w-full overflow-hidden group/slider mt-16 md:mt-24">
         <div
           ref={trackRef}
-          className="flex w-max py-4 cursor-grab select-none touch-pan-y"
+          className="flex w-max py-4 cursor-grab select-none touch-pan-y will-change-transform"
           style={{ touchAction: 'pan-y' }}
         >
           <div className="flex gap-6 pr-6">

@@ -3,12 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createImageMorph } from '../lib/imageMorph';
-import { DESKTOP_MOTION_QUERY } from '../lib/motion';
 
 import heroCardImg from '../assets/vantage.webp';
-import saucedImg from '../assets/optimized/sauced-1400.webp';
+import saucedImg from '../assets/sauced.webp';
 import savmontImg from '../assets/Savmont.webp';
-import jerseyImg from '../assets/optimized/jersey2-1400.webp';
+import jerseyImg from '../assets/jersey2.webp';
 import midasImg from '../assets/midas.webp';
 import gardenImg from '../assets/gardeninminute.webp';
 import checkMyRideImg from '../assets/checkmyride.webp';
@@ -46,10 +45,11 @@ const ProjectsGrid = ({ previewImageRef }) => {
     const section = sectionRef.current;
     if (!section) return;
 
-    const mm = gsap.matchMedia();
-    mm.add(DESKTOP_MOTION_QUERY, () => {
-      // Keep the first card stationary as the hero morph's destination.
-      const cards = cardRefs.current.slice(1).filter(Boolean);
+    const ctx = gsap.context(() => {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) return;
+
+      const cards = cardRefs.current.filter(Boolean);
       cards.forEach((card) => {
         gsap.set(card, { scale: 0.72, yPercent: 8, force3D: true });
 
@@ -69,7 +69,24 @@ const ProjectsGrid = ({ previewImageRef }) => {
       });
     }, section);
 
-    return () => mm.revert();
+    const refresh = () => ScrollTrigger.refresh(true);
+    const onLoad = () => refresh();
+
+    const images = section.querySelectorAll('img');
+    images.forEach((img) => {
+      if (!img.complete) img.addEventListener('load', onLoad, { once: true });
+    });
+
+    requestAnimationFrame(refresh);
+    const refreshTimers = [150, 600, 1200].map((ms) =>
+      window.setTimeout(refresh, ms)
+    );
+
+    return () => {
+      refreshTimers.forEach((id) => window.clearTimeout(id));
+      images.forEach((img) => img.removeEventListener('load', onLoad));
+      ctx.revert();
+    };
   }, []);
 
   const setCardRef = (el, index) => {
@@ -101,8 +118,8 @@ const ProjectsGrid = ({ previewImageRef }) => {
           <div
             key={i}
             ref={(el) => setCardRef(el, i)}
-            className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] origin-center"
-            onClick={() => {
+            className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center"
+            onClick={(e) => {
               if (item.link) {
                 if (item.link.startsWith('http')) {
                   window.open(item.link, '_blank');
@@ -116,8 +133,7 @@ const ProjectsGrid = ({ previewImageRef }) => {
               ref={i === 0 ? card1ImageRef : null}
               src={item.src}
               alt={item.alt}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-50 relative origin-center"
-              style={{ opacity: i === 0 && !morphComplete ? 0 : 1 }}
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-50 relative will-change-transform opacity-100 origin-center"
               loading="lazy"
               decoding="async"
               draggable={false}

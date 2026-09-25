@@ -1,4 +1,4 @@
-import { lazy, Suspense, useLayoutEffect, useEffect, useRef, useSyncExternalStore } from 'react'
+import { lazy, Suspense, useLayoutEffect, useEffect, useRef } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -6,22 +6,14 @@ import LocomotiveScroll from 'locomotive-scroll'
 import SplashCursor from './components/SplashCursor'
 import DocumentTitle from './components/DocumentTitle'
 import { setLocoScroll } from './lib/scrollBus'
-import { DESKTOP_MOTION_QUERY } from './lib/motion'
+import { initMagneticSnap, shouldEnableMagneticSnap } from './lib/magneticSnap'
 import 'locomotive-scroll/dist/locomotive-scroll.css'
 
 gsap.registerPlugin(ScrollTrigger)
-ScrollTrigger.config({ ignoreMobileResize: true })
 
 // Scroll-linked tweens should follow the scroll position, not be time-corrected
 // after a dropped frame — that correction is what shows up as a small lurch.
 gsap.ticker.lagSmoothing(0)
-
-const subscribeMotion = (callback) => {
-  const media = window.matchMedia(DESKTOP_MOTION_QUERY)
-  media.addEventListener('change', callback)
-  return () => media.removeEventListener('change', callback)
-}
-const getDesktopMotion = () => window.matchMedia(DESKTOP_MOTION_QUERY).matches
 
 const Home = lazy(() => import('./pages/Home'))
 const CaseStudies = lazy(() => import('./pages/CaseStudies'))
@@ -51,7 +43,6 @@ function SmoothScroll({ children }) {
   const containerRef = useRef(null)
   const locoRef = useRef(null)
   const location = useLocation()
-  const desktopMotion = useSyncExternalStore(subscribeMotion, getDesktopMotion, () => false)
 
   useLayoutEffect(() => {
     const scroller = containerRef.current
@@ -66,7 +57,7 @@ function SmoothScroll({ children }) {
     scroller.style.transform = ''
     scroller.style.removeProperty('transform')
 
-    const locoScroll = desktopMotion ? new LocomotiveScroll({
+    const locoScroll = new LocomotiveScroll({
       el: scroller,
       smooth: true,
       // lerp = how fast it catches up to the target (lower = longer glide).
@@ -78,24 +69,24 @@ function SmoothScroll({ children }) {
       // Firefox reports wheel deltas in lines, not pixels
       firefoxMultiplier: 40,
       touchMultiplier: 2.2,
-      smartphone: { smooth: false },
-      tablet: { smooth: false },
-    }) : null
+      smartphone: { smooth: true, lerp: 0.1, multiplier: 1 },
+      tablet: { smooth: true, lerp: 0.09, multiplier: 1 },
+    })
     locoRef.current = locoScroll
     setLocoScroll(locoScroll)
 
-    let lastScrollAt = 0
-    let lastY = 0
-    const onScroll = (event) => {
-      const y = event?.scroll?.y ?? window.scrollY
-      if (y !== lastY) lastScrollAt = performance.now()
-      lastY = y
-      if (locoScroll) ScrollTrigger.update()
-    }
-    if (locoScroll) locoScroll.on('scroll', onScroll)
-    else window.addEventListener('scroll', onScroll, { passive: true })
+    locoScroll.on('scroll', ScrollTrigger.update)
 
-    if (locoScroll) ScrollTrigger.scrollerProxy(scroller, {
+    let destroySnap = null
+    let snapTimer = null
+    if (shouldEnableMagneticSnap(location.pathname)) {
+      // Defer until layout/lazy content settles so section tops are accurate
+      snapTimer = window.setTimeout(() => {
+        destroySnap = initMagneticSnap({ offset: 88 })
+      }, 500)
+    }
+
+    ScrollTrigger.scrollerProxy(scroller, {
       scrollTop(value) {
         if (arguments.length) {
           // Refresh jumps must update scroll state and the DOM synchronously.
@@ -120,66 +111,50 @@ function SmoothScroll({ children }) {
       // container and cards just scroll away (looks like sticky is broken).
       pinType: 'transform',
     })
-    ScrollTrigger.defaults({ scroller: locoScroll ? scroller : window })
-    let measuredWidth = scroller.offsetWidth
-    let measuredHeight = scroller.offsetHeight
-    const onRefresh = () => {
-      locoScroll?.update()
-      measuredWidth = scroller.offsetWidth
-      measuredHeight = scroller.offsetHeight
-    }
+    ScrollTrigger.defaults({ scroller })
+    const onRefresh = () => locoScroll.update()
     ScrollTrigger.addEventListener('refresh', onRefresh)
 
-    locoScroll?.scrollTo(0, { duration: 0, disableLerp: true })
+    locoScroll.scrollTo(0, { duration: 0, disableLerp: true })
     window.scrollTo(0, 0)
 
-    let disposed = false
-    let refreshTimer = null
     const refresh = () => {
-      if (disposed) return
-      // Remeasuring every pinned element while the user scrolls creates a hitch.
-      if (performance.now() - lastScrollAt < 200) {
-        refreshTimer = window.setTimeout(refresh, 200)
-        return
-      }
-      locoScroll?.update()
+      locoScroll.update()
       ScrollTrigger.refresh()
     }
-    const scheduleRefresh = () => {
-      if (disposed) return
-      window.clearTimeout(refreshTimer)
-      refreshTimer = window.setTimeout(refresh, 200)
-    }
-    const initialFrame = requestAnimationFrame(scheduleRefresh)
-    document.fonts?.ready.then(scheduleRefresh)
 
-    // Ignore observer notifications caused by refresh itself. Only real layout
-    // changes (e.g. loaded content) need another global measurement.
-    const ro = new ResizeObserver(([entry]) => {
-      const width = Math.round(entry.borderBoxSize?.[0]?.inlineSize ?? scroller.offsetWidth)
-      const height = Math.round(entry.borderBoxSize?.[0]?.blockSize ?? scroller.offsetHeight)
-      if (width === measuredWidth && height === measuredHeight) return
-      measuredWidth = width
-      measuredHeight = height
-      scheduleRefresh()
+    // After paint + after lazy images/fonts settle
+    requestAnimationFrame(refresh)
+    const t1 = window.setTimeout(refresh, 100)
+    const t2 = window.setTimeout(refresh, 400)
+    const t3 = window.setTimeout(refresh, 1000)
+
+    // Pinned sections resize the container constantly while scrolling, and a
+    // ScrollTrigger.refresh() mid-scroll reverts/remeasures every trigger —
+    // that is the hitch you feel. Debounce so it only runs once things settle.
+    let roTimer = null
+    const ro = new ResizeObserver(() => {
+      if (roTimer != null) window.clearTimeout(roTimer)
+      roTimer = window.setTimeout(refresh, 180)
     })
     ro.observe(scroller)
 
     return () => {
-      disposed = true
-      cancelAnimationFrame(initialFrame)
-      window.clearTimeout(refreshTimer)
+      window.clearTimeout(t1)
+      window.clearTimeout(t2)
+      window.clearTimeout(t3)
+      if (snapTimer != null) window.clearTimeout(snapTimer)
+      if (roTimer != null) window.clearTimeout(roTimer)
+      destroySnap?.()
       ro.disconnect()
       ScrollTrigger.removeEventListener('refresh', onRefresh)
-      window.removeEventListener('scroll', onScroll)
-      if (locoScroll) ScrollTrigger.scrollerProxy(scroller)
-      ScrollTrigger.defaults({ scroller: window })
+      ScrollTrigger.scrollerProxy(scroller) // clear proxy for this element
       setLocoScroll(null)
-      locoScroll?.destroy()
+      locoScroll.destroy()
       locoRef.current = null
       scroller.style.transform = ''
     }
-  }, [location.pathname, desktopMotion])
+  }, [location.pathname])
 
   return (
     <div

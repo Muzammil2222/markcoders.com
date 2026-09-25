@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react'
-import { DESKTOP_MOTION_QUERY } from '../lib/motion'
 
 /**
  * BlueWaves
@@ -95,168 +94,126 @@ export default function BlueWaves({
 }) {
   const canvasRef = useRef(null)
   const propsRef = useRef({ speed, frequency, amplitude, level, color })
-  useEffect(() => {
-    propsRef.current = { speed, frequency, amplitude, level, color }
-  }, [speed, frequency, amplitude, level, color])
+  propsRef.current = { speed, frequency, amplitude, level, color }
 
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
 
-    const motion = window.matchMedia(DESKTOP_MOTION_QUERY)
-    let renderer = null
-    let visible = false
-    let failed = false
-    let raf = 0
-    let needsResize = true
-    let lastDraw = -Infinity
-    const start = performance.now()
-
-    // Defer context/shader allocation until this hero or footer is near the viewport.
-    const createRenderer = () => {
-      const gl = canvas.getContext('webgl', {
-        antialias: false,
-        alpha: false,
-        depth: false,
-        stencil: false,
-        powerPreference: 'low-power',
-      })
-      if (!gl) return null
-
-      const program = gl.createProgram()
-      let vs
-      let fs
-      let buffer
-      const dispose = () => {
-        if (buffer) gl.deleteBuffer(buffer)
-        gl.deleteProgram(program)
-        if (vs) gl.deleteShader(vs)
-        if (fs) gl.deleteShader(fs)
-      }
-
-      try {
-        vs = compile(gl, gl.VERTEX_SHADER, VERTEX)
-        fs = compile(gl, gl.FRAGMENT_SHADER, FRAGMENT)
-        gl.attachShader(program, vs)
-        gl.attachShader(program, fs)
-        gl.linkProgram(program)
-        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-          dispose()
-          return null
-        }
-        gl.useProgram(program)
-
-        buffer = gl.createBuffer()
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
-        gl.bufferData(
-          gl.ARRAY_BUFFER,
-          new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
-          gl.STATIC_DRAW
-        )
-        const loc = gl.getAttribLocation(program, 'a_pos')
-        gl.enableVertexAttribArray(loc)
-        gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0)
-      } catch {
-        dispose()
-        return null
-      }
-
-      const u = {
-        res: gl.getUniformLocation(program, 'u_res'),
-        time: gl.getUniformLocation(program, 'u_time'),
-        speed: gl.getUniformLocation(program, 'u_speed'),
-        amp: gl.getUniformLocation(program, 'u_amp'),
-        freq: gl.getUniformLocation(program, 'u_freq'),
-        level: gl.getUniformLocation(program, 'u_level'),
-        color: gl.getUniformLocation(program, 'u_color'),
-      }
-
-      return {
-        dispose,
-        draw(now) {
-          if (needsResize) {
-            // This soft background gains little from a full retina-sized buffer.
-            const dpr = Math.min(window.devicePixelRatio || 1, motion.matches ? 1.5 : 1)
-            const width = Math.max(1, Math.round(canvas.clientWidth * dpr))
-            const height = Math.max(1, Math.round(canvas.clientHeight * dpr))
-            if (canvas.width !== width || canvas.height !== height) {
-              canvas.width = width
-              canvas.height = height
-            }
-            gl.viewport(0, 0, canvas.width, canvas.height)
-            needsResize = false
-          }
-          const p = propsRef.current
-          gl.uniform2f(u.res, canvas.width, canvas.height)
-          gl.uniform1f(u.time, motion.matches ? (now - start) / 1000 : 0)
-          gl.uniform1f(u.speed, p.speed)
-          gl.uniform1f(u.amp, p.amplitude)
-          gl.uniform1f(u.freq, p.frequency)
-          gl.uniform1f(u.level, p.level)
-          gl.uniform3f(u.color, p.color[0], p.color[1], p.color[2])
-          gl.drawArrays(gl.TRIANGLES, 0, 6)
-        },
-      }
+    const gl = canvas.getContext('webgl', { antialias: false, alpha: false })
+    if (!gl) {
+      console.warn('WebGL is not supported in this browser.')
+      return
     }
+
+    const program = gl.createProgram()
+    const vs = compile(gl, gl.VERTEX_SHADER, VERTEX)
+    const fs = compile(gl, gl.FRAGMENT_SHADER, FRAGMENT)
+    gl.attachShader(program, vs)
+    gl.attachShader(program, fs)
+    gl.linkProgram(program)
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.error(gl.getProgramInfoLog(program))
+      return
+    }
+    gl.useProgram(program)
+
+    // Fullscreen triangle-pair
+    const buffer = gl.createBuffer()
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
+      gl.STATIC_DRAW
+    )
+    const loc = gl.getAttribLocation(program, 'a_pos')
+    gl.enableVertexAttribArray(loc)
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0)
+
+    const u = {
+      res: gl.getUniformLocation(program, 'u_res'),
+      time: gl.getUniformLocation(program, 'u_time'),
+      speed: gl.getUniformLocation(program, 'u_speed'),
+      amp: gl.getUniformLocation(program, 'u_amp'),
+      freq: gl.getUniformLocation(program, 'u_freq'),
+      level: gl.getUniformLocation(program, 'u_level'),
+      color: gl.getUniformLocation(program, 'u_color'),
+    }
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const w = Math.max(1, Math.floor(canvas.clientWidth * dpr))
+      const h = Math.max(1, Math.floor(canvas.clientHeight * dpr))
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w
+        canvas.height = h
+      }
+      gl.viewport(0, 0, canvas.width, canvas.height)
+    }
+
+    const ro = new ResizeObserver(resize)
+    ro.observe(canvas)
+    resize()
+
+    const reduceMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches
+
+    // Pause when off-screen / tab hidden so hero+footer don't burn frames during scroll
+    let visible = true
+    let pageVisible = document.visibilityState !== 'hidden'
+    let raf = 0
+    const start = performance.now()
 
     const render = (now) => {
       raf = 0
-      if (!visible || document.hidden || failed) return
-      if (!renderer) renderer = createRenderer()
-      if (!renderer) {
-        failed = true
-        return
-      }
-      // Slow decorative waves are smooth at 30fps. Touch and reduced-motion
-      // render once, retaining the design without a continuous GPU workload.
-      if (needsResize || now - lastDraw >= 1000 / 30) {
-        renderer.draw(now)
-        lastDraw = now
-      }
-      if (motion.matches) raf = requestAnimationFrame(render)
+      if (!visible || !pageVisible) return
+
+      const p = propsRef.current
+      const t = reduceMotion ? 0 : (now - start) / 1000
+
+      gl.uniform2f(u.res, canvas.width, canvas.height)
+      gl.uniform1f(u.time, t)
+      gl.uniform1f(u.speed, p.speed)
+      gl.uniform1f(u.amp, p.amplitude)
+      gl.uniform1f(u.freq, p.frequency)
+      gl.uniform1f(u.level, p.level)
+      gl.uniform3f(u.color, p.color[0], p.color[1], p.color[2])
+      gl.drawArrays(gl.TRIANGLES, 0, 6)
+
+      raf = requestAnimationFrame(render)
     }
 
-    const stop = () => {
-      if (raf) cancelAnimationFrame(raf)
-      raf = 0
-    }
     const kick = () => {
-      if (visible && !document.hidden && !raf && !failed) {
-        raf = requestAnimationFrame(render)
-      }
+      if (visible && pageVisible && !raf) raf = requestAnimationFrame(render)
     }
-    const ro = new ResizeObserver(() => {
-      needsResize = true
-      kick()
-    })
-    ro.observe(canvas)
 
-    const io = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting
-      if (visible) kick()
-      else stop()
-    }, { rootMargin: '80px' })
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting
+        kick()
+      },
+      { rootMargin: '80px' }
+    )
     io.observe(canvas)
 
     const onVisibility = () => {
-      if (document.hidden) stop()
-      else kick()
-    }
-    const onMotionChange = () => {
-      needsResize = true
-      stop()
+      pageVisible = document.visibilityState !== 'hidden'
       kick()
     }
     document.addEventListener('visibilitychange', onVisibility)
-    motion.addEventListener('change', onMotionChange)
+
+    raf = requestAnimationFrame(render)
 
     return () => {
-      stop()
+      if (raf) cancelAnimationFrame(raf)
       ro.disconnect()
       io.disconnect()
       document.removeEventListener('visibilitychange', onVisibility)
-      motion.removeEventListener('change', onMotionChange)
-      renderer?.dispose()
+      gl.deleteBuffer(buffer)
+      gl.deleteProgram(program)
+      gl.deleteShader(vs)
+      gl.deleteShader(fs)
     }
   }, [])
 
