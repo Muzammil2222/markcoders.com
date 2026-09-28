@@ -307,8 +307,6 @@ const Footer = () => {
                       Gulshan-e-Jamal,
                       <br />
                       Karachi
-                      <br />
-                      <span className="footer__map-link">View Map</span>
                     </span>
                   </a>
                 </li>
