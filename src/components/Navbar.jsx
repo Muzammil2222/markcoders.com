@@ -6,12 +6,13 @@ import LOGO_SRC from '../assets/logo.png';
 import { getScrollY, subscribeScroll } from '../lib/scrollBus';
 
 const NAV_LINKS = [
-  { label: 'Home', to: '/' },
   { label: 'About Us', to: '/about' },
   { label: 'Services', to: '/services' },
-  { label: 'Case Studies', to: '/case-studies' },
   { label: 'Portfolio', to: '/portfolio' },
+  { label: 'Case Studies', to: '/case-studies' },
 ];
+
+const CALENDLY_URL = 'https://calendly.com/saarang-markcoders/30min';
 
 const Navbar = () => {
   const navRef = useRef(null);
@@ -22,7 +23,6 @@ const Navbar = () => {
   const hamburgerRef = useRef(null);
   const location = useLocation();
 
-  // Intro fade-in for logo / links / CTA
   useEffect(() => {
     const nav = navRef.current;
     if (!nav) return;
@@ -32,10 +32,7 @@ const Navbar = () => {
     const ctx = gsap.context(() => {
       if (!targets.length) return;
 
-      gsap.set(targets, {
-        opacity: 0,
-        y: -30,
-      });
+      gsap.set(targets, { opacity: 0, y: -24 });
 
       const tl = gsap.timeline({ delay: 0.3 });
 
@@ -43,31 +40,21 @@ const Navbar = () => {
         tl.to(logoRef.current, {
           opacity: 1,
           y: 0,
-          duration: 0.8,
+          duration: 0.75,
           ease: 'power3.out',
         });
       }
       if (linksRef.current) {
         tl.to(
           linksRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-          },
+          { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out' },
           '-=0.5'
         );
       }
       if (btnRef.current) {
         tl.to(
           btnRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-          },
+          { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out' },
           '-=0.5'
         );
       }
@@ -76,7 +63,6 @@ const Navbar = () => {
     return () => ctx.revert();
   }, []);
 
-  // Hide on scroll down, show on scroll up (Locomotive via scrollBus + native fallback)
   useEffect(() => {
     const nav = navRef.current;
     if (!nav) return;
@@ -104,13 +90,13 @@ const Navbar = () => {
       const menu = mobileMenuRef.current;
       const hamburger = hamburgerRef.current;
       if (menu && !menu.classList.contains('max-h-0')) {
-        menu.classList.remove('max-h-[400px]', 'opacity-100');
+        menu.classList.remove('max-h-[320px]', 'opacity-100');
         menu.classList.add('max-h-0', 'opacity-0');
         hamburger?.classList.remove('active');
       }
 
       gsap.to(nav, {
-        yPercent: -110,
+        yPercent: -120,
         duration: 0.4,
         ease: 'power3.inOut',
         overwrite: true,
@@ -155,143 +141,155 @@ const Navbar = () => {
   const toggleMobileMenu = () => {
     const menu = mobileMenuRef.current;
     const hamburger = hamburgerRef.current;
+    if (!menu || !hamburger) return;
 
     if (menu.classList.contains('max-h-0')) {
       menu.classList.remove('max-h-0', 'opacity-0');
-      menu.classList.add('max-h-[400px]', 'opacity-100');
+      menu.classList.add('max-h-[320px]', 'opacity-100');
       hamburger.classList.add('active');
     } else {
-      menu.classList.remove('max-h-[400px]', 'opacity-100');
+      menu.classList.remove('max-h-[320px]', 'opacity-100');
       menu.classList.add('max-h-0', 'opacity-0');
       hamburger.classList.remove('active');
     }
   };
 
-  // Portal to document.body so position:fixed works with Locomotive's
-  // transformed scroll container (no transform on the nav itself).
+  const isActive = (to) =>
+    location.pathname === to ||
+    (to !== '/' && !to.includes('#') && location.pathname.startsWith(to));
+
   return createPortal(
     <nav
       ref={navRef}
-      className="fixed top-0 left-0 right-0 z-[60] px-6 md:px-10 lg:px-16 py-5 will-change-transform"
-      style={{
-        // No backdrop-filter: a full-width blur re-rasterizes on every scrolled
-        // frame. The gradient is the page background colour, so a near-opaque
-        // fill reads the same without the per-frame cost.
-        background:
-          'linear-gradient(180deg, rgba(3,7,18,1) 0%, rgba(3,7,18,0.98) 60%, rgba(3,7,18,0.92) 100%)',
-      }}
+      className="fixed top-0 left-0 right-0 z-[60] flex justify-center pt-4 md:pt-5 px-4 will-change-transform pointer-events-none"
     >
-      <div className="max-w-[1400px] mx-auto flex items-center justify-between">
-        <Link
-          to="/"
-          ref={logoRef}
-          className="flex items-center cursor-pointer select-none no-underline"
-        >
-          <img
-            src={LOGO_SRC}
-            alt="Markcoders"
-            className="h-[40px] w-auto object-contain shrink-0"
-            decoding="async"
-            draggable={false}
-          />
-        </Link>
+      <div
+        className="pointer-events-auto w-[min(92vw,720px)] md:w-[60vw] max-w-[900px] rounded-full border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)]"
+        style={{
+          background: 'rgba(18, 18, 18, 0.92)',
+        }}
+      >
+        <div className="flex items-center justify-between gap-3 pl-4 pr-2 sm:pl-5 sm:pr-2.5 md:pl-6 md:pr-3 py-2 md:py-2.5">
+          <Link
+            to="/"
+            ref={logoRef}
+            className="flex items-center cursor-pointer select-none no-underline shrink-0"
+          >
+            <img
+              src={LOGO_SRC}
+              alt="Markcoders"
+              className="h-[28px] md:h-[32px] w-auto object-contain"
+              decoding="async"
+              draggable={false}
+            />
+          </Link>
 
-        <div
-          ref={linksRef}
-          className="hidden lg:flex items-center gap-6 xl:gap-10"
-        >
-          {NAV_LINKS.map((item) => {
-            const isActive =
-              location.pathname === item.to ||
-              (item.to !== '/' &&
-                !item.to.includes('#') &&
-                location.pathname.startsWith(item.to));
-            return (
+          <div
+            ref={linksRef}
+            className="hidden lg:flex items-center justify-center gap-5 xl:gap-7 flex-1 min-w-0"
+          >
+            {NAV_LINKS.map((item) => (
               <Link
                 key={item.label}
                 to={item.to}
-                className={`text-[16px] xl:text-[20px] transition-colors duration-300 relative group font-medium tracking-wide no-underline ${
-                  isActive
-                    ? 'text-[#25A9E0]'
-                    : 'text-gray-300 hover:text-[#25A9E0]'
+                className={`text-[14px] xl:text-[15px] font-medium tracking-wide whitespace-nowrap no-underline transition-colors duration-300 ${
+                  isActive(item.to)
+                    ? 'text-white'
+                    : 'text-white/70 hover:text-white'
                 }`}
               >
                 {item.label}
-                <span
-                  className={`absolute -bottom-1 left-0 h-[2px] bg-[#25A9E0] transition-all duration-300 ${
-                    isActive ? 'w-full' : 'w-0 group-hover:w-full'
-                  }`}
-                />
               </Link>
-            );
-          })}
-        </div>
+            ))}
+          </div>
 
-        <div ref={btnRef} className="hidden lg:block">
-          <a
-            href="https://calendly.com/saarang-markcoders/30min"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block px-6 xl:px-7 py-2.5 xl:py-3 rounded-[15px] text-base xl:text-lg font-normal text-white cursor-pointer no-underline"
-            style={{
-              background: '#25A9E0',
-              boxShadow: '0 4px 20px rgba(26, 122, 248, 0.3)',
-            }}
+          <div ref={btnRef} className="hidden lg:block shrink-0">
+            <a
+              href={CALENDLY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 h-10 px-5 rounded-full bg-white text-[#0a0a0a] text-[14px] font-semibold no-underline transition-transform duration-300 hover:scale-[1.03] cursor-pointer"
+            >
+              Get Started
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 14 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden
+                className="-rotate-45"
+              >
+                <path
+                  d="M1 7H13M13 7L7 1M13 7L7 13"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </a>
+          </div>
+
+          <button
+            ref={hamburgerRef}
+            type="button"
+            className="lg:hidden flex flex-col gap-1.5 p-2.5 mr-0.5 cursor-pointer bg-transparent border-none rounded-full hover:bg-white/5"
+            onClick={toggleMobileMenu}
+            aria-label="Toggle menu"
           >
-            Get in Touch
-          </a>
+            <span className="w-5 h-0.5 bg-white rounded-full" />
+            <span className="w-5 h-0.5 bg-white rounded-full" />
+            <span className="w-3.5 h-0.5 bg-white rounded-full self-end" />
+          </button>
         </div>
 
-        <button
-          ref={hamburgerRef}
-          className="lg:hidden flex flex-col gap-1.5 p-2 cursor-pointer bg-transparent border-none"
-          onClick={toggleMobileMenu}
-          aria-label="Toggle menu"
+        <div
+          ref={mobileMenuRef}
+          className="lg:hidden max-h-0 opacity-0 overflow-hidden transition-all duration-400 ease-in-out rounded-b-[28px]"
         >
-          <span className="w-6 h-0.5 bg-white rounded-full hamburger-line-1" />
-          <span className="w-6 h-0.5 bg-white rounded-full hamburger-line-2" />
-          <span className="w-4 h-0.5 bg-white rounded-full hamburger-line-3" />
-        </button>
-      </div>
-
-      <div
-        ref={mobileMenuRef}
-        className="lg:hidden max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out"
-      >
-        <div className="pt-6 pb-4 flex flex-col gap-4">
-          {NAV_LINKS.map((item) => {
-            const isActive =
-              location.pathname === item.to ||
-              (item.to !== '/' &&
-                !item.to.includes('#') &&
-                location.pathname.startsWith(item.to));
-            return (
+          <div className="px-5 pb-5 pt-1 flex flex-col gap-1 border-t border-white/8">
+            {NAV_LINKS.map((item) => (
               <Link
                 key={item.label}
                 to={item.to}
-                className={`transition-colors duration-300 text-base py-2 border-b border-white/5 no-underline ${
-                  isActive
-                    ? 'text-[#25A9E0]'
-                    : 'text-gray-300 hover:text-[#25A9E0]'
+                className={`py-2.5 text-[15px] font-medium no-underline transition-colors duration-300 ${
+                  isActive(item.to)
+                    ? 'text-white'
+                    : 'text-white/70 hover:text-white'
                 }`}
                 onClick={toggleMobileMenu}
               >
                 {item.label}
               </Link>
-            );
-          })}
-          <a
-            href="https://calendly.com/saarang-markcoders/30min"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-2 px-6 py-3 rounded-full text-sm font-semibold text-white w-full cursor-pointer no-underline text-center box-border"
-            style={{
-              background: 'linear-gradient(135deg, #1a7af8 0%, #1565d8 100%)',
-            }}
-            onClick={toggleMobileMenu}
-          >
-            Get in Touch
-          </a>
+            ))}
+            <a
+              href={CALENDLY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-flex items-center justify-center gap-1.5 h-11 px-5 rounded-full bg-white text-[#0a0a0a] text-[14px] font-semibold no-underline cursor-pointer"
+              onClick={toggleMobileMenu}
+            >
+              Get Started
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 14 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden
+                className="-rotate-45"
+              >
+                <path
+                  d="M1 7H13M13 7L7 1M13 7L7 13"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
     </nav>,

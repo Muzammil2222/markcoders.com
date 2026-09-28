@@ -85,6 +85,7 @@ const StoryCard = ({ imageRef }) => (
     </div>
 
     <div
+      ref={imageRef}
       className="relative flex-shrink-0 z-30 overflow-hidden"
       style={{
         width: '162.16px',
@@ -93,7 +94,6 @@ const StoryCard = ({ imageRef }) => (
       }}
     >
       <img
-        ref={imageRef}
         src={teamBw}
         alt="Our Story"
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-50 will-change-transform origin-center"

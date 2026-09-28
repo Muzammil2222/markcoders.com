@@ -9,8 +9,8 @@ gsap.registerPlugin(ScrollTrigger)
  *
  * Geometry is measured once per ScrollTrigger refresh and cached in document
  * space; each scrub tick only interpolates those numbers and writes a
- * transform. No getBoundingClientRect, no width/height/top/left writes, and no
- * React state churn while scrolling.
+ * transform + size. Width/height (not scaleX/scaleY) keep object-fit:cover
+ * sharp when the hero and target have different aspect ratios.
  */
 export function createImageMorph({
   heroImg,
@@ -36,12 +36,12 @@ export function createImageMorph({
   let killed = false
   let st = null
   let clone = null
-  let baseW = 1
-  let baseH = 1
   let complete = false
   let timer = null
   let visible = null
   let lastRadius = null
+  let lastW = null
+  let lastH = null
 
   // Geometry cached at refresh time, in document space. Both the hero and the
   // target scroll together, so only the shared scroll offset changes per frame
@@ -59,23 +59,16 @@ export function createImageMorph({
     const hero = heroImg.getBoundingClientRect()
     const target = targetEl.getBoundingClientRect()
 
-    baseW = Math.max(hero.width, 1)
-    baseH = Math.max(hero.height, 1)
-
     geo = {
       fromX: hero.left,
       fromY: hero.top + scrollY,
-      fromW: hero.width,
-      fromH: hero.height,
+      fromW: Math.max(hero.width, 1),
+      fromH: Math.max(hero.height, 1),
       toX: target.left,
       toY: target.top + scrollY,
-      toW: target.width,
-      toH: target.height,
+      toW: Math.max(target.width, 1),
+      toH: Math.max(target.height, 1),
     }
-
-    if (!clone) return
-    clone.style.width = `${baseW}px`
-    clone.style.height = `${baseH}px`
   }
 
   const applyProgress = (progress) => {
@@ -87,13 +80,22 @@ export function createImageMorph({
     const x = geo.fromX + (geo.toX - geo.fromX) * progress
     const y = geo.fromY + (geo.toY - geo.fromY) * progress - scrollY
 
+    // Translate only — size via width/height so object-fit:cover never stretches
+    // when aspect ratios differ (e.g. About portrait hero → landscape target).
     gsap.set(clone, {
       x,
       y,
-      scaleX: w / baseW,
-      scaleY: h / baseH,
       force3D: true,
     })
+
+    const rw = Math.round(w)
+    const rh = Math.round(h)
+    if (rw !== lastW || rh !== lastH) {
+      lastW = rw
+      lastH = rh
+      clone.style.width = `${rw}px`
+      clone.style.height = `${rh}px`
+    }
 
     // Radius is a paint-triggering property; only write it when it changes.
     const radius = Math.round(startRadius + (endRadius - startRadius) * progress)
@@ -129,6 +131,7 @@ export function createImageMorph({
       z-index: 9999;
       border-radius: ${startRadius}px;
       object-fit: cover;
+      object-position: center;
       will-change: transform, opacity;
       transform-origin: 0 0;
       transition: none;
@@ -136,6 +139,12 @@ export function createImageMorph({
     document.body.appendChild(clone)
 
     measureBase()
+    if (geo) {
+      lastW = Math.round(geo.fromW)
+      lastH = Math.round(geo.fromH)
+      clone.style.width = `${lastW}px`
+      clone.style.height = `${lastH}px`
+    }
     gsap.set(clone, { opacity: 0, force3D: true })
 
     st = ScrollTrigger.create({
@@ -146,6 +155,8 @@ export function createImageMorph({
       invalidateOnRefresh: true,
       onRefresh: () => {
         measureBase()
+        lastW = null
+        lastH = null
         if (st) applyProgress(st.progress)
       },
       onUpdate: (self) => applyProgress(self.progress),
