@@ -331,7 +331,10 @@ const ToolsSection = () => {
               choice is driven by performance, maintainability and business
               growth.
             </p>
-            <button className="flex items-center gap-2 bg-[#23b3e8] hover:bg-[#1ca2d4] transition-colors text-white font-medium py-[12px] px-[24px] rounded-[12px] text-[18px] group">
+            <Link
+              to="/services"
+              className="inline-flex items-center gap-2 bg-[#23b3e8] hover:bg-[#1ca2d4] transition-colors text-white font-medium py-[12px] px-[24px] rounded-[12px] text-[18px] group no-underline"
+            >
               <svg
                 width="16"
                 height="16"
@@ -349,7 +352,7 @@ const ToolsSection = () => {
                 ></path>
               </svg>
               Explore Our Process
-            </button>
+            </Link>
           </div>
 
           {/* Cards Grid */}

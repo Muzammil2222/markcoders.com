@@ -1,10 +1,9 @@
 import PageHero from './landing/PageHero';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import cardImage from '../assets/vantage.webp';
 import BlueWaves from './BlueWaves';
 
 const HeroSection = ({ heroImageRef }) => {
-  const navigate = useNavigate();
   return (
     <section
       id="home"
@@ -50,9 +49,9 @@ const HeroSection = ({ heroImageRef }) => {
             verticalAlign: 'middle',
           }}
         >
-          <div
-            onClick={() => navigate('/portfolio')}
-            className="w-full max-w-[430.82px] h-[216.86px] rounded-[15px] p-[10px] relative overflow-hidden group cursor-pointer flex flex-row items-stretch"
+          <Link
+            to="/portfolio"
+            className="w-full max-w-[430.82px] h-[216.86px] rounded-[15px] p-[10px] relative overflow-hidden group cursor-pointer flex flex-row items-stretch no-underline"
             style={{
               width: '430.82px',
               maxWidth: '100%',
@@ -104,15 +103,12 @@ const HeroSection = ({ heroImageRef }) => {
 
               <div className="flex justify-start mt-auto z-20 relative">
                 <div
-                  className="w-[42px] h-[42px] rounded-[10px] flex items-center justify-center transition-all duration-300 group-hover:scale-105 hover:!scale-110 cursor-pointer"
+                  className="w-[42px] h-[42px] rounded-[10px] flex items-center justify-center transition-all duration-300 group-hover:scale-105 hover:!scale-110"
                   style={{
                     background: '#1399e8',
                     boxShadow: '0 2px 10px rgba(19, 153, 232, 0.3)',
                   }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate('/portfolio');
-                  }}
+                  aria-hidden="true"
                 >
                   <svg
                     width="18"
@@ -155,7 +151,7 @@ const HeroSection = ({ heroImageRef }) => {
                 }}
               />
             </div>
-          </div>
+          </Link>
         </PageHero>
       </div>
 

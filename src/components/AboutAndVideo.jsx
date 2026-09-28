@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import videoImg from '../assets/videoimg.jpg';
@@ -7,7 +7,6 @@ import videoImg from '../assets/videoimg.jpg';
 gsap.registerPlugin(ScrollTrigger);
 
 const AboutAndVideo = () => {
-  const navigate = useNavigate();
   const containerRef = useRef(null);
   const headingRef = useRef(null);
   const paragraphRef = useRef(null);
@@ -151,9 +150,9 @@ const AboutAndVideo = () => {
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16 mb-24 md:mb-32">
         {/* (All Work) Label */}
         <div className="w-full text-center mb-[60px] sm:mb-[90px] md:mb-[110px] lg:mb-[130px]">
-          <h2
-            className="group inline-flex items-center gap-[0.12em] text-[#25A9E0] transition-transform duration-300 hover:scale-95 cursor-pointer pb-[0.1em]"
-            onClick={() => navigate('/portfolio')}
+          <Link
+            to="/portfolio"
+            className="group inline-flex items-center gap-[0.12em] text-[#25A9E0] transition-transform duration-300 hover:scale-95 cursor-pointer pb-[0.1em] no-underline"
             style={{
               fontFamily: 'Switzer, sans-serif',
               fontWeight: 500,
@@ -185,7 +184,7 @@ const AboutAndVideo = () => {
                 strokeLinejoin="round"
               />
             </svg>
-          </h2>
+          </Link>
         </div>
 
         {/* Large Statement Heading */}

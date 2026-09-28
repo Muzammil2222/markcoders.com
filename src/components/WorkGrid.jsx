@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createImageMorph } from '../lib/imageMorph';
@@ -11,7 +11,6 @@ import jersey2Img from '../assets/jersey2.webp';
 gsap.registerPlugin(ScrollTrigger);
 
 const WorkGrid = ({ heroImageRef }) => {
-  const navigate = useNavigate();
   const sectionRef = useRef(null);
   const card1Ref = useRef(null);
   const card1ImageRef = useRef(null);
@@ -101,10 +100,12 @@ const WorkGrid = ({ heroImageRef }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 justify-items-center">
 
         {/* Card 1 (Top Left) - Vantage - Blank initially, image lands here on scroll */}
-        <div
+        <a
           ref={card1Ref}
-          className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center"
-          onClick={() => window.open("https://vantage-contractors.com/", "_blank")}
+          href="https://vantage-contractors.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center block no-underline"
         >
           {/* This image shows ONLY when morph is complete */}
           <img
@@ -114,13 +115,15 @@ const WorkGrid = ({ heroImageRef }) => {
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             style={{ opacity: morphComplete ? 1 : 0 }}
           />
-        </div>
+        </a>
 
         {/* Card 2 (Top Right) - Sauced */}
-        <div
+        <a
           ref={card2Ref}
-          className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center"
-          onClick={() => window.open("https://play.google.com/store/apps/details?id=com.sauced&pcampaignid=web_share", "_blank")}
+          href="https://play.google.com/store/apps/details?id=com.sauced&pcampaignid=web_share"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center block no-underline"
         >
           <img
             src={saucedImg}
@@ -129,13 +132,13 @@ const WorkGrid = ({ heroImageRef }) => {
             decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
-        </div>
+        </a>
 
         {/* Card 3 (Bottom Left) - Jersey / Shareable vCard Platform */}
-        <div
+        <Link
           ref={card3Ref}
-          className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center"
-          onClick={() => navigate("/case-studies")}
+          to="/case-studies"
+          className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center block no-underline"
         >
           <img
             src={jerseyImg}
@@ -144,13 +147,15 @@ const WorkGrid = ({ heroImageRef }) => {
             decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
-        </div>
+        </Link>
 
         {/* Card 4 (Bottom Right) - The Jersey Generator */}
-        <div
+        <a
           ref={card4Ref}
-          className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center"
-          onClick={() => window.open("https://thejerseygenerator.com/", "_blank")}
+          href="https://thejerseygenerator.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center block no-underline"
         >
           <img
             src={jersey2Img}
@@ -159,7 +164,7 @@ const WorkGrid = ({ heroImageRef }) => {
             decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
-        </div>
+        </a>
 
       </div>
     </section>
