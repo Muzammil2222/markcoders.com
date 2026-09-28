@@ -24,14 +24,14 @@ import hassnainColor from '../assets/COLORFUL HEADSHOTS/HASSNAIN.jpg';
 gsap.registerPlugin(ScrollTrigger);
 
 const avatars = [
-  { bw: saarangBw, color: saarangColor, name: 'Saarang Ali' },
-  { bw: shameekBw, color: shameekColor, name: 'Syed Shamekh Hussain' },
-  { bw: muzammilBw, color: muzammilColor, name: 'Muzammil Ahmed' },
-  { bw: affanBw, color: affanColor, name: 'Affan Abdullah' },
-  { bw: amanBw, color: amanColor, name: 'Aman Raza' },
-  { bw: ammarBw, color: ammarColor, name: 'Ammar Sheikh' },
-  { bw: shahzaibBw, color: shahzaibColor, name: 'Shahzaib Ali' },
-  { bw: hassnainBw, color: hassnainColor, name: 'Hassnain' },
+  { bw: saarangBw, color: saarangColor, name: 'Saarang Ali', linkedin: 'https://www.linkedin.com/in/saarang-ali/' },
+  { bw: shameekBw, color: shameekColor, name: 'Syed Shamekh Hussain', linkedin: 'https://www.linkedin.com/in/syed-shamekh-hussain/' },
+  { bw: muzammilBw, color: muzammilColor, name: 'Muzammil Ahmed', linkedin: 'https://www.linkedin.com/in/muzammil-shk/' },
+  { bw: affanBw, color: affanColor, name: 'Affan Abdullah', linkedin: 'https://www.linkedin.com/in/affan-abdullah-97b7a029b/' },
+  { bw: amanBw, color: amanColor, name: 'Aman Raza', linkedin: 'https://www.linkedin.com/in/aman-raza-618a8723a/' },
+  { bw: ammarBw, color: ammarColor, name: 'Ammar Sheikh', linkedin: 'https://www.linkedin.com/in/ammar-shaikhhh/' },
+  { bw: shahzaibBw, color: shahzaibColor, name: 'Shahzaib Ali', linkedin: 'https://www.linkedin.com/in/shahzaib-ali1/' },
+  { bw: hassnainBw, color: hassnainColor, name: 'Hassnain', linkedin: 'https://www.linkedin.com/in/hasnain-raza-rizvi/' },
 ];
 
 const TeamSection = ({ roundedTop = false }) => {
@@ -250,10 +250,14 @@ const TeamSection = ({ roundedTop = false }) => {
             {/* Avatars Grid */}
             <div className="avatars-container flex flex-wrap gap-2 md:gap-[10px] max-w-[380px] mb-20">
               {avatars.map((avatar, i) => (
-                <div
+                <a
                   key={avatar.name}
+                  href={avatar.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${avatar.name} on LinkedIn`}
                   ref={el => avatarsRef.current[i] = el}
-                  className="group relative w-[52px] h-[52px] rounded-[10px] overflow-hidden shadow-sm"
+                  className="group relative w-[52px] h-[52px] rounded-[10px] overflow-hidden shadow-sm cursor-pointer"
                 >
                   <img
                     src={avatar.bw}
@@ -272,7 +276,7 @@ const TeamSection = ({ roundedTop = false }) => {
                     className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     draggable={false}
                   />
-                </div>
+                </a>
               ))}
               {/* +25 Box */}
               <div

@@ -56,6 +56,9 @@ const SocialIcon = ({ name }) => {
   );
 };
 
+const MAPS_URL =
+  "https://www.google.com/maps/place/MarkCoders/@24.8997461,67.1097885,17z/data=!3m1!4b1!4m6!3m5!1s0x3eb339440dace579:0xe7b4b6112b75fd56!8m2!3d24.8997461!4d67.1097885!16s%2Fg%2F11ssx1w8h_";
+
 const SOCIAL_LINKS = [
   {
     label: "LinkedIn",
@@ -280,24 +283,34 @@ const Footer = () => {
                     <span>info@markcoders.com</span>
                   </a>
                 </li>
-                <li className="footer__address footer__social-link">
-                  <svg
-                    className="footer__social-icon"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    aria-hidden="true"
+                <li>
+                  <a
+                    href={MAPS_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="footer__link footer__social-link footer__address"
+                    aria-label="Open MarkCoders location on Google Maps"
                   >
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1112 6a2.5 2.5 0 010 5.5z" />
-                  </svg>
-                  <span className="footer__address-text">
-                    E15, Street No. 2, Block A,
-                    <br />
-                    Gulshan-e-Jamal,
-                    <br />
-                    Karachi
-                  </span>
+                    <svg
+                      className="footer__social-icon"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1112 6a2.5 2.5 0 010 5.5z" />
+                    </svg>
+                    <span className="footer__address-text">
+                      E15, Street No. 2, Block A,
+                      <br />
+                      Gulshan-e-Jamal,
+                      <br />
+                      Karachi
+                      <br />
+                      <span className="footer__map-link">View Map</span>
+                    </span>
+                  </a>
                 </li>
               </ul>
             </div>

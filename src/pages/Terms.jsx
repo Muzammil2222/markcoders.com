@@ -101,7 +101,7 @@ function Terms() {
               letterSpacing: '-0.03em',
             }}
           >
-            Terms and Conditions
+            Terms & Conditions
           </h1>
         </section>
 

@@ -163,7 +163,7 @@ const App = () => {
               <Route path=":slug" element={<CaseStudyDetail />} />
             </Route>
             <Route path="/portfolio" element={<Portfolio />} />
-            <Route path="//terms-and-conditions" element={<Terms />} />
+            <Route path="/terms-and-conditions" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

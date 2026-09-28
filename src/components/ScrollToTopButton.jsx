@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { getLenis, getScrollY, subscribeScroll } from '../lib/scrollBus'
 
-/** Soft periwinkle matching the scroll-to-top mock */
-const BTN_BG = '#8A8AFF'
+/** Brand blue matching site theme */
+const BTN_BG = '#25A9E0'
 
 /**
  * Fixed bottom-right “go to top” control.
@@ -70,7 +70,7 @@ function ScrollToTopButton() {
         'shadow-[0_8px_24px_rgba(0,0,0,0.25)]',
         'transition-[opacity,transform,visibility] duration-300 ease-out',
         'hover:scale-105 active:scale-95',
-        'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8A8AFF]',
+        'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25A9E0]',
         visible
           ? 'opacity-100 visible translate-y-0 pointer-events-auto'
           : 'opacity-0 invisible translate-y-3 pointer-events-none',
