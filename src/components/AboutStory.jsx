@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createImageMorph } from '../lib/imageMorph';
-import teamImg from '../assets/team.webp';
+import teamBw from '../assets/team-bw.jpg';
+import teamColor from '../assets/team-color.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -23,7 +24,7 @@ const AboutStory = ({ previewImageRef }) => {
       targetEl: targetImageContainerRef.current,
       triggerEl: sectionRef.current,
       cloneClass: 'about-morph-clone',
-      src: teamImg,
+      src: teamBw,
       alt: 'Team',
       start: 'top 95%',
       end: 'top 20%',
@@ -186,14 +187,24 @@ const AboutStory = ({ previewImageRef }) => {
             {/* Target Image Container */}
             <div
               ref={targetImageContainerRef}
-              className="w-full aspect-[16/10] rounded-[20px] overflow-hidden relative bg-[#0A0D14]"
+              className="group w-full aspect-[16/10] rounded-[20px] overflow-hidden relative bg-[#0A0D14]"
             >
               <img
                 ref={targetImageRef}
-                src={teamImg}
+                src={teamBw}
                 alt="Team"
                 className="absolute inset-0 w-full h-full object-cover"
                 style={{ opacity: morphComplete ? 1 : 0 }}
+              />
+              <img
+                src={teamColor}
+                alt=""
+                aria-hidden="true"
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                  morphComplete
+                    ? 'opacity-0 group-hover:opacity-100'
+                    : 'opacity-0 pointer-events-none'
+                }`}
               />
             </div>
 

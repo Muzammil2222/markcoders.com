@@ -1,6 +1,7 @@
 import PageHero from './landing/PageHero';
 import BlueWaves from './BlueWaves';
-import cardImage from '../assets/team.webp';
+import teamBw from '../assets/team-bw.jpg';
+import teamColor from '../assets/team-color.jpg';
 
 const StoryCard = ({ imageRef }) => (
   <div
@@ -93,14 +94,25 @@ const StoryCard = ({ imageRef }) => (
     >
       <img
         ref={imageRef}
-        src={cardImage}
+        src={teamBw}
         alt="Our Story"
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 relative z-50 will-change-transform opacity-100 origin-center"
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-50 will-change-transform origin-center"
         style={{
           width: '162.16px',
           height: '197.3px',
           borderRadius: '15px',
-          opacity: 1,
+        }}
+        draggable={false}
+      />
+      <img
+        src={teamColor}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full object-cover transition-all duration-500 opacity-0 group-hover:opacity-100 group-hover:scale-105 z-[51] will-change-transform origin-center"
+        style={{
+          width: '162.16px',
+          height: '197.3px',
+          borderRadius: '15px',
         }}
         draggable={false}
       />

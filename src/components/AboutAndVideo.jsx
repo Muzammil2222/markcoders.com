@@ -2,7 +2,8 @@ import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import videoImg from '../assets/videoimg.jpg';
+import videoImgBw from '../assets/team-bw.jpg';
+import videoImgColor from '../assets/team-color.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -288,14 +289,20 @@ ready to scale.
       <div className="w-full flex justify-center items-center py-6">
         <div
           ref={videoWrapperRef}
-          className="relative h-[55vh] md:h-[75vh] overflow-hidden mx-auto will-change-transform"
+          className="group relative h-[55vh] md:h-[75vh] overflow-hidden mx-auto will-change-transform"
           style={{ width: '40%', transform: 'scale(0.6)', borderRadius: '36px' }}
         >
           <img
             ref={videoImgRef}
-            src={videoImg}
-            alt="Showcase Video Background"
-            className="w-full h-full object-cover"
+            src={videoImgBw}
+            alt="MarkCoders team"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <img
+            src={videoImgColor}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
           />
           <div className="absolute inset-0 bg-black/10 pointer-events-none" />
         </div>
