@@ -318,16 +318,21 @@ const Footer = () => {
       {/* Full-bleed legal bar */}
       <hr className="footer__legal-hr" aria-hidden="true" />
       <div className="footer__legal relative z-[5]">
-        <div className="mx-auto w-[90%] sm:w-[92%] lg:w-[95%] max-w-[1440px] py-5 sm:py-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end sm:gap-x-8 sm:gap-y-2">
-          {LEGAL_LINKS.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              className="footer__legal-link"
-            >
-              {link.label}
-            </Link>
-          ))}
+        <div className="mx-auto w-[90%] sm:w-[92%] lg:w-[95%] max-w-[1440px] py-5 sm:py-6 flex flex-row flex-wrap items-center justify-between gap-x-6 gap-y-3">
+          <p className="footer__legal-copy m-0 text-[11px] sm:text-xs md:text-sm font-medium uppercase tracking-tight text-white/70 whitespace-nowrap">
+            2026 MarkCoders · All rights reserved
+          </p>
+          <div className="flex flex-row flex-wrap items-center gap-x-6 sm:gap-x-8">
+            {LEGAL_LINKS.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className="footer__legal-link"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
 

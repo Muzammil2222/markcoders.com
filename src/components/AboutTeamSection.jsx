@@ -18,12 +18,12 @@ import amanColor from '../assets/COLORFUL HEADSHOTS/AMAN.jpg';
 import ammarColor from '../assets/COLORFUL HEADSHOTS/AMMAR.jpg';
 import shahzaibColor from '../assets/COLORFUL HEADSHOTS/SHAHZAIB.jpg';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger); 
 
 const baseMembers = [
   { name: "Saarang Ali", title: "Co-Founder & CEO", imgBw: saarangBw, imgColor: saarangColor, linkedin: 'https://www.linkedin.com/in/saarang-ali/' },
   { name: "Syed Shamekh Hussain", title: "Co-Founder & COO", imgBw: shameekBw, imgColor: shameekColor, linkedin: 'https://www.linkedin.com/in/syed-shamekh-hussain/' },
-  { name: "Bilal", title: "Co-Founder & CTO" }, // no photo
+  { name: "Bilal Tunio", title: "Co-Founder & CTO" }, // no photo
   { name: "Muzammil Ahmed", title: "Co-Founder & CAO", imgBw: muzammilBw, imgColor: muzammilColor, linkedin: 'https://www.linkedin.com/in/muzammil-shk/' },
   { name: "Affan Abdullah", title: "Director Of Sales", imgBw: affanBw, imgColor: affanColor, linkedin: 'https://www.linkedin.com/in/affan-abdullah-97b7a029b/' },
   { name: "Aman Raza", title: "Creative Director", imgBw: amanBw, imgColor: amanColor, linkedin: 'https://www.linkedin.com/in/aman-raza-618a8723a/' },

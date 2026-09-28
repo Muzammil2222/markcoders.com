@@ -4,11 +4,11 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { initSectionBgTransition } from "../lib/sectionBgTransition";
 
-import chatgptImg from "../assets/ChatGPT Logo - Black - 512x512 - zonalogo.com.png";
-import claudeImg from "../assets/Claude-AI-Icon---Colored---512x512---zonalogo.com.png";
-import codexImg from "../assets/Codex Logo - Colored - 512x512 - zonalogo.com.png";
-import cursorImg from "../assets/Cursor Icon - Black - 451x512 - zonalogo.com.png";
-import geminiImg from "../assets/Google-Gemini-Icon---Colored---512x512---zonalogo.com.png";
+import chatgptImg from '../assets/tech-icons/chatgpt.jpg';
+import claudeImg from '../assets/tech-icons/claude.jpg';
+import codexImg from '../assets/tech-icons/codex.jpg';
+import cursorImg from '../assets/tech-icons/cursor.jpg';
+import geminiImg from '../assets/tech-icons/gemini.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -237,7 +237,7 @@ const ToolsSection = () => {
 
           {/* Tools Row */}
           <div
-            className="flex flex-wrap items-end justify-center md:justify-start gap-[12px] md:gap-[23px] my-2 relative z-20 h-[80px] md:h-[120px]"
+            className="flex flex-wrap items-end justify-center gap-[12px] md:gap-[23px] my-2 relative z-20 h-[80px] md:h-[120px]"
             onMouseLeave={() => setHoveredIndex(null)}
           >
             {tools.map((tool, index) => {
