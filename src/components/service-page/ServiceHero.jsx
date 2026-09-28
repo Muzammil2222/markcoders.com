@@ -154,7 +154,7 @@ const ServiceHero = ({
           fullWidthTitle
           showDot
           titleSize="clamp(48px, 11vw, 180px)"
-          className="flex-1 text-size-[35px]"
+          className="flex-1"
           titleClassName="!tracking-[-1.4px] my-auto"
           subtitleClassName="text-[24px] sm:text-[28px] lg:!text-[35px] leading-[1.2] font-[500] tracking-[-1px] text-white/90"
           subtitleContainerClassName="max-w-xl lg:max-w-2xl"

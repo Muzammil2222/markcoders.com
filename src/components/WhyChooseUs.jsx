@@ -207,8 +207,8 @@ const WhyChooseUs = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} data-snap-section className="relative z-20 py-20 w-full overflow-hidden">
-      <div className="max-w-[1400px] mx-auto w-full px-6 md:px-10 lg:px-16 mb-20">
+    <section ref={sectionRef} data-snap-section className="relative z-20 pt-8 pb-20 sm:pt-12 md:py-20 w-full overflow-hidden">
+      <div className="max-w-[1400px] mx-auto w-full px-6 md:px-10 lg:px-16 mb-12 sm:mb-16 md:mb-20">
         <h2
           ref={headingRef}
           className="text-white text-center font-medium mx-auto max-w-[1200px] will-change-transform"

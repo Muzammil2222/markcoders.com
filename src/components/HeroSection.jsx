@@ -39,9 +39,27 @@ const HeroSection = ({ heroImageRef }) => {
           spread
           showDot
           className="flex-1"
-          subtitle="Custom Software, Web & Mobile App Development That Moves Businesses Forward"
-          subtitleClassName="text-[22px] sm:text-[28px] md:text-[35px] leading-[32px] sm:leading-[38px] md:leading-[45px] font-[500] tracking-[-1px] text-white/90"
-          subtitleContainerClassName="max-w-xl lg:max-w-2xl"
+          subtitle={
+            <>
+              <span className="flex flex-col w-full md:hidden">
+                <span className="block w-full text-left whitespace-nowrap">
+                  Custom Software, Web & Mobile
+                </span>
+                <span className="block w-full text-center whitespace-nowrap">
+                  App Development That
+                </span>
+                <span className="block w-full text-right whitespace-nowrap">
+                  Moves Businesses Forward
+                </span>
+              </span>
+              <span className="hidden md:inline">
+                Custom Software, Web & Mobile App Development That Moves
+                Businesses Forward
+              </span>
+            </>
+          }
+          subtitleClassName="text-[18px] sm:text-[22px] md:text-[35px] leading-[1.25] sm:leading-[32px] md:leading-[45px] font-[500] tracking-[-1px] text-white/90 w-full"
+          subtitleContainerClassName="w-full max-w-none md:max-w-xl lg:max-w-2xl"
           subtitleStyle={{
             fontFamily: 'Switzer, sans-serif',
             fontWeight: 500,

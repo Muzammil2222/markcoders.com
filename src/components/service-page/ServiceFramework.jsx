@@ -214,6 +214,25 @@ const ServiceFramework = ({
         <div ref={leftSlotRef} className="w-full lg:w-[min(553px,38%)] shrink-0">
           <div ref={leftRef} className="flex flex-col gap-8 md:gap-10">
             <h2
+              className="md:hidden flex flex-col w-full"
+              style={{
+                fontFamily: 'Switzer, sans-serif',
+                fontWeight: 500,
+                fontSize: 'clamp(28px, 8vw, 48px)',
+                lineHeight: '1.15',
+                letterSpacing: 'clamp(-1.5px, -0.25vw, -3.4px)',
+                color: '#00060B',
+              }}
+            >
+              <span className="block w-full text-left whitespace-nowrap">
+                {headingLine1}
+              </span>
+              <span className="block w-full text-right whitespace-nowrap">
+                {headingLine2}
+              </span>
+            </h2>
+            <h2
+              className="hidden md:block"
               style={{
                 fontFamily: 'Switzer, sans-serif',
                 fontWeight: 500,
@@ -228,8 +247,10 @@ const ServiceFramework = ({
               {headingLine2}
             </h2>
 
-            <button
-              type="button"
+            <a
+              href="https://calendly.com/saarang-markcoders/30min"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-3 text-white transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer w-fit shrink-0"
               style={{
                 width: '243px',
@@ -264,7 +285,7 @@ const ServiceFramework = ({
                 />
               </svg>
               {ctaLabel}
-            </button>
+            </a>
           </div>
         </div>
 

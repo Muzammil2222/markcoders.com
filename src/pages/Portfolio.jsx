@@ -400,7 +400,7 @@ function Portfolio() {
               showDot
               titleSize="clamp(42px, 13vw, 190px)"
               className="flex-1"
-              titleClassName="!tracking-[-1.4px] my-auto leading-[1.1] whitespace-nowrap"
+              titleClassName="!tracking-[-1.4px] my-auto leading-[1.1]"
               subtitleClassName="text-[24px] sm:text-[28px] lg:!text-[35px] leading-[1.2] font-[500] tracking-[-1px] text-white/90"
               subtitleContainerClassName="max-w-xl lg:max-w-2xl"
               subtitleStyle={{
@@ -443,7 +443,7 @@ function Portfolio() {
               />
               <div className="w-[1px] h-4 bg-white/10 mx-2"></div>
               <Dropdown
-                label="Domain"
+                label="Category"
                 options={DOMAINS}
                 selected={filterDomain}
                 onSelect={setFilterDomain}

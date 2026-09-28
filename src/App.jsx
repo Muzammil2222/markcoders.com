@@ -137,7 +137,7 @@ const App = () => {
           COLOR_UPDATE_SPEED={10}
           SHADING
           RAINBOW_MODE={false}
-          COLOR="#00008B"
+          COLOR="#1D92F4"
         />
         <Suspense
           fallback={

@@ -115,22 +115,49 @@ const AboutStory = ({ previewImageRef }) => {
   };
 
   return (
-    <section ref={sectionRef} data-snap-section className="relative z-20 py-16 px-6 md:px-10 lg:px-16 w-full mt-12 mb-20 overflow-x-hidden">
+    <section
+      ref={sectionRef}
+      data-snap-section
+      className="relative z-20 pt-28 pb-8 sm:pt-24 sm:pb-12 md:py-16 px-6 md:px-10 lg:px-16 w-full mt-4 sm:mt-8 md:mt-12 mb-6 sm:mb-10 md:mb-16 overflow-x-hidden"
+    >
       <div className="max-w-[1400px] mx-auto w-full">
 
-        {/* Heading Alone at the top */}
+        {/* Heading — mobile: Right-left-concept (3 lines: left / center / right) */}
         <h2
           ref={headingRef}
-          className="font-medium will-change-transform text-white mb-16 md:mb-24"
+          className="font-medium will-change-transform text-white mb-12 sm:mb-16 md:mb-24 w-full"
           style={{
             fontFamily: 'Switzer, sans-serif',
-            fontSize: 'clamp(42px, 6vw, 91px)',
-            lineHeight: '1.13',
-            letterSpacing: 'clamp(-1.5px, -0.3vw, -3.4px)'
+            letterSpacing: 'clamp(-1px, -0.25vw, -3.4px)',
           }}
         >
-          <span className="block pl-30">Where we started </span>
-          <span className="block">and where we are going.</span>
+          {/* Mobile staircase — exactly 3 lines, size shrinks to fit */}
+          <span
+            className="flex flex-col w-full md:hidden"
+            style={{
+              fontSize: 'clamp(22px, 7.2vw, 42px)',
+              lineHeight: '1.2',
+            }}
+          >
+            <span className="block w-full text-left whitespace-nowrap">
+              Where We Started
+            </span>
+            <span className="block w-full text-center whitespace-nowrap">&</span>
+            <span className="block w-full text-right whitespace-nowrap">
+              Where are We Going.
+            </span>
+          </span>
+          {/* Desktop two-line with design indent */}
+          <span
+            className="hidden md:block"
+            style={{
+              fontSize: 'clamp(36px, 6vw, 91px)',
+              lineHeight: '1.15',
+            }}
+          >
+            <span className="block md:pl-16 lg:pl-28">Where we started</span>
+            <span className="block">and where we are going.</span>
+          </span>
         </h2>
 
         {/* Two-column layout */}

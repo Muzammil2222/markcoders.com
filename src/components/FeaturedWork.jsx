@@ -65,39 +65,62 @@ const FeaturedWork = ({
   return (
     <section
       ref={sectionRef}
-      className="relative z-30 w-full bg-white overflow-x-hidden py-16 md:py-24 lg:py-28"
+      className="relative z-30 w-full bg-white overflow-x-hidden pt-6 pb-12 sm:pt-8 sm:pb-16 md:py-24 lg:py-28"
     >
-      <div className="w-screen flex items-center pl-6 md:pl-16 lg:pl-[171px]">
-        <h2
-          className="select-none"
-          style={{
-            fontFamily: 'Switzer, sans-serif',
-            fontWeight: 500,
-            fontSize: 'clamp(64px, 14vw, 190px)',
-            lineHeight: '0.7',
-            letterSpacing: '-3.4px',
-            color: '#00060B',
-            width: 'min(761px, 100%)',
-          }}
-        >
+      {/* Mobile: Right-left-concept — left / right */}
+      <h2
+        className="md:hidden select-none flex flex-col w-full px-6 mb-8"
+        style={{
+          fontFamily: 'Switzer, sans-serif',
+          fontWeight: 500,
+          fontSize: 'clamp(42px, 12vw, 72px)',
+          lineHeight: '1.05',
+          letterSpacing: 'clamp(-1.5px, -0.4vw, -3.4px)',
+          color: '#00060B',
+        }}
+      >
+        <span className="block w-full text-left whitespace-nowrap">
           {titleLine1}
-        </h2>
-      </div>
-
-      <div className="w-screen flex items-center justify-center mt-2 md:mt-4 mb-14 md:mb-20 lg:mb-24">
-        <h2
-          className="select-none"
-          style={{
-            fontFamily: 'Switzer, sans-serif',
-            fontWeight: 500,
-            fontSize: 'clamp(64px, 14vw, 190px)',
-            lineHeight: '0.7',
-            letterSpacing: '-3.4px',
-            color: '#00060B',
-          }}
-        >
+        </span>
+        <span className="block w-full text-right whitespace-nowrap">
           {titleLine2}
-        </h2>
+        </span>
+      </h2>
+
+      {/* Desktop: existing staggered layout */}
+      <div className="hidden md:block">
+        <div className="w-screen flex items-center pl-6 md:pl-16 lg:pl-[171px]">
+          <h2
+            className="select-none"
+            style={{
+              fontFamily: 'Switzer, sans-serif',
+              fontWeight: 500,
+              fontSize: 'clamp(64px, 14vw, 190px)',
+              lineHeight: '0.7',
+              letterSpacing: '-3.4px',
+              color: '#00060B',
+              width: 'min(761px, 100%)',
+            }}
+          >
+            {titleLine1}
+          </h2>
+        </div>
+
+        <div className="w-screen flex items-center justify-center mt-2 md:mt-4 mb-14 md:mb-20 lg:mb-24">
+          <h2
+            className="select-none"
+            style={{
+              fontFamily: 'Switzer, sans-serif',
+              fontWeight: 500,
+              fontSize: 'clamp(64px, 14vw, 190px)',
+              lineHeight: '0.7',
+              letterSpacing: '-3.4px',
+              color: '#00060B',
+            }}
+          >
+            {titleLine2}
+          </h2>
+        </div>
       </div>
 
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16">

@@ -82,10 +82,10 @@ function Privacy() {
           style={{ background: '#030712' }}
         >
           <h1
-            className="text-center text-white font-medium tracking-tight leading-[1.1]"
+            className="text-center text-white font-medium tracking-tight leading-[1.1] whitespace-nowrap max-w-[80vw]"
             style={{
               fontFamily: 'Switzer, sans-serif',
-              fontSize: 'clamp(36px, 7vw, 72px)',
+              fontSize: 'clamp(1.5rem, 11vw, 72px)',
               letterSpacing: '-0.03em',
             }}
           >

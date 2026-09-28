@@ -166,10 +166,10 @@ const PageHero = ({
         <AnimatedHeroTitle
           ref={headingRef}
           text={title}
-          size={fullWidthTitle ? 'clamp(3rem, 10vw, 7.5rem)' : titleSize}
+          size={titleSize}
           className={`${
             isSplit ? (spread ? 'mb-0' : 'mb-12 md:mb-16') : ''
-          } ${fullWidthTitle ? 'whitespace-normal break-words max-w-full' : ''} ${titleClassName}`}
+          } ${fullWidthTitle ? 'max-w-full' : ''} ${titleClassName}`}
         />
 
         {isSplit ? (

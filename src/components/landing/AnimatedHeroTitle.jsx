@@ -1,24 +1,83 @@
-import { forwardRef } from 'react';
+import { forwardRef, useLayoutEffect, useRef } from 'react';
 
 const TITLE_SIZES = {
-  xl: 'clamp(60px, 12vw, 200px)',
-  lg: 'clamp(4.5rem, 14vw, 11rem)',
+  xl: 'clamp(40px, 12vw, 200px)',
+  lg: 'clamp(2.5rem, 10vw, 11rem)',
 };
+
+const FIT_MAX_PX = 220;
+const FIT_MIN_PX = 28;
+const FIT_VW = 0.8;
+
+function mergeRefs(...refs) {
+  return (node) => {
+    refs.forEach((ref) => {
+      if (!ref) return;
+      if (typeof ref === 'function') ref(node);
+      else ref.current = node;
+    });
+  };
+}
+
+function fitTitleToViewport(el) {
+  if (!el || typeof window === 'undefined') return;
+
+  // Start large, then scale so the line fills ~80vw (single line).
+  el.style.fontSize = `${FIT_MAX_PX}px`;
+  const measured = el.scrollWidth;
+  if (!measured) return;
+
+  const target = window.innerWidth * FIT_VW;
+  const next = Math.max(
+    FIT_MIN_PX,
+    Math.min(FIT_MAX_PX, (target / measured) * FIT_MAX_PX),
+  );
+  el.style.fontSize = `${next}px`;
+}
 
 /**
  * Per-letter hover bold — same as Home hero heading.
+ * Single-line titles auto-size to ~80vw; use \\n in `text` for intentional breaks.
  */
 const AnimatedHeroTitle = forwardRef(function AnimatedHeroTitle(
-  { text, size = 'lg', className = '' },
+  { text, size = 'lg', className = '', fitViewport = true },
   ref
 ) {
+  const localRef = useRef(null);
+  const hasBreaks = text.includes('\n');
+  const shouldFit = fitViewport && !hasBreaks;
+
+  useLayoutEffect(() => {
+    const el = localRef.current;
+    if (!el || !shouldFit) return undefined;
+
+    const run = () => fitTitleToViewport(el);
+    run();
+
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(run) : null;
+    ro?.observe(document.documentElement);
+    window.addEventListener('resize', run);
+
+    // Fonts can load after first paint and change metrics
+    document.fonts?.ready?.then(run);
+
+    return () => {
+      ro?.disconnect();
+      window.removeEventListener('resize', run);
+    };
+  }, [text, shouldFit, size, className]);
+
   return (
     <h1
-      ref={ref}
-      className={`leading-[0.9] tracking-[-0.04em] text-white ${className}`}
+      ref={mergeRefs(localRef, ref)}
+      className={`leading-[0.9] tracking-[-0.04em] text-white max-w-full ${
+        hasBreaks ? '' : 'whitespace-nowrap'
+      } ${className}`}
       style={{
         fontFamily: 'Switzer, sans-serif',
-        fontSize: TITLE_SIZES[size] || size || TITLE_SIZES.lg,
+        fontSize: shouldFit
+          ? `${FIT_MAX_PX}px`
+          : TITLE_SIZES[size] || size || TITLE_SIZES.lg,
       }}
     >
       {text.split('').map((char, i) =>
