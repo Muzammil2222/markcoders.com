@@ -9,7 +9,6 @@ import affanBw from '../assets/B&W HEADSHOTS/Affan.jpg';
 import amanBw from '../assets/B&W HEADSHOTS/AMAN.jpg';
 import ammarBw from '../assets/B&W HEADSHOTS/AMMAR.jpg';
 import shahzaibBw from '../assets/B&W HEADSHOTS/SHAHZAIB.jpg';
-import hassnainBw from '../assets/B&W HEADSHOTS/HASSNAIN.jpg';
 
 import saarangColor from '../assets/COLORFUL HEADSHOTS/SAARANG.jpg';
 import shameekColor from '../assets/COLORFUL HEADSHOTS/SHAHMEEK.jpg';
@@ -18,51 +17,81 @@ import affanColor from '../assets/COLORFUL HEADSHOTS/AFFAN.jpg';
 import amanColor from '../assets/COLORFUL HEADSHOTS/AMAN.jpg';
 import ammarColor from '../assets/COLORFUL HEADSHOTS/AMMAR.jpg';
 import shahzaibColor from '../assets/COLORFUL HEADSHOTS/SHAHZAIB.jpg';
-import hassnainColor from '../assets/COLORFUL HEADSHOTS/HASSNAIN.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const baseMembers = [
-  { name: "Saarang Ali", title: "Co-Founder & CEO", imgBw: saarangBw, imgColor: saarangColor },
-  { name: "Syed Shamekh Hussain", title: "Co-Founder & COO", imgBw: shameekBw, imgColor: shameekColor },
+  { name: "Saarang Ali", title: "Co-Founder & CEO", imgBw: saarangBw, imgColor: saarangColor, linkedin: 'https://www.linkedin.com/in/saarang-ali/' },
+  { name: "Syed Shamekh Hussain", title: "Co-Founder & COO", imgBw: shameekBw, imgColor: shameekColor, linkedin: 'https://www.linkedin.com/in/syed-shamekh-hussain/' },
   { name: "Bilal", title: "Co-Founder & CTO" }, // no photo
-  { name: "Muzammil Ahmed", title: "Co-Founder & CAO", imgBw: muzammilBw, imgColor: muzammilColor },
-  { name: "Affan Abdullah", title: "Director Of Sales", imgBw: affanBw, imgColor: affanColor },
-  { name: "Aman Raza", title: "Creative Director", imgBw: amanBw, imgColor: amanColor },
-  { name: "Ammar Sheikh", title: "Project Manager", imgBw: ammarBw, imgColor: ammarColor },
-  { name: "Shahzaib Ali", title: "Senior Developer", imgBw: shahzaibBw, imgColor: shahzaibColor },
+  { name: "Muzammil Ahmed", title: "Co-Founder & CAO", imgBw: muzammilBw, imgColor: muzammilColor, linkedin: 'https://www.linkedin.com/in/muzammil-shk/' },
+  { name: "Affan Abdullah", title: "Director Of Sales", imgBw: affanBw, imgColor: affanColor, linkedin: 'https://www.linkedin.com/in/affan-abdullah-97b7a029b/' },
+  { name: "Aman Raza", title: "Creative Director", imgBw: amanBw, imgColor: amanColor, linkedin: 'https://www.linkedin.com/in/aman-raza-618a8723a/' },
+  { name: "Ammar Sheikh", title: "Project Manager", imgBw: ammarBw, imgColor: ammarColor, linkedin: 'https://www.linkedin.com/in/ammar-shaikhhh/' },
+  { name: "Shahzaib Ali", title: "Senior Developer", imgBw: shahzaibBw, imgColor: shahzaibColor, linkedin: 'https://www.linkedin.com/in/shahzaib-ali1/' },
 ];
 
 const displayMembers = baseMembers;
 
-// Hassnain: photo only (no name/title in the list)
-const photoOnly = [
-  { name: "Hassnain", imgBw: hassnainBw, imgColor: hassnainColor },
-];
+const photoMembers = baseMembers.filter((m) => m.imgBw);
 
-const photoMembers = [...baseMembers.filter((m) => m.imgBw), ...photoOnly];
+const PhotoCard = ({ member }) => {
+  const cardClass =
+    'group relative w-[140px] md:w-[180px] lg:w-[205px] h-[190px] md:h-[240px] lg:h-[282px] rounded-[15px] overflow-hidden shrink-0 block no-underline cursor-pointer';
 
-const PhotoCard = ({ member }) => (
-  <div className="group relative w-[140px] md:w-[180px] lg:w-[205px] h-[190px] md:h-[240px] lg:h-[282px] rounded-[15px] overflow-hidden shrink-0">
-    <img
-      src={member.imgBw}
-      alt={member.name}
-      loading="lazy"
-      decoding="async"
-      className="absolute inset-0 w-full h-full object-cover"
-      draggable={false}
-    />
-    <img
-      src={member.imgColor}
-      alt=""
-      aria-hidden="true"
-      loading="lazy"
-      decoding="async"
-      className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-      draggable={false}
-    />
-  </div>
-);
+  const content = (
+    <>
+      <img
+        src={member.imgBw}
+        alt={member.name}
+        loading="lazy"
+        decoding="async"
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        draggable={false}
+      />
+      <img
+        src={member.imgColor}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+        className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105"
+        draggable={false}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 p-3 md:p-4 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-400 pointer-events-none">
+        <p
+          className="text-white font-medium text-[13px] md:text-[15px] leading-tight"
+          style={{ fontFamily: 'Switzer, sans-serif' }}
+        >
+          {member.name}
+        </p>
+        <p
+          className="text-white/75 text-[11px] md:text-[13px] mt-0.5 leading-snug"
+          style={{ fontFamily: 'Switzer, sans-serif' }}
+        >
+          {member.title}
+        </p>
+      </div>
+    </>
+  );
+
+  if (member.linkedin) {
+    return (
+      <a
+        href={member.linkedin}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${member.name} — ${member.title} on LinkedIn`}
+        className={cardClass}
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return <div className={cardClass}>{content}</div>;
+};
 
 const TeamSection = ({ roundedTop = false }) => {
   const sectionRef = useRef(null);

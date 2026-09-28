@@ -10,7 +10,6 @@ import affanBw from '../assets/B&W HEADSHOTS/Affan.jpg';
 import amanBw from '../assets/B&W HEADSHOTS/AMAN.jpg';
 import ammarBw from '../assets/B&W HEADSHOTS/AMMAR.jpg';
 import shahzaibBw from '../assets/B&W HEADSHOTS/SHAHZAIB.jpg';
-import hassnainBw from '../assets/B&W HEADSHOTS/HASSNAIN.jpg';
 
 import saarangColor from '../assets/COLORFUL HEADSHOTS/SAARANG.jpg';
 import shameekColor from '../assets/COLORFUL HEADSHOTS/SHAHMEEK.jpg';
@@ -19,7 +18,6 @@ import affanColor from '../assets/COLORFUL HEADSHOTS/AFFAN.jpg';
 import amanColor from '../assets/COLORFUL HEADSHOTS/AMAN.jpg';
 import ammarColor from '../assets/COLORFUL HEADSHOTS/AMMAR.jpg';
 import shahzaibColor from '../assets/COLORFUL HEADSHOTS/SHAHZAIB.jpg';
-import hassnainColor from '../assets/COLORFUL HEADSHOTS/HASSNAIN.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -31,7 +29,6 @@ const avatars = [
   { bw: amanBw, color: amanColor, name: 'Aman Raza', linkedin: 'https://www.linkedin.com/in/aman-raza-618a8723a/' },
   { bw: ammarBw, color: ammarColor, name: 'Ammar Sheikh', linkedin: 'https://www.linkedin.com/in/ammar-shaikhhh/' },
   { bw: shahzaibBw, color: shahzaibColor, name: 'Shahzaib Ali', linkedin: 'https://www.linkedin.com/in/shahzaib-ali1/' },
-  { bw: hassnainBw, color: hassnainColor, name: 'Hassnain', linkedin: 'https://www.linkedin.com/in/hasnain-raza-rizvi/' },
 ];
 
 const TeamSection = ({ roundedTop = false }) => {
@@ -85,17 +82,17 @@ const TeamSection = ({ roundedTop = false }) => {
         );
       }
 
-      // 2. Staggered 3D reveal for avatars
+      // 2. Staggered reveal for avatars (no 3D scale — that left images blurry)
       gsap.fromTo(
         avatarsRef.current.filter(Boolean),
-        { opacity: 0, scale: 0.5, rotationY: 90 },
+        { opacity: 0, y: 28 },
         {
           opacity: 1,
-          scale: 1,
-          rotationY: 0,
-          duration: 0.8,
+          y: 0,
+          duration: 0.7,
           stagger: 0.05,
-          ease: 'back.out(1.5)',
+          ease: 'power3.out',
+          clearProps: 'transform',
           scrollTrigger: {
             trigger: avatarsTrigger || root,
             start: 'top 85%',
@@ -257,31 +254,37 @@ const TeamSection = ({ roundedTop = false }) => {
                   rel="noopener noreferrer"
                   aria-label={`${avatar.name} on LinkedIn`}
                   ref={el => avatarsRef.current[i] = el}
-                  className="group relative w-[52px] h-[52px] rounded-[10px] overflow-hidden shadow-sm cursor-pointer"
+                  className="group relative w-[52px] h-[52px] rounded-[10px] overflow-hidden shadow-sm cursor-pointer shrink-0"
                 >
                   <img
                     src={avatar.bw}
                     alt={avatar.name}
+                    width={104}
+                    height={104}
                     loading="lazy"
                     decoding="async"
                     className="absolute inset-0 w-full h-full object-cover"
+                    style={{ imageRendering: 'auto' }}
                     draggable={false}
                   />
                   <img
                     src={avatar.color}
                     alt=""
                     aria-hidden="true"
+                    width={104}
+                    height={104}
                     loading="lazy"
                     decoding="async"
                     className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ imageRendering: 'auto' }}
                     draggable={false}
                   />
                 </a>
               ))}
               {/* +25 Box */}
               <div
-                ref={el => avatarsRef.current[8] = el}
-                className="w-[52px] h-[52px] rounded-[10px] bg-[#23b3e8] text-white flex items-center justify-center font-bold text-[15px] shadow-sm hover:scale-105 transition-transform cursor-pointer"
+                ref={el => avatarsRef.current[avatars.length] = el}
+                className="w-[52px] h-[52px] rounded-[10px] bg-[#23b3e8] text-white flex items-center justify-center font-bold text-[15px] shadow-sm hover:scale-105 transition-transform cursor-pointer shrink-0"
               >
                 +25
               </div>

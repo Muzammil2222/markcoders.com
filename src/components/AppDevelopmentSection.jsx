@@ -52,7 +52,17 @@ const AppDevelopmentSection = ({ previewImageRef, to }) => {
     });
   }, [previewImageRef]);
 
-  // Removed old reveal animations to replace with reel effect in parent
+  const imageInner = (
+    <img
+      ref={targetImageRef}
+      src={appDevImg}
+      alt="App Development"
+      className={`w-full h-full object-cover rounded-[24px] transition-transform duration-500 ease-out ${
+        to ? 'group-hover:scale-105' : ''
+      }`}
+      style={{ opacity: morphComplete ? 1 : 0 }}
+    />
+  );
 
   return (
     <section ref={sectionRef} data-snap-section className="w-full py-24 md:py-32 px-6 md:px-10 lg:px-16 bg-[#030712] text-white overflow-hidden">
@@ -138,10 +148,24 @@ const AppDevelopmentSection = ({ previewImageRef, to }) => {
           </div>
         </div>
         
-        {/* Right Side: Image */}
-        <div ref={targetImageContainerRef} className="relative w-full h-full lg:h-[800px] rounded-[24px] overflow-hidden mt-8 lg:mt-0">
-          <img ref={targetImageRef} src={appDevImg} alt="App Development" className="w-full h-full object-cover rounded-[24px]" style={{ opacity: morphComplete ? 1 : 0 }} />
-        </div>
+        {/* Right Side: Image — same destination as View Details */}
+        {to ? (
+          <Link
+            ref={targetImageContainerRef}
+            to={to}
+            aria-label="View details: App Development"
+            className="relative w-full h-full lg:h-[800px] rounded-[24px] overflow-hidden mt-8 lg:mt-0 group cursor-pointer block no-underline"
+          >
+            {imageInner}
+          </Link>
+        ) : (
+          <div
+            ref={targetImageContainerRef}
+            className="relative w-full h-full lg:h-[800px] rounded-[24px] overflow-hidden mt-8 lg:mt-0"
+          >
+            {imageInner}
+          </div>
+        )}
         
       </div>
     </section>

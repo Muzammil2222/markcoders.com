@@ -113,6 +113,8 @@ function Services() {
             to="/services/app-development"
           />
         </div>
+
+        <hr className="service-section-hr mx-auto w-[90%] sm:w-[92%] max-w-[1400px] border-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
         
         <div className="reel-item">
           <ServiceSection 
@@ -125,6 +127,8 @@ function Services() {
           />
         </div>
 
+        <hr className="service-section-hr mx-auto w-[90%] sm:w-[92%] max-w-[1400px] border-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+
         <div className="reel-item">
           <ServiceSection 
             title="CMS Development"
@@ -135,6 +139,8 @@ function Services() {
             to="/services/cms-development"
           />
         </div>
+
+        <hr className="service-section-hr mx-auto w-[90%] sm:w-[92%] max-w-[1400px] border-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
 
         <div className="reel-item">
           <ServiceSection 
@@ -147,6 +153,8 @@ function Services() {
           />
         </div>
 
+        <hr className="service-section-hr mx-auto w-[90%] sm:w-[92%] max-w-[1400px] border-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+
         <div className="reel-item">
           <ServiceSection 
             title="Graphic Design"
@@ -157,6 +165,8 @@ function Services() {
             to="/services/graphic-design"
           />
         </div>
+
+        <hr className="service-section-hr mx-auto w-[90%] sm:w-[92%] max-w-[1400px] border-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
 
         <div className="reel-item">
           <ServiceSection 

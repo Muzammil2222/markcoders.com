@@ -7,8 +7,9 @@ const FONT_SIZE = 100;
 const BASELINE = 100;
 const CAP_HEIGHT = 70; // approx cap-height ratio of Switzer/Inter at size 100
 const CAP_TOP = BASELINE - CAP_HEIGHT;
-const SHOWN = 0.8; // fraction of the letters visible (bottom is cropped)
-const VISIBLE = CAP_HEIGHT * SHOWN;
+const SHOWN = 1; // full letters visible (no bottom crop)
+// Extra room past the baseline so glyph feet aren't clipped by the SVG viewBox
+const VISIBLE = CAP_HEIGHT * SHOWN + 12;
 
 const MarkcodersText = () => {
   const textRef = useRef(null);

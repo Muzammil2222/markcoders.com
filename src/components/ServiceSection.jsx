@@ -40,6 +40,20 @@ const ServiceSection = ({ title, subtitle, accordionData, imageSrc, imageAlt, re
     </>
   );
 
+  const imageClassName = `relative w-full h-full lg:h-[800px] rounded-[24px] overflow-hidden mt-8 lg:mt-0 block ${
+    reverse ? 'lg:col-start-1' : ''
+  } ${to ? 'group cursor-pointer no-underline' : ''}`;
+
+  const imageEl = (
+    <img
+      src={imageSrc}
+      alt={imageAlt}
+      className={`w-full h-full object-cover rounded-[24px] transition-transform duration-500 ease-out ${
+        to ? 'group-hover:scale-105' : ''
+      }`}
+    />
+  );
+
   return (
     <section ref={sectionRef} data-snap-section className="w-full py-24 md:py-32 px-6 md:px-10 lg:px-16 bg-[#030712] text-white overflow-hidden">
       <div className={`max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center ${reverse ? 'lg:grid-flow-dense' : ''}`}>
@@ -104,10 +118,21 @@ const ServiceSection = ({ title, subtitle, accordionData, imageSrc, imageAlt, re
           </div>
         </div>
         
-        {/* Image Side */}
-        <div ref={imageContainerRef} className={`relative w-full h-full lg:h-[800px] rounded-[24px] overflow-hidden mt-8 lg:mt-0 ${reverse ? 'lg:col-start-1' : ''}`}>
-          <img src={imageSrc} alt={imageAlt} className="w-full h-full object-cover rounded-[24px]" />
-        </div>
+        {/* Image Side — same destination as View Details */}
+        {to ? (
+          <Link
+            ref={imageContainerRef}
+            to={to}
+            aria-label={`View details: ${title}`}
+            className={imageClassName}
+          >
+            {imageEl}
+          </Link>
+        ) : (
+          <div ref={imageContainerRef} className={imageClassName}>
+            {imageEl}
+          </div>
+        )}
         
       </div>
     </section>

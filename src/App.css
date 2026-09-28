@@ -267,11 +267,11 @@
   border-radius: 2px;
 }
 
-/* giant wordmark — full width of footer, behind gradient */
+/* giant wordmark — full width of footer */
 .footer__brand-wrap {
-  overflow: hidden;
+  overflow: visible;
   width: 100%;
   max-width: 100%;
-  padding: 0;
+  padding: 0 0 0.75rem;
   margin-top: 3rem;
 }
