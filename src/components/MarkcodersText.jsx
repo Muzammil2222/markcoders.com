@@ -1,49 +1,71 @@
-import { useRef } from 'react'
-import './MarkcodersText.css'
+import { useLayoutEffect, useRef, useState } from 'react';
 
-/**
- * Mouse spotlight reveal — blue fill only under the cursor
- */
-export default function MarkcodersText() {
-  const textRef = useRef(null)
+const WORD = 'MARKCODERS';
 
-  const handleMouseMove = (e) => {
-    const el = textRef.current
-    if (!el) return
+// SVG units (font-size = 100). Tweak these to change the look.
+const FONT_SIZE = 100;
+const BASELINE = 100;
+const CAP_HEIGHT = 70; // approx cap-height ratio of Switzer/Inter at size 100
+const CAP_TOP = BASELINE - CAP_HEIGHT;
+const SHOWN = 0.8; // fraction of the letters visible (bottom is cropped)
+const VISIBLE = CAP_HEIGHT * SHOWN;
 
-    const rect = el.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
+const MarkcodersText = () => {
+  const textRef = useRef(null);
+  const [box, setBox] = useState({ x: 0, w: 700 });
 
-    el.style.setProperty('--mouse-x', `${x}px`)
-    el.style.setProperty('--mouse-y', `${y}px`)
-  }
-
-  const handleMouseLeave = () => {
-    const el = textRef.current
-    if (!el) return
-
-    el.style.setProperty('--mouse-x', '-9999px')
-    el.style.setProperty('--mouse-y', '-9999px')
-  }
+  // Measure the word so it always spans the full width at any screen size
+  useLayoutEffect(() => {
+    const measure = () => {
+      const el = textRef.current;
+      if (!el) return;
+      const b = el.getBBox();
+      if (b.width) setBox({ x: b.x, w: b.width });
+    };
+    measure();
+    document.fonts?.ready.then(measure); // re-measure once Switzer has loaded
+  }, []);
 
   return (
-    <div
-      ref={textRef}
-      className="markcoders-wrap markcoders-wrap--footer"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      aria-label="MarkCoders"
-    >
-      <div className="markcoders-stack" aria-hidden="true">
-        <div className="markcoders-brand">MarkCoders</div>
-      </div>
-
-      <div className="markcoders-reveal markcoders-reveal--blue" aria-hidden="true">
-        <div className="markcoders-stack">
-          <div className="markcoders-brand markcoders-fill--blue">MarkCoders</div>
-        </div>
-      </div>
+    <div className="w-full px-[2.5vw]">
+      <svg
+        viewBox={`${box.x} ${CAP_TOP} ${box.w} ${VISIBLE}`}
+        className="block h-auto w-full"
+        role="img"
+        aria-label={WORD}
+      >
+        <defs>
+          <linearGradient
+            id="markcoders-blue"
+            gradientUnits="userSpaceOnUse"
+            x1="0"
+            y1={CAP_TOP}
+            x2="0"
+            y2={CAP_TOP + VISIBLE}
+          >
+            <stop offset="0" stopColor="#00060B" />
+            <stop offset="0.4" stopColor="#012A7A" />
+            <stop offset="0.8" stopColor="#005EF7" />
+            <stop offset="1" stopColor="#25A9E0" />
+          </linearGradient>
+        </defs>
+        <text
+          ref={textRef}
+          x="0"
+          y={BASELINE}
+          fill="url(#markcoders-blue)"
+          fontSize={FONT_SIZE}
+          fontWeight="600"
+          style={{
+            fontFamily:
+              "Switzer, 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+          }}
+        >
+          {WORD}
+        </text>
+      </svg>
     </div>
-  )
-}
+  );
+};
+
+export default MarkcodersText;
