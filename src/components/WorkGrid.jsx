@@ -31,6 +31,7 @@ const WorkGrid = ({ heroImageRef }) => {
       alt: 'Vantage Project',
       start: 'top 90%',
       end: 'top 10%',
+      scrub: 0.3,
       startRadius: 16,
       endRadius: 32,
       onCompleteChange: setMorphComplete,

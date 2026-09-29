@@ -1,16 +1,14 @@
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { getScrollY } from './scrollBus'
 
 gsap.registerPlugin(ScrollTrigger)
 
 /**
- * Hero → next-section image handoff without layout thrashing.
+ * Hero → next-section image handoff.
  *
- * Geometry is measured once per ScrollTrigger refresh and cached in document
- * space; each scrub tick only interpolates those numbers and writes a
- * transform + size. Width/height (not scaleX/scaleY) keep object-fit:cover
- * sharp when the hero and target have different aspect ratios.
+ * Positions are interpolated from live getBoundingClientRect() values in
+ * viewport space (matches position:fixed). That avoids scrollY/Lenis drift
+ * that made the clone jump right/down at the start and miss the target at the end.
  */
 export function createImageMorph({
   heroImg,
@@ -21,7 +19,7 @@ export function createImageMorph({
   alt = '',
   start = 'top 90%',
   end = 'top 10%',
-  scrub = 0.6,
+  scrub = 0.35,
   startRadius = 15,
   endRadius = 32,
   onCompleteChange,
@@ -38,15 +36,11 @@ export function createImageMorph({
   let clone = null
   let complete = false
   let timer = null
-  let visible = null
   let lastRadius = null
   let lastW = null
   let lastH = null
-
-  // Geometry cached at refresh time, in document space. Both the hero and the
-  // target scroll together, so only the shared scroll offset changes per frame
-  // — which we read from the scroll bus instead of forcing layout.
-  let geo = null
+  let lastX = null
+  let lastY = null
 
   const setComplete = (next) => {
     if (next === complete) return
@@ -54,42 +48,21 @@ export function createImageMorph({
     onCompleteChange?.(next)
   }
 
-  const measureBase = () => {
-    const scrollY = getScrollY()
-    const hero = heroImg.getBoundingClientRect()
-    const target = targetEl.getBoundingClientRect()
+  const placeClone = (x, y, w, h, radius) => {
+    if (!clone) return
 
-    geo = {
-      fromX: hero.left,
-      fromY: hero.top + scrollY,
-      fromW: Math.max(hero.width, 1),
-      fromH: Math.max(hero.height, 1),
-      toX: target.left,
-      toY: target.top + scrollY,
-      toW: Math.max(target.width, 1),
-      toH: Math.max(target.height, 1),
+    const rx = Math.round(x * 100) / 100
+    const ry = Math.round(y * 100) / 100
+    const rw = Math.max(1, Math.round(w))
+    const rh = Math.max(1, Math.round(h))
+
+    if (rx !== lastX || ry !== lastY) {
+      lastX = rx
+      lastY = ry
+      clone.style.left = `${rx}px`
+      clone.style.top = `${ry}px`
     }
-  }
 
-  const applyProgress = (progress) => {
-    if (!clone || !geo) return
-
-    const scrollY = getScrollY()
-    const w = geo.fromW + (geo.toW - geo.fromW) * progress
-    const h = geo.fromH + (geo.toH - geo.fromH) * progress
-    const x = geo.fromX + (geo.toX - geo.fromX) * progress
-    const y = geo.fromY + (geo.toY - geo.fromY) * progress - scrollY
-
-    // Translate only — size via width/height so object-fit:cover never stretches
-    // when aspect ratios differ (e.g. About portrait hero → landscape target).
-    gsap.set(clone, {
-      x,
-      y,
-      force3D: true,
-    })
-
-    const rw = Math.round(w)
-    const rh = Math.round(h)
     if (rw !== lastW || rh !== lastH) {
       lastW = rw
       lastH = rh
@@ -97,21 +70,47 @@ export function createImageMorph({
       clone.style.height = `${rh}px`
     }
 
-    // Radius is a paint-triggering property; only write it when it changes.
-    const radius = Math.round(startRadius + (endRadius - startRadius) * progress)
-    if (radius !== lastRadius) {
-      lastRadius = radius
-      clone.style.borderRadius = `${radius}px`
+    const rr = Math.round(radius)
+    if (rr !== lastRadius) {
+      lastRadius = rr
+      clone.style.borderRadius = `${rr}px`
+    }
+  }
+
+  const applyProgress = (progress) => {
+    if (!clone) return
+
+    const hero = heroImg.getBoundingClientRect()
+    const target = targetEl.getBoundingClientRect()
+
+    // Viewport-space lerp — clone is position:fixed, so no scrollY conversion
+    const x = hero.left + (target.left - hero.left) * progress
+    const y = hero.top + (target.top - hero.top) * progress
+    const w = hero.width + (target.width - hero.width) * progress
+    const h = hero.height + (target.height - hero.height) * progress
+    const radius = startRadius + (endRadius - startRadius) * progress
+
+    placeClone(x, y, w, h, radius)
+
+    // Keep clone locked over hero from the first frame (no 0.02 snap-jump),
+    // and over the target until the very end (no 0.95 early handoff jump).
+    if (progress <= 0) {
+      clone.style.opacity = '0'
+      heroImg.style.opacity = '1'
+      setComplete(false)
+      return
     }
 
-    const shouldShow = progress > 0.02 && progress <= 0.95
-    if (shouldShow !== visible) {
-      visible = shouldShow
-      clone.style.opacity = shouldShow ? '1' : '0'
-      heroImg.style.opacity = progress > 0.02 ? '0' : '1'
+    if (progress >= 1) {
+      clone.style.opacity = '0'
+      heroImg.style.opacity = '0'
+      setComplete(true)
+      return
     }
 
-    setComplete(progress > 0.95)
+    clone.style.opacity = '1'
+    heroImg.style.opacity = '0'
+    setComplete(false)
   }
 
   timer = window.setTimeout(() => {
@@ -127,25 +126,23 @@ export function createImageMorph({
       top: 0;
       left: 0;
       margin: 0;
+      padding: 0;
+      border: 0;
       pointer-events: none;
       z-index: 9999;
       border-radius: ${startRadius}px;
       object-fit: cover;
       object-position: center;
-      will-change: transform, opacity;
-      transform-origin: 0 0;
+      will-change: left, top, width, height, opacity;
+      transform: none;
       transition: none;
+      opacity: 0;
     `
     document.body.appendChild(clone)
 
-    measureBase()
-    if (geo) {
-      lastW = Math.round(geo.fromW)
-      lastH = Math.round(geo.fromH)
-      clone.style.width = `${lastW}px`
-      clone.style.height = `${lastH}px`
-    }
-    gsap.set(clone, { opacity: 0, force3D: true })
+    // Seed at exact hero rect before ScrollTrigger updates
+    const hero = heroImg.getBoundingClientRect()
+    placeClone(hero.left, hero.top, hero.width, hero.height, startRadius)
 
     st = ScrollTrigger.create({
       trigger: triggerEl,
@@ -154,13 +151,13 @@ export function createImageMorph({
       scrub,
       invalidateOnRefresh: true,
       onRefresh: () => {
-        measureBase()
-        lastW = null
-        lastH = null
+        lastX = lastY = lastW = lastH = lastRadius = null
         if (st) applyProgress(st.progress)
       },
       onUpdate: (self) => applyProgress(self.progress),
     })
+
+    applyProgress(st.progress)
   }, delay)
 
   return () => {
