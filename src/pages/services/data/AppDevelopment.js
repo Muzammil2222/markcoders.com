@@ -1,4 +1,4 @@
-import image14 from '../../../assets/image 14.webp';
+import appDevImg from '../../../assets/services/App-development.jpg';
 import image15 from '../../../assets/image 15.png';
 import vantageImg from '../../../assets/vantage.webp';
 import saucedImg from '../../../assets/sauced.webp';
@@ -11,11 +11,11 @@ export const AppDevelopmentData = {
     subtitle: 'Mobile apps, web applications, and SaaS products built around your users and business requirements.',
     cardTitle: 'Our work',
     cardSubtitle: 'Shipping products that scale with you',
-    cardImage: image14,
-    cardImageAlt: 'Our work',
+    cardImage: appDevImg,
+    cardImageAlt: 'App Development',
   },
   showcase: {
-    imageSrc: image14,
+    imageSrc: appDevImg,
     imageAlt: 'App development showcase',
   },
   offerings: {

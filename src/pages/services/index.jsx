@@ -13,9 +13,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 // Assets
-import websiteDevImg from '../../assets/services/Website-development.jpg';
-import cmsDevImg from '../../assets/services/CMS-development.jpg';
-import uiuxImg from '../../assets/services/UIUX-Design.jpg';
+import websiteDevImg from '../../assets/services/WebsiteDevelopment-CsTaI-wB.webp';
+import cmsDevImg from '../../assets/services/CMSDevelopment-BqtLsmuH.webp';
+import uiuxImg from '../../assets/services/UIUXDesign-Drsg_a-L.webp';
 import graphicDesignImg from '../../assets/services/GraphicDesign-DhYkR5Ad.webp';
 import apiImg from '../../assets/services/api.png';
 

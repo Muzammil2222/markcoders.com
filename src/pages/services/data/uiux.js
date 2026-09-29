@@ -1,4 +1,4 @@
-import image14 from '../../../assets/image 14.webp';
+import uiuxImg from '../../../assets/services/UIUX-Design.jpg';
 import image15 from '../../../assets/image 15.png';
 import vantageImg from '../../../assets/vantage.webp';
 import saucedImg from '../../../assets/sauced.webp';
@@ -12,11 +12,11 @@ export const uiuxData = {
     subtitle: 'Branding shapes perception, builds trust, and creates lasting value.',
     cardTitle: 'Our work',
     cardSubtitle: 'Designing a bold voice for thought leadership',
-    cardImage: image14,
-    cardImageAlt: 'Our work',
+    cardImage: uiuxImg,
+    cardImageAlt: 'UI/UX Design',
   },
   showcase: {
-    imageSrc: image14,
+    imageSrc: uiuxImg,
     imageAlt: 'UI/UX showcase',
   },
   offerings: {

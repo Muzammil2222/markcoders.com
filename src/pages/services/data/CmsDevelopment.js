@@ -1,4 +1,4 @@
-import image14 from '../../../assets/image 14.webp';
+import cmsDevImg from '../../../assets/services/CMS-development.jpg';
 import image15 from '../../../assets/image 15.png';
 import vantageImg from '../../../assets/vantage.webp';
 import saucedImg from '../../../assets/sauced.webp';
@@ -11,11 +11,11 @@ export const CmsDevelopmentData = {
     subtitle: 'Flexible websites and online stores that give your team practical control over pages, products, and content.',
     cardTitle: 'Our work',
     cardSubtitle: 'Content systems your team can own',
-    cardImage: image14,
-    cardImageAlt: 'Our work',
+    cardImage: cmsDevImg,
+    cardImageAlt: 'CMS Development',
   },
   showcase: {
-    imageSrc: image14,
+    imageSrc: cmsDevImg,
     imageAlt: 'CMS development showcase',
   },
   offerings: {

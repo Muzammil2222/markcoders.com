@@ -1,4 +1,4 @@
-import image14 from '../../../assets/image 14.webp';
+import websiteDevImg from '../../../assets/services/Website-development.jpg';
 import image15 from '../../../assets/image 15.png';
 import vantageImg from '../../../assets/vantage.webp';
 import saucedImg from '../../../assets/sauced.webp';
@@ -12,11 +12,11 @@ export const webDevelopmentData = {
     subtitle: 'Modern, responsive websites designed to communicate your value clearly and guide visitors toward action.',
     cardTitle: 'Our work',
     cardSubtitle: 'Building digital experiences that convert',
-    cardImage: image14,
-    cardImageAlt: 'Our work',
+    cardImage: websiteDevImg,
+    cardImageAlt: 'Website Development',
   },
   showcase: {
-    imageSrc: image14,
+    imageSrc: websiteDevImg,
     imageAlt: 'Web development showcase',
   },
   offerings: {
