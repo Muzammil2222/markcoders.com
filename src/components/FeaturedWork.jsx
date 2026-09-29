@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -10,7 +10,6 @@ const FeaturedWork = ({
   titleLine2 = 'Work.',
   images = [],
 }) => {
-  const navigate = useNavigate();
   const sectionRef = useRef(null);
   const cardRefs = useRef([]);
 
@@ -61,6 +60,64 @@ const FeaturedWork = ({
       ctx.revert();
     };
   }, [images]);
+
+  const cardClassName =
+    'w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center block no-underline';
+
+  const renderCard = (item, i) => {
+    const media = (
+      <>
+        <img
+          src={item.src}
+          alt={item.alt}
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          loading="lazy"
+          decoding="async"
+        />
+        <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10 pointer-events-none" />
+      </>
+    );
+
+    const refCb = (el) => {
+      cardRefs.current[i] = el;
+    };
+
+    if (!item.link) {
+      return (
+        <div key={`${item.alt}-${i}`} ref={refCb} className={cardClassName}>
+          {media}
+        </div>
+      );
+    }
+
+    if (item.link.startsWith('http')) {
+      return (
+        <a
+          key={`${item.alt}-${i}`}
+          ref={refCb}
+          href={item.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={item.alt}
+          className={cardClassName}
+        >
+          {media}
+        </a>
+      );
+    }
+
+    return (
+      <Link
+        key={`${item.alt}-${i}`}
+        ref={refCb}
+        to={item.link}
+        aria-label={item.alt}
+        className={cardClassName}
+      >
+        {media}
+      </Link>
+    );
+  };
 
   return (
     <section
@@ -125,32 +182,7 @@ const FeaturedWork = ({
 
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 justify-items-center">
-          {images.map((item, i) => (
-            <div
-              key={`${item.alt}-${i}`}
-              ref={(el) => {
-                cardRefs.current[i] = el;
-              }}
-              className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center"
-              onClick={() => {
-                if (item.link) {
-                  if (item.link.startsWith('http')) {
-                    window.open(item.link, '_blank');
-                  } else {
-                    navigate(item.link);
-                  }
-                }
-              }}
-            >
-              <img
-                src={item.src}
-                alt={item.alt}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-          ))}
+          {images.map((item, i) => renderCard(item, i))}
         </div>
       </div>
     </section>
