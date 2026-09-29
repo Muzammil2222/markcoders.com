@@ -16,7 +16,7 @@ const STATIC_TITLES = {
   '/services/graphic-design': `Graphic Design - ${BRAND}`,
   '/case-studies': `Case Studies - ${BRAND}`,
   '/portfolio': `Portfolio - ${BRAND}`,
-  '/terms-and-conditions': `Terms and Conditions - ${BRAND}`,
+  '/terms-and-conditions': `Terms & Conditions - ${BRAND}`,
   '/privacy': `Privacy Policy - ${BRAND}`,
 }
 

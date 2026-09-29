@@ -1,6 +1,6 @@
 import PageHero from './landing/PageHero';
 import BlueWaves from './BlueWaves';
-import appDevImg from '../assets/services/AppDevelopment-BC7DxIEZ.webp';
+import appDevImg from '../assets/services/App-development.jpg';
 
 const ServiceCard = ({ imageRef }) => (
   <div

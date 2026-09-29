@@ -161,24 +161,24 @@ const Navbar = () => {
   return createPortal(
     <nav
       ref={navRef}
-      className="fixed top-0 left-0 right-0 z-[60] flex justify-center pt-4 md:pt-5 px-4 will-change-transform pointer-events-none"
+      className="fixed top-0 left-0 right-0 z-[60] flex justify-center pt-3 sm:pt-4 md:pt-5 px-3 sm:px-4 will-change-transform pointer-events-none"
     >
       <div
-        className="pointer-events-auto w-[min(92vw,720px)] md:w-[60vw] max-w-[900px] rounded-full border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)]"
+        className="pointer-events-auto w-[min(94vw,560px)] xl:w-[min(94vw,1080px)] rounded-full border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)] overflow-hidden"
         style={{
           background: 'rgba(18, 18, 18, 0.92)',
         }}
       >
-        <div className="flex items-center justify-between gap-3 pl-4 pr-2 sm:pl-5 sm:pr-2.5 md:pl-6 md:pr-3 py-2 md:py-2.5">
+        <div className="flex items-center justify-between gap-2 sm:gap-3 xl:gap-4 pl-3 pr-2 sm:pl-4 sm:pr-2.5 xl:pl-5 xl:pr-3 py-2 xl:py-2.5 min-w-0">
           <Link
             to="/"
             ref={logoRef}
-            className="flex items-center cursor-pointer select-none no-underline shrink-0"
+            className="flex items-center cursor-pointer select-none no-underline shrink-0 min-w-0 max-w-[42%] xl:max-w-none"
           >
             <img
               src={LOGO_SRC}
               alt="Markcoders"
-              className="h-[28px] md:h-[32px] w-auto object-contain"
+              className="h-[24px] sm:h-[28px] xl:h-[30px] w-auto max-w-full object-contain object-left"
               decoding="async"
               draggable={false}
             />
@@ -186,13 +186,13 @@ const Navbar = () => {
 
           <div
             ref={linksRef}
-            className="hidden lg:flex items-center justify-center gap-5 xl:gap-7 flex-1 min-w-0"
+            className="hidden xl:flex items-center justify-center gap-4 2xl:gap-7 flex-1 min-w-0 px-2"
           >
             {NAV_LINKS.map((item) => (
               <Link
                 key={item.label}
                 to={item.to}
-                className={`text-[14px] xl:text-[15px] font-medium tracking-wide whitespace-nowrap no-underline transition-colors duration-300 ${
+                className={`text-[13px] 2xl:text-[15px] font-medium tracking-wide whitespace-nowrap no-underline transition-colors duration-300 shrink-0 ${
                   isActive(item.to)
                     ? 'text-white'
                     : 'text-white/70 hover:text-white'
@@ -203,12 +203,12 @@ const Navbar = () => {
             ))}
           </div>
 
-          <div ref={btnRef} className="hidden lg:block shrink-0">
+          <div ref={btnRef} className="hidden xl:block shrink-0">
             <a
               href={CALENDLY_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 h-10 px-5 rounded-full bg-white text-[#0a0a0a] text-[14px] font-semibold no-underline transition-transform duration-300 hover:scale-[1.03] cursor-pointer"
+              className="inline-flex items-center gap-1.5 h-9 2xl:h-10 px-4 2xl:px-5 rounded-full bg-white text-[#0a0a0a] text-[13px] 2xl:text-[14px] font-semibold no-underline transition-transform duration-300 hover:scale-[1.03] cursor-pointer whitespace-nowrap"
             >
               Get Started
               <svg
@@ -234,7 +234,7 @@ const Navbar = () => {
           <button
             ref={hamburgerRef}
             type="button"
-            className="lg:hidden flex flex-col gap-1.5 p-2.5 mr-0.5 cursor-pointer bg-transparent border-none rounded-full hover:bg-white/5"
+            className="xl:hidden flex flex-col gap-1.5 p-2.5 mr-0.5 cursor-pointer bg-transparent border-none rounded-full hover:bg-white/5 shrink-0"
             onClick={toggleMobileMenu}
             aria-label="Toggle menu"
           >
@@ -246,9 +246,9 @@ const Navbar = () => {
 
         <div
           ref={mobileMenuRef}
-          className="lg:hidden max-h-0 opacity-0 overflow-hidden transition-all duration-400 ease-in-out rounded-b-[28px]"
+          className="xl:hidden max-h-0 opacity-0 overflow-hidden transition-all duration-400 ease-in-out"
         >
-          <div className="px-5 pb-5 pt-1 flex flex-col gap-1 border-t border-white/8">
+          <div className="px-5 pb-5 pt-1 flex flex-col gap-1 border-t border-white/10">
             {NAV_LINKS.map((item) => (
               <Link
                 key={item.label}

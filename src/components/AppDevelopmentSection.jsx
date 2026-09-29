@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createImageMorph } from '../lib/imageMorph';
-import appDevImg from '../assets/services/AppDevelopment-BC7DxIEZ.webp';
+import appDevImg from '../assets/services/App-development.jpg';
 
 const accordionData = [
   {
