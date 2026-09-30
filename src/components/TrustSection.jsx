@@ -11,22 +11,22 @@ const testimonials = [
   {
     quote:
       'Pleasure to work with from start to finish. They translated complex flows into something intuitive a rare balance between aesthetics and functionality.',
-    name: 'Emma Watson',
+    name: 'Habib Rehman',
   },
   {
     quote:
       'Saarang was very quick to respond to feedback and worked with us to get the design just right.',
-    name: 'Cassandra Sigmon',
+    name: 'Nathan Rocha',
   },
   {
     quote:
       'They took our messy brief and turned it into a polished experience. Fast iterations, thoughtful UX, and zero drama throughout the build.',
-    name: 'Sofia Reyes',
+    name: 'Caleb Matthew',
   },
   {
     quote:
       'A rare team that cares about both craft and shipping. Our launch felt smooth, and the final product still looks fresh months later.',
-    name: 'Daniel Okonkwo',
+    name: 'Joshua Thomas',
   },
 ];
 

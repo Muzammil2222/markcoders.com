@@ -186,13 +186,13 @@ const Navbar = () => {
 
           <div
             ref={linksRef}
-            className="hidden xl:flex items-center justify-center gap-4 2xl:gap-7 flex-1 min-w-0 px-2"
+            className="hidden xl:flex items-center justify-evenly flex-1 min-w-0 px-6 2xl:px-10"
           >
             {NAV_LINKS.map((item) => (
               <Link
                 key={item.label}
                 to={item.to}
-                className={`text-[13px] 2xl:text-[15px] font-medium tracking-wide whitespace-nowrap no-underline transition-colors duration-300 shrink-0 ${
+                className={`text-[13px] 2xl:text-[15px] font-medium tracking-wide whitespace-nowrap no-underline transition-colors duration-300 shrink-0 px-1 ${
                   isActive(item.to)
                     ? 'text-white'
                     : 'text-white/70 hover:text-white'
