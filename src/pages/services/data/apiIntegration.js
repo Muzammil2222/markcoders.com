@@ -8,7 +8,7 @@ import jerseyImg from '../../../assets/jersey2.webp';
 // Same layout as other service pages — swap text/images when content is ready
 export const apiIntegrationData = {
   hero: {
-    title: 'API',
+    title: 'Integrations',
     subtitle: 'Connected platforms and automated workflows that help your business tools work together.',
     cardTitle: 'Our work',
     cardSubtitle: 'Integrations that remove friction',

@@ -3,19 +3,31 @@ import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { initSectionBgTransition } from '../lib/sectionBgTransition';
-import img1 from '../assets/whatwedo/ui-ux.png';
-import img2 from '../assets/whatwedo/cms.png';
-import img3 from '../assets/whatwedo/app.png';
-import img4 from '../assets/whatwedo/api-integration.png';
+import imgUiux from '../assets/whatwedo/uiux.png';
+import imgCms from '../assets/whatwedo/cms.png';
+import imgApp from '../assets/whatwedo/app.png';
+import imgApi from '../assets/whatwedo/api.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const DEFAULT_IMG = { w: 320, h: 220, fit: 'cover', bg: 'transparent' };
+
 const services = [
-  { num: '01', title: 'UI/UX Design', color: '#E84E3A', img: img1, to: '/services/ui-ux' },
-  { num: '02', title: 'CMS Development', color: '#6C5CE7', img: img2, to: '/services/cms-development' },
-  { num: '03', title: 'App Development', color: '#00B894', img: img3, to: '/services/app-development' },
-  { num: '04', title: 'API Integration And Automation', color: '#FDCB6E', img: img4, to: '/services/api-integration' },
+  { num: '01', title: 'UI/UX Design', color: '#E84E3A', img: imgUiux, to: '/services/ui-ux' },
+  { num: '02', title: 'CMS Development', color: '#6C5CE7', img: imgCms, to: '/services/cms-development' },
+  {
+    num: '03',
+    title: 'App Development',
+    color: '#00B894',
+    img: imgApp,
+    to: '/services/app-development',
+    // Tall phone mockup — portrait frame + contain so the device isn’t cropped
+    imgStyle: { w: 180, h: 340, fit: 'contain', bg: '#0a0a0a' },
+  },
+  { num: '04', title: 'API Integration And Automation', color: '#FDCB6E', img: imgApi, to: '/services/api-integration' },
 ];
+
+const getImgStyle = (service) => ({ ...DEFAULT_IMG, ...service.imgStyle });
 
 const WhatWeDo = () => {
   const sectionRef = useRef(null);
@@ -93,53 +105,46 @@ const WhatWeDo = () => {
     if (!listRef.current || !imageContainerRef.current || activeIndex === null) return;
     const rect = listRef.current.getBoundingClientRect();
     mouseX.current = e.clientX - rect.left;
+    const { w } = getImgStyle(services[activeIndex]);
 
     gsap.to(imageContainerRef.current, {
-      x: mouseX.current - 160,
+      x: mouseX.current - w / 2,
       duration: 0.4,
       ease: 'power2.out',
       overwrite: 'auto',
     });
   }, [activeIndex]);
 
+  const positionImage = (index, mouseXPos) => {
+    if (!imageContainerRef.current || !listRef.current || !rowRefs.current[index]) return;
+    const { w, h } = getImgStyle(services[index]);
+    const listRect = listRef.current.getBoundingClientRect();
+    const rowRect = rowRefs.current[index].getBoundingClientRect();
+    const rowCenterY = rowRect.top - listRect.top + rowRect.height / 2 - h / 2;
+
+    if (mouseXPos != null) {
+      gsap.set(imageContainerRef.current, { x: mouseXPos - w / 2 });
+    }
+    gsap.to(imageContainerRef.current, {
+      y: rowCenterY,
+      opacity: 1,
+      scale: 1,
+      duration: 0.45,
+      ease: 'power3.out',
+    });
+  };
+
   const handleItemEnter = (index, e) => {
     setActiveIndex(index);
-
-    if (imageContainerRef.current && listRef.current && rowRefs.current[index]) {
+    if (listRef.current) {
       const listRect = listRef.current.getBoundingClientRect();
-      const rowRect = rowRefs.current[index].getBoundingClientRect();
-      const mouseXPos = e.clientX - listRect.left;
-
-      // Position image vertically centered on the hovered row
-      const rowCenterY = rowRect.top - listRect.top + rowRect.height / 2 - 110;
-
-      gsap.set(imageContainerRef.current, { x: mouseXPos - 160 });
-      gsap.to(imageContainerRef.current, {
-        y: rowCenterY,
-        opacity: 1,
-        scale: 1,
-        duration: 0.45,
-        ease: 'power3.out',
-      });
+      positionImage(index, e.clientX - listRect.left);
     }
   };
 
   const handleItemHover = (index) => {
-    // Update Y position when switching between rows without leaving
-    if (imageContainerRef.current && listRef.current && rowRefs.current[index]) {
-      const listRect = listRef.current.getBoundingClientRect();
-      const rowRect = rowRefs.current[index].getBoundingClientRect();
-      const rowCenterY = rowRect.top - listRect.top + rowRect.height / 2 - 110;
-
-      setActiveIndex(index);
-      gsap.to(imageContainerRef.current, {
-        y: rowCenterY,
-        opacity: 1,
-        scale: 1,
-        duration: 0.4,
-        ease: 'power3.out',
-      });
-    }
+    setActiveIndex(index);
+    positionImage(index);
   };
 
   const handleListLeave = () => {
@@ -192,31 +197,39 @@ const WhatWeDo = () => {
           {/* Floating image — follows mouse X, snaps to hovered row Y */}
           <div
             ref={imageContainerRef}
-            className="hidden lg:block absolute pointer-events-none"
+            className="hidden lg:block absolute pointer-events-none overflow-hidden rounded-[16px]"
             style={{
               top: 0,
               left: 0,
-              width: '320px',
-              height: '220px',
+              width: activeIndex != null ? getImgStyle(services[activeIndex]).w : DEFAULT_IMG.w,
+              height: activeIndex != null ? getImgStyle(services[activeIndex]).h : DEFAULT_IMG.h,
+              background:
+                activeIndex != null ? getImgStyle(services[activeIndex]).bg : DEFAULT_IMG.bg,
               opacity: 0,
               transform: 'scale(0.88)',
               zIndex: 20,
               willChange: 'transform, opacity',
+              boxShadow: '0 20px 50px rgba(0,0,0,0.2)',
+              transition: 'width 0.25s ease, height 0.25s ease, background 0.25s ease',
             }}
           >
-            {services.map((service, i) => (
-              <img
-                key={i}
-                src={service.img}
-                alt={service.title}
-                className="absolute inset-0 w-full h-full object-cover rounded-[16px]"
-                style={{
-                  opacity: activeIndex === i ? 1 : 0,
-                  transition: 'opacity 0.3s ease',
-                  boxShadow: '0 20px 50px rgba(0,0,0,0.2)',
-                }}
-              />
-            ))}
+            {services.map((service, i) => {
+              const style = getImgStyle(service);
+              return (
+                <img
+                  key={i}
+                  src={service.img}
+                  alt={service.title}
+                  className="absolute inset-0 w-full h-full rounded-[16px]"
+                  style={{
+                    objectFit: style.fit,
+                    objectPosition: 'center',
+                    opacity: activeIndex === i ? 1 : 0,
+                    transition: 'opacity 0.3s ease',
+                  }}
+                />
+              );
+            })}
           </div>
 
           {/* Service rows */}
