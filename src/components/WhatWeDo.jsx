@@ -7,7 +7,6 @@ import imgUiux from '../assets/whatwedo/uiux.png';
 import imgCms from '../assets/whatwedo/cms.png';
 import imgApp from '../assets/whatwedo/app.png';
 import imgApi from '../assets/whatwedo/api.png';
-import LazyImg from './LazyImg';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -217,7 +216,7 @@ const WhatWeDo = () => {
             {services.map((service, i) => {
               const style = getImgStyle(service);
               return (
-                <LazyImg
+                <img
                   key={i}
                   src={service.img}
                   alt={service.title}

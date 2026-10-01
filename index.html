@@ -7,12 +7,12 @@
     <meta name="description" content="MarkCoders - We work with startups, scaleups, and established brands to launch digital products that stand out and convert." />
     <meta name="theme-color" content="#030712" />
     <title>Markcoders</title>
-    <!-- LCP: hero card image, fetched before any JS runs -->
-    <link rel="preload" as="image" href="%BASE_URL%hero/vantage.webp" fetchpriority="high" />
-    <!-- Switzer variable font (100-900), self-hosted; @font-face lives in src/index.css -->
-    <link rel="preload" as="font" type="font/woff2" href="%BASE_URL%fonts/Switzer-Variable.woff2" crossorigin />
+    <!-- Switzer Variable Font from Fontshare (supports smooth weight transitions 100-900) -->
+    <link href="https://api.fontshare.com/v2/css?f[]=switzer@1&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <!-- ===== MARKCODERS PRELOADER STYLES (DISABLED) =====
+    <!-- ===== MARKCODERS PRELOADER ===== -->
     <style>
     :root{
       --mc-light:#25A8DF;
@@ -97,10 +97,9 @@
     <script>
       document.documentElement.classList.add('mc-lock');
     </script>
-    ===== END PRELOADER STYLES ===== -->
   </head>
   <body>
-    <!-- ===== MARKCODERS PRELOADER MARKUP (DISABLED) — must be the first element in <body> =====
+    <!-- must be the first element in <body> -->
     <div class="mc-pre" id="mcPre" role="status" aria-live="polite" aria-label="Loading Markcoders">
       <div class="mc-stage">
         <div class="mc-float">
@@ -157,8 +156,6 @@
       setTimeout(window.hideMarkcodersLoader, 8000);
     })();
     </script>
-    ===== END PRELOADER ===== -->
-
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

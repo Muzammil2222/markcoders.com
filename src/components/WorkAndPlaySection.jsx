@@ -5,7 +5,6 @@ import workAndPlay1 from '../assets/WorkAndPLayImage1.jpg';
 import workAndPlay2 from '../assets/WorkAndPLayImage2.jpg';
 import workAndPlay3 from '../assets/WorkAndPLayImage3.jpg';
 import workAndPlay4 from '../assets/WorkAndPLayImage4.webp.jpg';
-import LazyImg from './LazyImg';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -117,10 +116,12 @@ const WorkAndPlaySection = () => {
         {/* The 4 Images */}
         <div className="w-full flex flex-col lg:block items-center gap-8 lg:gap-0 mt-12 lg:mt-10 z-20 px-6">
           {images.map((src, index) => (
-            <LazyImg
+            <img
               key={index}
               src={src}
               alt={`Work and Play ${index + 1}`}
+              loading="lazy"
+              decoding="async"
               className="scatter-image relative lg:absolute lg:top-[calc(50%+10px)] w-full max-w-[280px] sm:max-w-[400px] h-auto aspect-square lg:w-[320px] lg:h-[320px] min-[1301px]:w-[320px] min-[1301px]:h-[320px] object-cover rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] lg:rounded-none lg:shadow-none"
             />
           ))}
