@@ -10,7 +10,7 @@ import imgApi from '../assets/whatwedo/api.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const DEFAULT_IMG = { w: 320, h: 220, fit: 'cover', bg: 'transparent' };
+const DEFAULT_IMG = { w: 320, h: 220, fit: 'cover', bg: 'transparent', radius: 16, shadow: '0 20px 50px rgba(0,0,0,0.2)' };
 
 const services = [
   { num: '01', title: 'UI/UX Design', color: '#E84E3A', img: imgUiux, to: '/services/ui-ux' },
@@ -21,8 +21,8 @@ const services = [
     color: '#00B894',
     img: imgApp,
     to: '/services/app-development',
-    // Tall phone mockup — portrait frame + contain so the device isn’t cropped
-    imgStyle: { w: 180, h: 340, fit: 'contain', bg: '#0a0a0a' },
+    // Tall phone mockup — show asset as-is (no crop, no fill behind it)
+    imgStyle: { w: 180, h: 340, fit: 'contain', bg: 'transparent', radius: 0, shadow: 'none' },
   },
   { num: '04', title: 'API Integration And Automation', color: '#FDCB6E', img: imgApi, to: '/services/api-integration' },
 ];
@@ -197,7 +197,7 @@ const WhatWeDo = () => {
           {/* Floating image — follows mouse X, snaps to hovered row Y */}
           <div
             ref={imageContainerRef}
-            className="hidden lg:block absolute pointer-events-none overflow-hidden rounded-[16px]"
+            className="hidden lg:block absolute pointer-events-none"
             style={{
               top: 0,
               left: 0,
@@ -205,12 +205,23 @@ const WhatWeDo = () => {
               height: activeIndex != null ? getImgStyle(services[activeIndex]).h : DEFAULT_IMG.h,
               background:
                 activeIndex != null ? getImgStyle(services[activeIndex]).bg : DEFAULT_IMG.bg,
+              borderRadius:
+                activeIndex != null
+                  ? getImgStyle(services[activeIndex]).radius
+                  : DEFAULT_IMG.radius,
+              overflow:
+                activeIndex != null && getImgStyle(services[activeIndex]).radius === 0
+                  ? 'visible'
+                  : 'hidden',
               opacity: 0,
               transform: 'scale(0.88)',
               zIndex: 20,
               willChange: 'transform, opacity',
-              boxShadow: '0 20px 50px rgba(0,0,0,0.2)',
-              transition: 'width 0.25s ease, height 0.25s ease, background 0.25s ease',
+              boxShadow:
+                activeIndex != null
+                  ? getImgStyle(services[activeIndex]).shadow
+                  : DEFAULT_IMG.shadow,
+              transition: 'width 0.25s ease, height 0.25s ease, background 0.25s ease, border-radius 0.25s ease',
             }}
           >
             {services.map((service, i) => {
@@ -220,10 +231,11 @@ const WhatWeDo = () => {
                   key={i}
                   src={service.img}
                   alt={service.title}
-                  className="absolute inset-0 w-full h-full rounded-[16px]"
+                  className="absolute inset-0 w-full h-full"
                   style={{
                     objectFit: style.fit,
                     objectPosition: 'center',
+                    borderRadius: style.radius,
                     opacity: activeIndex === i ? 1 : 0,
                     transition: 'opacity 0.3s ease',
                   }}

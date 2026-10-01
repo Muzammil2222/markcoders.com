@@ -1,0 +1,19 @@
+# SPA fallback for Apache / LiteSpeed (cPanel, shared hosting)
+# Serves index.html for client routes like /case-studies/sauced
+# so "Open in new tab" and direct URLs work.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Don't rewrite real files or directories (assets, favicon, etc.)
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Everything else → React app
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Optional: if rewrite isn't available, custom 404 still loads the SPA
+ErrorDocument 404 /index.html

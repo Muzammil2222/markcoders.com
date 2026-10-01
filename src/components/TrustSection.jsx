@@ -16,7 +16,7 @@ const testimonials = [
   {
     quote:
       'Saarang was very quick to respond to feedback and worked with us to get the design just right.',
-    name: 'Nathan Rocha',
+    name: 'JW Reed',
   },
   {
     quote:
@@ -26,7 +26,7 @@ const testimonials = [
   {
     quote:
       'A rare team that cares about both craft and shipping. Our launch felt smooth, and the final product still looks fresh months later.',
-    name: 'Joshua Thomas',
+    name: 'James Woody',
   },
 ];
 
