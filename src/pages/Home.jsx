@@ -5,6 +5,7 @@ import WorkGrid from '../components/WorkGrid';
 
 // Hero + WorkGrid share the morphing image, so they ship in the first chunk.
 // Everything below the fold is split out to keep the initial parse small.
+// Images use LazyImg (react-cool-img) and only fetch when scrolled near.
 const AboutAndVideo = lazy(() => import('../components/AboutAndVideo'));
 const WhatWeDo = lazy(() => import('../components/WhatWeDo'));
 const ToolsSection = lazy(() => import('../components/ToolsSection'));

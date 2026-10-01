@@ -2,13 +2,16 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import viteCompression from 'vite-plugin-compression'
+import { analyzer } from 'vite-bundle-analyzer'
 
 
 // https://vite.dev/config/
-export default defineConfig(({ command }) => {
+export default defineConfig(({ command, mode }) => {
   // Vercel already compresses at the edge — skip pre-gzip/br there.
   // GitHub Pages / Render previews benefit from the compressed copies.
   const onVercel = process.env.VERCEL === '1'
+  // Opt-in only: `npm run analyze` — keeps normal builds fast.
+  const analyze = mode === 'analyze' || process.env.ANALYZE === 'true'
 
   return {
     // Vercel / local: site is served from domain root → base `/`
@@ -33,6 +36,16 @@ export default defineConfig(({ command }) => {
         ? [
             viteCompression({ algorithm: 'gzip', ext: '.gz' }),
             viteCompression({ algorithm: 'brotliCompress', ext: '.br' }),
+          ]
+        : []),
+      ...(analyze
+        ? [
+            analyzer({
+              analyzerMode: 'server',
+              openAnalyzer: true,
+              defaultSizes: 'gzip',
+              summary: true,
+            }),
           ]
         : []),
     ],

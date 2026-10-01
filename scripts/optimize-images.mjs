@@ -16,6 +16,9 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 
+// Windows keeps cached inputs open, which blocks writing back to the same path
+sharp.cache(false)
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const DIRS = [path.join(ROOT, 'src/assets'), path.join(ROOT, 'public')]
 

@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { initSectionBgTransition } from '../lib/sectionBgTransition';
+import LazyImg from './LazyImg';
 
 import saarangBw from '../assets/B&W HEADSHOTS/SAARANG.jpg';
 import shameekBw from '../assets/B&W HEADSHOTS/SHAHMEEK.jpg';
@@ -256,25 +257,21 @@ const TeamSection = ({ roundedTop = false }) => {
                   ref={el => avatarsRef.current[i] = el}
                   className="group relative w-[52px] h-[52px] rounded-[10px] overflow-hidden shadow-sm cursor-pointer shrink-0"
                 >
-                  <img
+                  <LazyImg
                     src={avatar.bw}
                     alt={avatar.name}
                     width={104}
                     height={104}
-                    loading="lazy"
-                    decoding="async"
                     className="absolute inset-0 w-full h-full object-cover"
                     style={{ imageRendering: 'auto' }}
                     draggable={false}
                   />
-                  <img
+                  <LazyImg
                     src={avatar.color}
                     alt=""
                     aria-hidden="true"
                     width={104}
                     height={104}
-                    loading="lazy"
-                    decoding="async"
                     className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     style={{ imageRendering: 'auto' }}
                     draggable={false}

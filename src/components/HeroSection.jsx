@@ -1,7 +1,7 @@
 import PageHero from './landing/PageHero';
 import { Link } from 'react-router-dom';
-import cardImage from '../assets/vantage.webp';
 import BlueWaves from './BlueWaves';
+import { HERO_IMG_SRC } from '../lib/heroImage';
 
 const HeroSection = ({ heroImageRef }) => {
   return (
@@ -158,8 +158,12 @@ const HeroSection = ({ heroImageRef }) => {
             >
               <img
                 ref={heroImageRef}
-                src={cardImage}
+                src={HERO_IMG_SRC}
                 alt="Our work - Designing a bold voice"
+                width={162}
+                height={197}
+                fetchPriority="high"
+                decoding="async"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-50 relative will-change-transform origin-center"
                 style={{
                   width: '162.16px',

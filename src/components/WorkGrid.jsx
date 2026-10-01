@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createImageMorph } from '../lib/imageMorph';
-import heroCardImg from '../assets/vantage.webp';
+import LazyImg from './LazyImg';
+import { HERO_IMG_SRC as heroCardImg } from '../lib/heroImage';
 import saucedImg from '../assets/sauced.webp';
 import jerseyImg from '../assets/jersey.jpg';
 import jersey2Img from '../assets/jersey2.webp';
@@ -69,24 +70,7 @@ const WorkGrid = ({ heroImageRef }) => {
       });
     }, section);
 
-    const refresh = () => ScrollTrigger.refresh(true);
-    const onLoad = () => refresh();
-
-    const images = section.querySelectorAll('img');
-    images.forEach((img) => {
-      if (!img.complete) img.addEventListener('load', onLoad, { once: true });
-    });
-
-    requestAnimationFrame(refresh);
-    const refreshTimers = [150, 600, 1200].map((ms) =>
-      window.setTimeout(refresh, ms)
-    );
-
-    return () => {
-      refreshTimers.forEach((id) => window.clearTimeout(id));
-      images.forEach((img) => img.removeEventListener('load', onLoad));
-      ctx.revert();
-    };
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -113,6 +97,7 @@ const WorkGrid = ({ heroImageRef }) => {
             ref={card1ImageRef}
             src={heroCardImg}
             alt="Vantage Project"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             style={{ opacity: morphComplete ? 1 : 0 }}
           />
@@ -126,11 +111,9 @@ const WorkGrid = ({ heroImageRef }) => {
           rel="noopener noreferrer"
           className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center block no-underline"
         >
-          <img
+          <LazyImg
             src={saucedImg}
             alt="Sauced Project"
-            loading="lazy"
-            decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </a>
@@ -141,11 +124,9 @@ const WorkGrid = ({ heroImageRef }) => {
           to="/case-studies"
           className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center block no-underline"
         >
-          <img
+          <LazyImg
             src={jerseyImg}
             alt="Shareable vCard Platform"
-            loading="lazy"
-            decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </Link>
@@ -158,11 +139,9 @@ const WorkGrid = ({ heroImageRef }) => {
           rel="noopener noreferrer"
           className="w-full max-w-[661.02px] h-[520px] sm:h-[650px] lg:h-[804px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center block no-underline"
         >
-          <img
+          <LazyImg
             src={jersey2Img}
             alt="The Jersey Generator"
-            loading="lazy"
-            decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </a>

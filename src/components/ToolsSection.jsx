@@ -9,6 +9,7 @@ import claudeImg from '../assets/tech-icons/claude.jpg';
 import codexImg from '../assets/tech-icons/codex.jpg';
 import cursorImg from '../assets/tech-icons/cursor.jpg';
 import geminiImg from '../assets/tech-icons/gemini.jpg';
+import LazyImg from './LazyImg';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -280,7 +281,7 @@ const ToolsSection = () => {
                       opacity: isFar ? 0.85 : 1,
                     }}
                   >
-                    <img
+                    <LazyImg
                       src={tool.img}
                       alt={tool.name}
                       className="w-full h-full object-cover"

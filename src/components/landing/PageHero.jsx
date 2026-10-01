@@ -39,8 +39,10 @@ const PageHero = ({
     const ctx = gsap.context(() => {
       gsap.set(headingRef.current, { opacity: 0, y: 80, scale: 0.95 });
 
+      // Subtitle is often the LCP element: keep it painted, only slide it in.
+      // Chrome doesn't record LCP for opacity:0 text until it fades in.
       if (subRef.current) {
-        gsap.set(subRef.current, { opacity: 0, y: 50 });
+        gsap.set(subRef.current, { y: 50 });
       }
 
       if (dotRef.current) {
@@ -71,7 +73,7 @@ const PageHero = ({
       if (subRef.current) {
         tl.to(
           subRef.current,
-          { opacity: 1, y: 0, duration: 1, ease: 'power3.out' },
+          { y: 0, duration: 1, ease: 'power3.out' },
           '-=0.6'
         );
       }

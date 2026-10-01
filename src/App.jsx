@@ -1,11 +1,11 @@
-import { lazy, Suspense, useEffect, useRef } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ReactLenis, useLenis } from 'lenis/react'
 import DocumentTitle from './components/DocumentTitle'
 import ScrollToTopButton from './components/ScrollToTopButton'
-import SplashCursor from './components/SplashCursor'
+import Home from './pages/Home'
 import { setLenis } from './lib/scrollBus'
 import { initSectionSnap, shouldEnableSectionSnap } from './lib/magneticSnap'
 
@@ -15,7 +15,8 @@ gsap.registerPlugin(ScrollTrigger)
 // after a dropped frame — that correction is what shows up as a small lurch.
 gsap.ticker.lagSmoothing(0)
 
-const Home = lazy(() => import('./pages/Home'))
+// WebGL fluid sim — kept out of the first paint
+const SplashCursor = lazy(() => import('./components/SplashCursor'))
 const CaseStudies = lazy(() => import('./pages/CaseStudies'))
 const CaseStudyDetail = lazy(() => import('./pages/CaseStudyDetail'))
 const Portfolio = lazy(() => import('./pages/Portfolio'))
@@ -105,7 +106,36 @@ function ScrollRig() {
   return null
 }
 
+function useAfterLoadIdle() {
+  const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    let idleId
+    let timer
+    const start = () => {
+      if ('requestIdleCallback' in window) {
+        idleId = window.requestIdleCallback(() => setReady(true), { timeout: 2000 })
+      } else {
+        timer = window.setTimeout(() => setReady(true), 300)
+      }
+    }
+
+    if (document.readyState === 'complete') start()
+    else window.addEventListener('load', start, { once: true })
+
+    return () => {
+      window.removeEventListener('load', start)
+      if (idleId != null) window.cancelIdleCallback(idleId)
+      if (timer != null) window.clearTimeout(timer)
+    }
+  }, [])
+
+  return ready
+}
+
 const App = () => {
+  const showSplash = useAfterLoadIdle()
+
   useEffect(() => {
     if (window.hideMarkcodersLoader) {
       window.hideMarkcodersLoader()
@@ -127,18 +157,22 @@ const App = () => {
         <DocumentTitle />
         <ScrollRig />
         <ScrollToTopButton />
-        <SplashCursor
-          DENSITY_DISSIPATION={1.8}
-          VELOCITY_DISSIPATION={1.1}
-          PRESSURE={0.1}
-          CURL={3}
-          SPLAT_RADIUS={0.2}
-          SPLAT_FORCE={6000}
-          COLOR_UPDATE_SPEED={10}
-          SHADING
-          RAINBOW_MODE={false}
-          COLOR="#1D92F4"
-        />
+        {showSplash && (
+          <Suspense fallback={null}>
+            <SplashCursor
+              DENSITY_DISSIPATION={1.8}
+              VELOCITY_DISSIPATION={1.1}
+              PRESSURE={0.1}
+              CURL={3}
+              SPLAT_RADIUS={0.2}
+              SPLAT_FORCE={6000}
+              COLOR_UPDATE_SPEED={10}
+              SHADING
+              RAINBOW_MODE={false}
+              COLOR="#1D92F4"
+            />
+          </Suspense>
+        )}
         <Suspense
           fallback={
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#030712]">

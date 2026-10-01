@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import videoImgBw from '../assets/team-bw.jpg';
 import videoImgColor from '../assets/team-color.jpg';
+import LazyImg from './LazyImg';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -292,13 +293,13 @@ ready to scale.
           className="group relative h-[55vh] md:h-[75vh] overflow-hidden mx-auto will-change-transform"
           style={{ width: '40%', transform: 'scale(0.6)', borderRadius: '36px' }}
         >
-          <img
+          <LazyImg
             ref={videoImgRef}
             src={videoImgBw}
             alt="MarkCoders team"
             className="absolute inset-0 w-full h-full object-cover"
           />
-          <img
+          <LazyImg
             src={videoImgColor}
             alt=""
             aria-hidden="true"
