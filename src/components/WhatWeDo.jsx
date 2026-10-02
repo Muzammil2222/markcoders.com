@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { initSectionBgTransition } from '../lib/sectionBgTransition';
-import imgUiux from '../assets/whatwedo/uiux.png';
-import imgCms from '../assets/whatwedo/cms.png';
-import imgApp from '../assets/whatwedo/app.png';
-import imgApi from '../assets/whatwedo/api.png';
+import imgUiux from '../assets/whatwedo/uiux.webp';
+import imgCms from '../assets/whatwedo/cms.webp';
+import imgApp from '../assets/whatwedo/app.webp';
+import imgApi from '../assets/whatwedo/api.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -269,41 +269,36 @@ const WhatWeDo = () => {
                 }}
               />
 
-              {/* Row content — w-fit keeps long titles (e.g. #04) as a centered cluster */}
+              {/* Row content — number + title as one centered text unit so wraps stay tight */}
               <div className="relative z-10 flex justify-center items-center py-7 md:py-9 px-4 md:px-8">
-                <div className="flex items-center justify-center gap-3 md:gap-8 w-fit max-w-full min-w-0">
-                  {/* Number */}
+                <p
+                  className="m-0 max-w-full text-center"
+                  style={{
+                    fontFamily: 'Switzer, sans-serif',
+                    fontSize: 'clamp(22px, 4.5vw, 91px)',
+                    fontWeight: activeIndex === index ? 600 : 400,
+                    color: activeIndex === index ? '#fff' : '#1a1a1a',
+                    letterSpacing: '-0.02em',
+                    lineHeight: 1.15,
+                    maxWidth: 'min(16em, calc(100vw - 3rem))',
+                    transition: 'font-weight 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), color 0.35s ease',
+                  }}
+                >
                   <span
-                    className="shrink-0 self-center"
                     style={{
-                      fontFamily: 'Switzer, sans-serif',
                       fontSize: 'clamp(11px, 1.1vw, 31px)',
                       color: activeIndex === index ? 'rgba(255,255,255,0.7)' : '#999',
                       fontWeight: 500,
                       letterSpacing: '0.04em',
+                      marginRight: '0.45em',
+                      verticalAlign: '0.12em',
                       transition: 'color 0.35s ease',
                     }}
                   >
                     ({service.num})
                   </span>
-
-                  {/* Service title */}
-                  <span
-                    className="min-w-0 text-center"
-                    style={{
-                      fontFamily: 'Switzer, sans-serif',
-                      fontSize: 'clamp(22px, 4.5vw, 91px)',
-                      fontWeight: activeIndex === index ? 600 : 400,
-                      color: activeIndex === index ? '#fff' : '#1a1a1a',
-                      letterSpacing: '-0.02em',
-                      lineHeight: 1.15,
-                      maxWidth: 'min(18em, calc(100vw - 5.5rem))',
-                      transition: 'font-weight 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), color 0.35s ease',
-                    }}
-                  >
-                    {service.title}
-                  </span>
-                </div>
+                  {service.title}
+                </p>
               </div>
             </Link>
           ))}

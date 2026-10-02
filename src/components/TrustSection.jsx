@@ -58,7 +58,10 @@ const TrustSection = () => {
 
         childNodes.forEach((node) => {
           if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
-            heading.appendChild(document.createElement('br'));
+            // Keep responsive breaks (e.g. hidden sm:block) — plain <br> blows height on mobile
+            const br = document.createElement('br');
+            if (node.className) br.className = node.className;
+            heading.appendChild(br);
             return;
           }
 
@@ -66,8 +69,9 @@ const TrustSection = () => {
           if (!text) return;
 
           if (isFirstText) {
+            // Desktop hanging indent only — 102px spacer overflows / wraps badly on mobile
             const spacer = document.createElement('span');
-            spacer.className = 'inline-block w-[102px]';
+            spacer.className = 'hidden sm:inline-block sm:w-[102px]';
             spacer.setAttribute('aria-hidden', 'true');
             heading.appendChild(spacer);
             isFirstText = false;
@@ -76,7 +80,7 @@ const TrustSection = () => {
           const words = text.split(' ').filter(Boolean);
           words.forEach((word) => {
             const wordSpan = document.createElement('span');
-            wordSpan.className = 'inline-block mr-[0.25em] whitespace-nowrap ';
+            wordSpan.className = 'inline-block mr-[0.25em] whitespace-nowrap max-w-full';
 
             for (const char of word) {
               const charSpan = document.createElement('span');
@@ -223,7 +227,9 @@ const TrustSection = () => {
     <section
       ref={sectionRef}
       data-snap-section
-      className="relative w-full max-w-[100%] overflow-x-hidden px-4 sm:px-6 md:px-12 lg:px-20 py-16 sm:py-24 md:py-32"
+      // overflow-x:hidden computes overflow-y to auto → nested y-scroll on mobile.
+      // clip keeps horizontal bleed cut off without creating an inner scroller.
+      className="relative w-full max-w-[100%] overflow-x-clip px-4 sm:px-6 md:px-12 lg:px-20 py-16 sm:py-24 md:py-32"
       style={{ backgroundColor: '#ffffff' }}
     >
       <div
@@ -232,31 +238,33 @@ const TrustSection = () => {
         className="absolute inset-0 pointer-events-none"
         style={{ backgroundColor: '#000000', opacity: 0, willChange: 'opacity' }}
       />
-      <div className="relative z-10 max-w-[1200px] mx-auto w-full min-w-0">
+      <div className="relative z-10 max-w-[1200px] mx-auto w-full min-w-0 overflow-x-clip">
         {/* ── Heading ── */}
         <h2
           ref={headingRef}
-          className="text-white font-medium leading-[1.08] tracking-[-0.035em] mb-10 sm:mb-14 md:mb-20 max-w-[1100px] break-words"
+          className="text-white font-medium leading-[1.1] sm:leading-[1.08] tracking-[-0.035em] mb-10 sm:mb-14 md:mb-20 max-w-[1100px] w-full break-words overflow-x-clip"
           style={{
             fontFamily: 'Switzer, sans-serif',
-            fontSize: 'clamp(32px, 7.5vw, 91px)',
+            fontSize: 'clamp(28px, 8vw, 91px)',
           }}
-        > 
+        >
           A Technology Partner You Can Rely On.
-          <br />
+          <br className="hidden sm:block" />
+          {' '}
           High standards. Reliable
-          <br />
+          <br className="hidden sm:block" />
+          {' '}
           Delivery.
         </h2>
 
         {/* ── Cards row ── */}
         <div
           ref={cardsRef}
-          className="flex flex-col lg:flex-row gap-4 sm:gap-5 md:gap-6 w-full"
+          className="flex flex-col lg:flex-row gap-4 sm:gap-5 md:gap-6 w-full min-w-0"
         >
           {/* ── Left: Stats / trust card (blue) ── */}
           <div
-            className="relative w-full lg:w-[38%] lg:flex-[0_0_38%] min-w-0 min-h-[280px] sm:min-h-[340px] md:min-h-[400px] flex flex-col justify-between overflow-hidden"
+            className="relative w-full lg:w-[38%] lg:flex-[0_0_38%] min-w-0 min-h-0 sm:min-h-[340px] md:min-h-[400px] flex flex-col justify-between overflow-x-clip"
             style={{
               backgroundColor: '#1B75BB',
               borderRadius: '20px',
@@ -265,13 +273,13 @@ const TrustSection = () => {
           >
             {/* Large quotation mark */}
             <span
-              className="select-none block"
+              className="select-none block shrink-0"
               style={{
                 fontFamily: 'Georgia, "Times New Roman", serif',
-                fontSize: 'clamp(64px, 14vw, 130px)',
+                fontSize: 'clamp(48px, 12vw, 130px)',
                 lineHeight: 0.65,
                 color: 'rgba(255,255,255,0.92)',
-                marginBottom: '20px',
+                marginBottom: '16px',
               }}
               aria-hidden
             >
@@ -279,12 +287,12 @@ const TrustSection = () => {
             </span>
 
             {/* Bottom text */}
-            <div className="min-w-0 mt-auto">
+            <div className="min-w-0 mt-4 sm:mt-auto">
               <p
                 className="text-white font-medium tracking-[-0.02em] mb-2 sm:mb-3 break-words leading-[1.15]"
                 style={{
                   fontFamily: 'Switzer, sans-serif',
-                  fontSize: 'clamp(24px, 5vw, 30px)',
+                  fontSize: 'clamp(22px, 5vw, 30px)',
                 }}
               >
                 300+ websites.
@@ -306,18 +314,18 @@ const TrustSection = () => {
 
           {/* ── Right: Testimonial slider (dark) ── */}
           <div
-            className="relative w-full lg:flex-1 min-w-0 min-h-[320px] sm:min-h-[360px] md:min-h-[400px] flex flex-col overflow-hidden"
+            className="relative w-full lg:flex-1 min-w-0 min-h-0 sm:min-h-[360px] md:min-h-[400px] flex flex-col overflow-x-clip"
             style={{
               backgroundColor: '#151515',
               borderRadius: '20px',
               padding: 'clamp(20px, 3.5vw, 36px)',
             }}
           >
-            {/* Main content: avatar + text — fixed min height prevents layout shake */}
-            <div className="relative flex-1 min-h-[210px] sm:min-h-[230px] md:min-h-[250px] overflow-hidden">
+            {/* Main content: avatar + text — grow with content on mobile (no inner y-scroll) */}
+            <div className="relative flex-1 min-h-0 sm:min-h-[230px] md:min-h-[250px] overflow-x-clip">
               <div
                 ref={slideContentRef}
-                className="flex h-full w-full flex-col sm:flex-row items-center sm:items-stretch gap-5 sm:gap-6 md:gap-8 min-w-0 will-change-transform"
+                className="flex h-full w-full flex-col sm:flex-row items-center sm:items-stretch gap-4 sm:gap-6 md:gap-8 min-w-0 will-change-transform"
                 style={{ backfaceVisibility: 'hidden' }}
               >
                 {/* Letter avatar */}
@@ -325,12 +333,12 @@ const TrustSection = () => {
                   <div
                     className="rounded-full border border-white/10 flex items-center justify-center select-none"
                     style={{
-                      width: 'clamp(110px, 18vw, 168px)',
-                      height: 'clamp(110px, 18vw, 168px)',
+                      width: 'clamp(88px, 22vw, 168px)',
+                      height: 'clamp(88px, 22vw, 168px)',
                       backgroundColor: '#1B75BB',
                       fontFamily: 'Switzer, sans-serif',
                       fontWeight: 600,
-                      fontSize: 'clamp(40px, 7vw, 64px)',
+                      fontSize: 'clamp(36px, 7vw, 64px)',
                       color: '#ffffff',
                       letterSpacing: '-0.02em',
                     }}
@@ -349,12 +357,11 @@ const TrustSection = () => {
                       fontSize: 'clamp(15px, 2.2vw, 24px)',
                       lineHeight: 1.55,
                       letterSpacing: '-0.01em',
-                      minHeight: '4.8em',
                     }}
                   >
                     {current.quote}
                   </p>
-                  <div className="mt-5 sm:mt-6 min-w-0">
+                  <div className="mt-4 sm:mt-6 min-w-0">
                     <p
                       className="text-white font-medium truncate"
                       style={{
@@ -371,7 +378,7 @@ const TrustSection = () => {
             </div>
 
             {/* Bottom: pagination (center) + arrows (right) */}
-            <div className="mt-6 sm:mt-8 flex items-center justify-between gap-3">
+            <div className="mt-5 sm:mt-8 flex items-center justify-between gap-3 shrink-0">
               <div className="hidden sm:block flex-1" aria-hidden />
 
               <div

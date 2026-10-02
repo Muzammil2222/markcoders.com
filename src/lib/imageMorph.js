@@ -3,12 +3,18 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
+const lerp = (a, b, t) => a + (b - a) * t
+
+const isCoarsePointer = () =>
+  typeof window !== 'undefined' &&
+  window.matchMedia('(pointer: coarse)').matches
+
 /**
- * Hero → next-section image handoff.
+ * Hero → destination image handoff.
  *
- * Positions are interpolated from live getBoundingClientRect() values in
- * viewport space (matches position:fixed). That avoids scrollY/Lenis drift
- * that made the clone jump right/down at the start and miss the target at the end.
+ * Moves the frame down into the target while slowly growing to final size.
+ * No mid-screen expand (that was yanking the image upward).
+ * Photo inside stays object-fit:cover so it never stretches.
  */
 export function createImageMorph({
   heroImg,
@@ -36,11 +42,12 @@ export function createImageMorph({
   let clone = null
   let complete = false
   let timer = null
-  let lastRadius = null
-  let lastW = null
-  let lastH = null
-  let lastX = null
-  let lastY = null
+  let lastKey = ''
+  let raf = 0
+  let pendingProgress = 0
+
+  const mobile = isCoarsePointer()
+  const scrubOpt = mobile ? true : scrub
 
   const setComplete = (next) => {
     if (next === complete) return
@@ -48,33 +55,25 @@ export function createImageMorph({
     onCompleteChange?.(next)
   }
 
-  const placeClone = (x, y, w, h, radius) => {
+  const placeClone = (rect, opacity) => {
     if (!clone) return
 
-    const rx = Math.round(x * 100) / 100
-    const ry = Math.round(y * 100) / 100
-    const rw = Math.max(1, Math.round(w))
-    const rh = Math.max(1, Math.round(h))
+    const top = Math.round(rect.top * 10) / 10
+    const left = Math.round(rect.left * 10) / 10
+    const width = Math.max(1, Math.round(rect.width * 10) / 10)
+    const height = Math.max(1, Math.round(rect.height * 10) / 10)
+    const radius = Math.max(0, Math.round(rect.radius ?? 0))
+    const op = Math.round(opacity * 100) / 100
+    const key = `${top}|${left}|${width}|${height}|${radius}|${op}`
+    if (key === lastKey) return
+    lastKey = key
 
-    if (rx !== lastX || ry !== lastY) {
-      lastX = rx
-      lastY = ry
-      clone.style.left = `${rx}px`
-      clone.style.top = `${ry}px`
-    }
-
-    if (rw !== lastW || rh !== lastH) {
-      lastW = rw
-      lastH = rh
-      clone.style.width = `${rw}px`
-      clone.style.height = `${rh}px`
-    }
-
-    const rr = Math.round(radius)
-    if (rr !== lastRadius) {
-      lastRadius = rr
-      clone.style.borderRadius = `${rr}px`
-    }
+    clone.style.top = `${top}px`
+    clone.style.left = `${left}px`
+    clone.style.width = `${width}px`
+    clone.style.height = `${height}px`
+    clone.style.borderRadius = `${radius}px`
+    clone.style.opacity = String(op)
   }
 
   const applyProgress = (progress) => {
@@ -83,78 +82,132 @@ export function createImageMorph({
     const hero = heroImg.getBoundingClientRect()
     const target = targetEl.getBoundingClientRect()
 
-    // Viewport-space lerp — clone is position:fixed, so no scrollY conversion
-    const x = hero.left + (target.left - hero.left) * progress
-    const y = hero.top + (target.top - hero.top) * progress
-    const w = hero.width + (target.width - hero.width) * progress
-    const h = hero.height + (target.height - hero.height) * progress
-    const radius = startRadius + (endRadius - startRadius) * progress
-
-    placeClone(x, y, w, h, radius)
-
-    // Keep clone locked over hero from the first frame (no 0.02 snap-jump),
-    // and over the target until the very end (no 0.95 early handoff jump).
     if (progress <= 0) {
-      clone.style.opacity = '0'
+      placeClone(
+        {
+          top: hero.top,
+          left: hero.left,
+          width: hero.width,
+          height: hero.height,
+          radius: startRadius,
+        },
+        0
+      )
       heroImg.style.opacity = '1'
       setComplete(false)
       return
     }
 
-    if (progress >= 1) {
-      clone.style.opacity = '0'
+    if (progress >= 0.995) {
+      placeClone(
+        {
+          top: target.top,
+          left: target.left,
+          width: target.width,
+          height: target.height,
+          radius: endRadius,
+        },
+        0
+      )
       heroImg.style.opacity = '0'
       setComplete(true)
       return
     }
 
-    clone.style.opacity = '1'
+    // Direct path: ease down into the destination while slowly scaling size
+    placeClone(
+      {
+        top: lerp(hero.top, target.top, progress),
+        left: lerp(hero.left, target.left, progress),
+        width: lerp(hero.width, Math.max(target.width, 1), progress),
+        height: lerp(hero.height, Math.max(target.height, 1), progress),
+        radius: lerp(startRadius, endRadius, progress),
+      },
+      1
+    )
     heroImg.style.opacity = '0'
     setComplete(false)
+  }
+
+  const queueProgress = (progress) => {
+    pendingProgress = progress
+    if (raf) return
+    raf = requestAnimationFrame(() => {
+      raf = 0
+      applyProgress(pendingProgress)
+    })
   }
 
   timer = window.setTimeout(() => {
     if (killed) return
 
-    clone = document.createElement('img')
-    clone.src = src
-    clone.alt = alt
+    const hero = heroImg.getBoundingClientRect()
+
+    clone = document.createElement('div')
     clone.className = cloneClass
-    clone.decoding = 'async'
+    clone.setAttribute('aria-hidden', 'true')
     clone.style.cssText = `
       position: fixed;
-      top: 0;
-      left: 0;
+      top: ${hero.top}px;
+      left: ${hero.left}px;
+      width: ${Math.max(1, hero.width)}px;
+      height: ${Math.max(1, hero.height)}px;
       margin: 0;
       padding: 0;
       border: 0;
+      overflow: hidden;
       pointer-events: none;
       z-index: 9999;
       border-radius: ${startRadius}px;
-      object-fit: cover;
-      object-position: center;
-      will-change: left, top, width, height, opacity;
-      transform: none;
+      will-change: top, left, width, height, opacity, border-radius;
+      backface-visibility: hidden;
       transition: none;
       opacity: 0;
+      box-sizing: border-box;
     `
+
+    const img = document.createElement('img')
+    img.src = src
+    img.alt = alt
+    img.decoding = 'async'
+    img.draggable = false
+    img.style.cssText = `
+      display: block;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      object-fit: cover;
+      object-position: center;
+      pointer-events: none;
+      user-select: none;
+    `
+    clone.appendChild(img)
     document.body.appendChild(clone)
 
-    // Seed at exact hero rect before ScrollTrigger updates
-    const hero = heroImg.getBoundingClientRect()
-    placeClone(hero.left, hero.top, hero.width, hero.height, startRadius)
+    placeClone(
+      {
+        top: hero.top,
+        left: hero.left,
+        width: hero.width,
+        height: hero.height,
+        radius: startRadius,
+      },
+      0
+    )
 
     st = ScrollTrigger.create({
       trigger: triggerEl,
       start,
       end,
-      scrub,
+      scrub: scrubOpt,
       invalidateOnRefresh: true,
       onRefresh: () => {
-        lastX = lastY = lastW = lastH = lastRadius = null
+        lastKey = ''
         if (st) applyProgress(st.progress)
       },
-      onUpdate: (self) => applyProgress(self.progress),
+      onUpdate: (self) => queueProgress(self.progress),
     })
 
     applyProgress(st.progress)
@@ -163,6 +216,7 @@ export function createImageMorph({
   return () => {
     killed = true
     if (timer != null) window.clearTimeout(timer)
+    if (raf) cancelAnimationFrame(raf)
     st?.kill()
     st = null
     if (clone) {

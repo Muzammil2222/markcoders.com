@@ -19,54 +19,68 @@ const AboutAndVideo = () => {
     if (!root) return;
 
     const ctx = gsap.context(() => {
-      // 1. Heading Char Reveal
+      const coarse = window.matchMedia('(pointer: coarse)').matches;
+      // Instant scrub on touch (tracks finger, reverses on scroll-back).
+      // Soft scrub on desktop only.
+      const scrubOpt = coarse ? true : 0.5;
+
+      // 1. Heading reveal — word-level on mobile (fewer nodes), char on desktop
       const headingElement = headingRef.current;
       if (headingElement) {
-        const text = "We turn ambitious ideas into scalable digital products businesses rely on.";
+        const text =
+          'We turn ambitious ideas into scalable digital products businesses rely on.';
         headingElement.innerHTML = '';
 
-        // Spacer for first line indent
         const spacer = document.createElement('span');
         spacer.className = 'inline-block w-12 sm:w-20 md:w-28 lg:w-36';
         spacer.setAttribute('aria-hidden', 'true');
         headingElement.appendChild(spacer);
 
         const words = text.split(/\s+/).filter(Boolean);
+        const animTargets = [];
+
         words.forEach((word) => {
           const wordSpan = document.createElement('span');
           wordSpan.className = 'inline-block mr-[0.28em] whitespace-nowrap';
 
-          for (let char of word) {
-            const charSpan = document.createElement('span');
-            charSpan.textContent = char;
-            charSpan.className = 'about-heading-char';
-            charSpan.style.opacity = '0.15';
-            charSpan.style.color = '#FFFFFF';
-            wordSpan.appendChild(charSpan);
+          if (coarse) {
+            wordSpan.classList.add('about-heading-unit');
+            wordSpan.style.opacity = '0.15';
+            wordSpan.style.color = '#FFFFFF';
+            wordSpan.textContent = word;
+            animTargets.push(wordSpan);
+          } else {
+            for (const char of word) {
+              const charSpan = document.createElement('span');
+              charSpan.textContent = char;
+              charSpan.className = 'about-heading-char about-heading-unit';
+              charSpan.style.opacity = '0.15';
+              charSpan.style.color = '#FFFFFF';
+              wordSpan.appendChild(charSpan);
+              animTargets.push(charSpan);
+            }
           }
           headingElement.appendChild(wordSpan);
         });
 
-        const chars = headingElement.querySelectorAll('.about-heading-char');
-        gsap.to(chars, {
+        gsap.to(animTargets, {
           opacity: 1,
-          stagger: 0.02,
+          stagger: coarse ? 0.04 : 0.02,
           ease: 'none',
           scrollTrigger: {
             trigger: headingElement,
             start: 'top 85%',
             end: 'bottom 45%',
-            scrub: 0.5,
+            scrub: scrubOpt,
           },
         });
       }
 
-      // 2. About us paragraph reveal
+      // 2. About us paragraph reveal (same pattern — reverses on scroll-back)
       const paraElement = paragraphRef.current;
       if (paraElement) {
         paraElement.innerHTML = '';
 
-        // Spacer for first line indent
         const spacer = document.createElement('span');
         spacer.className = 'inline-block w-8 sm:w-12 md:w-16';
         spacer.setAttribute('aria-hidden', 'true');
@@ -74,8 +88,13 @@ const AboutAndVideo = () => {
 
         const segments = [
           { text: 'About us: ', isBold: true },
-          { text: 'MarkCoders is a custom software development company helping businesses plan, design and build web applications, mobile apps, eCommerce platforms and digital products. We combine strategy, UI/UX, engineering and quality assurance to deliver reliable solutions from concept to launch.', isBold: false },
+          {
+            text: 'MarkCoders is a custom software development company helping businesses plan, design and build web applications, mobile apps, eCommerce platforms and digital products. We combine strategy, UI/UX, engineering and quality assurance to deliver reliable solutions from concept to launch.',
+            isBold: false,
+          },
         ];
+
+        const animTargets = [];
 
         segments.forEach((seg) => {
           const segWords = seg.text.split(/\s+/).filter(Boolean);
@@ -83,34 +102,43 @@ const AboutAndVideo = () => {
             const wordSpan = document.createElement('span');
             wordSpan.className = 'inline-block mr-[0.28em] whitespace-nowrap';
 
-            for (let char of word) {
-              const charSpan = document.createElement('span');
-              charSpan.textContent = char;
-              charSpan.className = 'about-para-char';
-              charSpan.style.opacity = seg.isBold ? '0.35' : '0.2';
-              charSpan.style.fontWeight = seg.isBold ? '700' : '500';
-              charSpan.style.color = '#FFFFFF';
-              wordSpan.appendChild(charSpan);
+            if (coarse) {
+              wordSpan.classList.add('about-para-unit');
+              wordSpan.style.opacity = seg.isBold ? '0.35' : '0.2';
+              wordSpan.style.fontWeight = seg.isBold ? '700' : '500';
+              wordSpan.style.color = '#FFFFFF';
+              wordSpan.textContent = word;
+              animTargets.push(wordSpan);
+            } else {
+              for (const char of word) {
+                const charSpan = document.createElement('span');
+                charSpan.textContent = char;
+                charSpan.className = 'about-para-char about-para-unit';
+                charSpan.style.opacity = seg.isBold ? '0.35' : '0.2';
+                charSpan.style.fontWeight = seg.isBold ? '700' : '500';
+                charSpan.style.color = '#FFFFFF';
+                wordSpan.appendChild(charSpan);
+                animTargets.push(charSpan);
+              }
             }
             paraElement.appendChild(wordSpan);
           });
         });
 
-        const paraChars = paraElement.querySelectorAll('.about-para-char');
-        gsap.to(paraChars, {
+        gsap.to(animTargets, {
           opacity: 1,
-          stagger: 0.01,
+          stagger: coarse ? 0.025 : 0.01,
           ease: 'none',
           scrollTrigger: {
             trigger: paraElement,
             start: 'top 85%',
             end: 'bottom 50%',
-            scrub: 0.5,
+            scrub: scrubOpt,
           },
         });
       }
 
-      // 3. Video Box Scroll Animation (Expanding from small to full width)
+      // 3. Video/image expand — full width scrub on all viewports
       if (videoWrapperRef.current) {
         gsap.fromTo(
           videoWrapperRef.current,
@@ -130,7 +158,7 @@ const AboutAndVideo = () => {
               trigger: videoWrapperRef.current,
               start: 'top 95%',
               end: 'top 15%',
-              scrub: 0.6,
+              scrub: coarse ? true : 0.6,
               invalidateOnRefresh: true,
             },
           }
@@ -286,23 +314,25 @@ ready to scale.
       </div>
 
       {/* Full-width Expanding Video/Image Showcase on scroll */}
-      <div className="w-full flex justify-center items-center py-6">
+      <div className="w-full flex justify-center items-center py-6 px-0">
         <div
           ref={videoWrapperRef}
-          className="group relative h-[55vh] md:h-[75vh] overflow-hidden mx-auto will-change-transform"
+          className="group relative overflow-hidden mx-auto will-change-transform"
           style={{ width: '40%', transform: 'scale(0.6)', borderRadius: '36px' }}
         >
+          {/* Natural aspect ratio — no fixed vh, so the full photo shows (not object-cover crop) */}
           <img
             ref={videoImgRef}
             src={videoImgBw}
             alt="MarkCoders team"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="block w-full h-auto max-h-[min(78vh,900px)] object-contain bg-[#0a0a0a]"
+            decoding="async"
           />
           <img
             src={videoImgColor}
             alt=""
             aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            className="absolute inset-0 w-full h-full object-contain opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
           />
           <div className="absolute inset-0 bg-black/10 pointer-events-none" />
         </div>

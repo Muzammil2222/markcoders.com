@@ -1,0 +1,5 @@
+# https://www.markcoders.com/robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://www.markcoders.com/sitemap.xml

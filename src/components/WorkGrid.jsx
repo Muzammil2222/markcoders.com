@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createImageMorph } from '../lib/imageMorph';
-import heroCardImg from '../assets/vantage.webp';
 import saucedImg from '../assets/sauced.webp';
 import jerseyImg from '../assets/jersey.jpg';
 import jersey2Img from '../assets/jersey2.webp';
+
+const heroCardImg = `${import.meta.env.BASE_URL}hero/vantage.webp`;
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -47,6 +48,7 @@ const WorkGrid = ({ heroImageRef }) => {
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (reduce) return;
 
+      const coarse = window.matchMedia('(pointer: coarse)').matches;
       const cards = [card1Ref.current, card2Ref.current, card3Ref.current, card4Ref.current];
       cards.forEach((card) => {
         if (!card) return;
@@ -56,14 +58,18 @@ const WorkGrid = ({ heroImageRef }) => {
         gsap.to(card, {
           scale: 1,
           yPercent: 0,
-          ease: 'none',
           force3D: true,
+          ...(coarse
+            ? { ease: 'power2.out', duration: 0.55 }
+            : { ease: 'none' }),
           scrollTrigger: {
             trigger: card,
             start: 'top 95%',
             end: 'top 35%',
-            scrub: 0.45,
             invalidateOnRefresh: true,
+            ...(coarse
+              ? { toggleActions: 'play none none none' }
+              : { scrub: 0.45 }),
           },
         });
       });

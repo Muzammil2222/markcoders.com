@@ -102,7 +102,7 @@ function Services() {
   }, []);
 
   return (
-    <div className="relative bg-[#030712] min-h-screen text-white overflow-x-hidden max-w-[100vw]">
+    <div className="page-top relative bg-[#030712] min-h-screen text-white overflow-x-hidden max-w-[100vw]">
       <Navbar />
       <main ref={mainRef}>
         <ServicesHero previewImageRef={previewImageRef} />

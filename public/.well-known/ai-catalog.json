@@ -1,0 +1,68 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "MarkCoders",
+    "documentationUrl": "https://www.markcoders.com/",
+    "logoUrl": "https://www.markcoders.com/fav-Logo-1.png"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:markcoders.com:site:llms",
+      "displayName": "MarkCoders site guide for AI agents",
+      "type": "text/markdown; profile=\"urn:air:agent-skills\"",
+      "url": "https://www.markcoders.com/llms.txt",
+      "description": "Markdown overview of MarkCoders pages and services for autonomous agents and crawlers.",
+      "tags": ["markcoders", "agency", "software", "llms.txt"],
+      "capabilities": ["SiteNavigation", "ServiceCatalog", "CompanyOverview"],
+      "representativeQueries": [
+        "What does MarkCoders do?",
+        "MarkCoders web and mobile app development services",
+        "MarkCoders portfolio and case studies"
+      ],
+      "version": "1.0.0",
+      "updatedAt": "2026-10-02T00:00:00Z"
+    },
+    {
+      "identifier": "urn:air:markcoders.com:site:home",
+      "displayName": "MarkCoders",
+      "type": "application/agent-card+json",
+      "data": {
+        "name": "MarkCoders",
+        "description": "Custom software, web, and mobile app development for startups, scaleups, and established brands.",
+        "url": "https://www.markcoders.com/",
+        "provider": {
+          "organization": "MarkCoders",
+          "url": "https://www.markcoders.com/"
+        },
+        "documentationUrl": "https://www.markcoders.com/llms.txt",
+        "skills": [
+          {
+            "id": "web-development",
+            "name": "Web Development",
+            "description": "Custom websites and web applications"
+          },
+          {
+            "id": "app-development",
+            "name": "App Development",
+            "description": "Mobile and cross-platform apps"
+          },
+          {
+            "id": "ui-ux",
+            "name": "UI/UX Design",
+            "description": "Product design and user experience"
+          }
+        ]
+      },
+      "description": "Inline agent card describing the MarkCoders studio and core service skills.",
+      "tags": ["agency", "development", "design"],
+      "capabilities": ["WebDevelopment", "AppDevelopment", "UiUxDesign"],
+      "representativeQueries": [
+        "Hire a software development agency",
+        "Custom web app development company",
+        "UI UX and mobile app studio"
+      ],
+      "version": "1.0.0",
+      "updatedAt": "2026-10-02T00:00:00Z"
+    }
+  ]
+}

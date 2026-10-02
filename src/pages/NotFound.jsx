@@ -10,7 +10,7 @@ import './NotFound.css'
  */
 function NotFound() {
   return (
-    <div className="not-found">
+    <div className="page-top not-found">
       <div
         className="not-found__stars"
         style={{ backgroundImage: `url(${starsSrc})` }}

@@ -38,6 +38,24 @@ export default defineConfig(({ command }) => {
     ],
     build: {
       target: 'es2022',
+      // Don't <link rel=modulepreload> post-paint chunks — that races LCP/TBT.
+      modulePreload: {
+        resolveDependencies: (filename, deps) =>
+          deps.filter(
+            (dep) =>
+              !dep.includes('vendor-gsap') &&
+              !dep.includes('vendor-lenis') &&
+              // Don't race WorkGrid / below-fold chunks ahead of LCP.
+              !dep.includes('WorkGrid') &&
+              !dep.includes('AboutAndVideo') &&
+              !dep.includes('WhatWeDo') &&
+              !dep.includes('ToolsSection') &&
+              !dep.includes('TeamSection') &&
+              !dep.includes('WorkAndPlay') &&
+              !dep.includes('TrustSection') &&
+              !dep.includes('Footer')
+          ),
+      },
       rollupOptions: {
         output: {
           manualChunks: (id) => {

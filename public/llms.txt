@@ -1,0 +1,27 @@
+# MarkCoders
+
+> Custom software, web, and mobile app development for startups, scaleups, and established brands.
+
+MarkCoders builds digital products that stand out and convert - from UI/UX and web apps to APIs, CMS platforms, and branding.
+
+## Pages
+
+- [Home](https://www.markcoders.com/): Studio overview and featured work
+- [About](https://www.markcoders.com/about): Team, story, and how we work
+- [Services](https://www.markcoders.com/services): Full service catalog
+- [Portfolio](https://www.markcoders.com/portfolio): Selected projects and case studies
+- [Case Studies](https://www.markcoders.com/case-studies): In-depth project write-ups
+
+## Services
+
+- [UI/UX Design](https://www.markcoders.com/services/ui-ux): Product design and user experience
+- [Web Development](https://www.markcoders.com/services/web-development): Custom websites and web apps
+- [App Development](https://www.markcoders.com/services/app-development): Mobile and cross-platform apps
+- [API Integration](https://www.markcoders.com/services/api-integration): Systems and third-party APIs
+- [CMS Development](https://www.markcoders.com/services/cms-development): Content platforms and admin tools
+- [Graphic Design](https://www.markcoders.com/services/graphic-design): Brand and visual identity
+
+## Optional
+
+- [Privacy Policy](https://www.markcoders.com/privacy)
+- [Terms and Conditions](https://www.markcoders.com/terms-and-conditions)

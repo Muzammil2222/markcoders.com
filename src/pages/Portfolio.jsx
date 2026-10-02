@@ -33,25 +33,43 @@ import img16 from '../assets/Portfolio/wordsmith-DpXww4zo.webp';
 gsap.registerPlugin(ScrollTrigger);
 
 const WORK_TYPES = ['Everything', 'App Development', 'Website Development', 'CMS Development', 'UI/UX Design', 'Graphic Design'];
-const DOMAINS = ['Anything', 'Advertising Technology', 'Food & Community', 'eCommerce', 'Personal Brands', 'Logistics Technology', 'Home & Garden', 'Sports & Apparel', 'Construction', 'Skincare'];
+const DOMAINS = [
+  'Anything',
+  'Advertising Technology',
+  'Automotive Technology',
+  'Branding & Content',
+  'Construction & Disaster Recovery',
+  'Drone & Logistics Technology',
+  'Education & Language Learning',
+  'eCommerce',
+  'Fashion & Apparel',
+  'Flowers & Gifting',
+  'Food & Community',
+  'Gaming',
+  'Home & Garden',
+  'Logistics Technology',
+  'Personal Brand',
+  'Skincare & Beauty',
+  'Sports & Apparel',
+];
 
 const imagesList = [
-  { src: img1, title: "Cozy101", type: "Website Development", domain: "eCommerce", link: "https://getcozy101.com/" },
+  { src: img1, title: "Cozy101", type: "Website Development", domain: "Fashion & Apparel", link: "https://getcozy101.com/" },
   { src: img2, title: "Sauced", type: "App Development", domain: "Food & Community", link: "https://play.google.com/store/apps/details?id=com.sauced&pcampaignid=web_share" },
-  { src: img3, title: "Resilience Skin and Beauty", type: "CMS Development", domain: "Anything", link: "https://rsbskin.com/" },
-  { src: img4, title: "Alex Tarnava", type: "Website Development", domain: "Personal Brands", link: "https://alextarnava.com/" },
-  { src: img5, title: "Check My Ride", type: "App Development", domain: "Anything", link: "/case-studies" },
+  { src: img3, title: "Resilience Skin and Beauty", type: "CMS Development", domain: "Skincare & Beauty", link: "https://rsbskin.com/" },
+  { src: img4, title: "Alex Tarnava", type: "Website Development", domain: "Personal Brand", link: "https://alextarnava.com/" },
+  { src: img5, title: "Check My Ride", type: "App Development", domain: "Automotive Technology", link: "/case-studies" },
   { src: img6, title: "EKO", type: "UI/UX Design", domain: "Advertising Technology", link: "/case-studies" },
-  { src: img7, title: "Farkle", type: "App Development", domain: "Sports & Apparel", link: "/case-studies" },
-  { src: img8, title: "Floral", type: "Website Development", domain: "Home & Garden", link: "/case-studies" },
+  { src: img7, title: "Farkle", type: "App Development", domain: "Gaming", link: "/case-studies" },
+  { src: img8, title: "Floral", type: "Website Development", domain: "Flowers & Gifting", link: "/case-studies" },
   { src: img9, title: "Garden in Minutes", type: "Website Development", domain: "Home & Garden", link: "https://gardeninminutes.com/" },
-  { src: img10, title: "IONA", type: "Graphic Design", domain: "Skincare", link: "https://ionadrones.com/" },
-  { src: img11, title: "Lengo", type: "App Development", domain: "Anything", link: "/case-studies" },
+  { src: img10, title: "IONA", type: "Graphic Design", domain: "Drone & Logistics Technology", link: "https://ionadrones.com/" },
+  { src: img11, title: "Lengo", type: "App Development", domain: "Education & Language Learning", link: "/case-studies" },
   { src: img12, title: "Monastic Mail", type: "CMS Development", domain: "Logistics Technology", link: "/case-studies" },
   { src: img13, title: "OLA-ADS", type: "Website Development", domain: "Advertising Technology", link: "/case-studies" },
   { src: img14, title: "The Jersey Generator", type: "Website Development", domain: "Sports & Apparel", link: "https://thejerseygenerator.com/" },
-  { src: img15, title: "Vantage", type: "Website Development", domain: "Construction", link: "https://vantage-contractors.com/" },
-  { src: img16, title: "Wordsmith", type: "CMS Development", domain: "Personal Brands", link: "/case-studies" },
+  { src: img15, title: "Vantage", type: "Website Development", domain: "Construction & Disaster Recovery", link: "https://vantage-contractors.com/" },
+  { src: img16, title: "Wordsmith", type: "CMS Development", domain: "Branding & Content", link: "/case-studies" },
 ];
 
 const OurWorkCard = ({ tagline, image, title }) => {
@@ -370,7 +388,7 @@ function Portfolio() {
   };
 
   return (
-    <div className="relative bg-[#030712] min-h-screen text-white overflow-x-hidden max-w-[100vw]">
+    <div className="page-top relative bg-[#030712] min-h-screen text-white overflow-x-hidden max-w-[100vw]">
       <Navbar />
       <main>
         {/* Banner Section with PageHero */}

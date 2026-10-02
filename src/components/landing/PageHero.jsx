@@ -1,10 +1,8 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
 import AnimatedHeroTitle from './AnimatedHeroTitle';
 
 /**
- * Reusable landing hero — same GSAP entrance as Home:
- * title bounce-in, optional dot pulse, subtitle fade, footer slot float.
+ * Landing hero — content paints immediately (no GSAP on critical path).
+ * Soft CSS motion only for the accent dot / footer float.
  */
 const PageHero = ({
   title,
@@ -23,111 +21,11 @@ const PageHero = ({
   subtitleStyle = {},
   children,
 }) => {
-  const sectionRef = useRef(null);
-  const headingRef = useRef(null);
-  const dotRef = useRef(null);
-  const subRef = useRef(null);
-  const footerRef = useRef(null);
-
   const isCenter = align === 'center';
   const isSplit = layout === 'split';
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const ctx = gsap.context(() => {
-      gsap.set(headingRef.current, { opacity: 0, y: 80, scale: 0.95 });
-
-      if (subRef.current) {
-        gsap.set(subRef.current, { opacity: 0, y: 50 });
-      }
-
-      if (dotRef.current) {
-        gsap.set(dotRef.current, { opacity: 0, scale: 0 });
-      }
-
-      if (footerRef.current) {
-        gsap.set(footerRef.current, {
-          opacity: 0,
-          y: 60,
-          x: isCenter ? 0 : 30,
-          rotation: isCenter ? 0 : 2,
-        });
-      }
-
-      const tl = gsap.timeline({ delay: 0.8 });
-
-      if (headingRef.current) {
-        tl.to(headingRef.current, {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 1.2,
-          ease: 'power4.out',
-        });
-      }
-
-      if (subRef.current) {
-        tl.to(
-          subRef.current,
-          { opacity: 1, y: 0, duration: 1, ease: 'power3.out' },
-          '-=0.6'
-        );
-      }
-
-      if (dotRef.current) {
-        tl.to(
-          dotRef.current,
-          { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(2)' },
-          '-=0.7'
-        );
-      }
-
-      if (footerRef.current) {
-        tl.to(
-          footerRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            x: 0,
-            rotation: 0,
-            duration: 1,
-            ease: 'power3.out',
-          },
-          '-=0.8'
-        );
-      }
-
-      if (dotRef.current) {
-        gsap.to(dotRef.current, {
-          boxShadow: '0 0 20px 5px rgba(26, 122, 248, 0.6)',
-          duration: 1.5,
-          ease: 'sine.inOut',
-          repeat: -1,
-          yoyo: true,
-          delay: 2,
-        });
-      }
-
-      if (animateFooter && footerRef.current) {
-        gsap.to(footerRef.current, {
-          y: -8,
-          duration: 3,
-          ease: 'sine.inOut',
-          repeat: -1,
-          yoyo: true,
-          delay: 2.5,
-        });
-      }
-    }, section);
-
-    return () => ctx.revert();
-  }, [align, animateFooter, isCenter]);
-
   const subtitleEl = subtitle && (
     <p
-      ref={subRef}
       className={`${subtitleClassName
           ? subtitleClassName
           : `text-lg md:text-xl leading-relaxed text-gray-300 font-light ${isCenter
@@ -143,15 +41,13 @@ const PageHero = ({
 
   const dotEl = showDot && (
     <div
-      ref={dotRef}
-      className={`w-3 h-3 bg-white ${isCenter ? 'mx-auto' : ''}`}
+      className={`w-3 h-3 bg-white mc-hero-dot ${isCenter ? 'mx-auto' : ''}`}
       style={{ boxShadow: '0 0 10px 2px rgba(255, 255, 255, 0.3)' }}
     />
   );
 
   return (
     <section
-      ref={sectionRef}
       className={`relative overflow-visible ${spread ? 'flex flex-col flex-1' : ''} ${className}`}
     >
       <div
@@ -164,7 +60,6 @@ const PageHero = ({
         } ${spread ? 'flex flex-col flex-1 h-full justify-between' : ''}`}
       >
         <AnimatedHeroTitle
-          ref={headingRef}
           text={title}
           size={titleSize}
           className={`${
@@ -183,7 +78,11 @@ const PageHero = ({
               {subtitleEl}
             </div>
             {children && (
-              <div ref={footerRef} className="w-full md:w-auto md:max-w-[480px] lg:max-w-[520px]">
+              <div
+                className={`w-full md:w-auto md:max-w-[480px] lg:max-w-[520px] ${
+                  animateFooter ? 'mc-hero-float' : ''
+                }`}
+              >
                 {children}
               </div>
             )}
@@ -196,11 +95,10 @@ const PageHero = ({
             {subtitleEl}
             {children && (
               <div
-                ref={footerRef}
                 className={`w-full ${isCenter
                     ? 'flex justify-center mt-12 md:mt-16 lg:mt-20'
                     : 'mt-8 md:mt-12'
-                  }`}
+                  } ${animateFooter ? 'mc-hero-float' : ''}`}
               >
                 {children}
               </div>

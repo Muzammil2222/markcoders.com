@@ -8,93 +8,156 @@ import workAndPlay4 from '../assets/WorkAndPLayImage4.webp.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const images = [
-  workAndPlay1,
-  workAndPlay2,
-  workAndPlay3,
-  workAndPlay4,
-];
+const images = [workAndPlay1, workAndPlay2, workAndPlay3, workAndPlay4];
 
 const WorkAndPlaySection = () => {
   const containerRef = useRef(null);
 
   useEffect(() => {
     const root = containerRef.current;
-    if (!root) return;
+    if (!root) return undefined;
 
-    let ctx = gsap.context(() => {
+    const ctx = gsap.context(() => {
       const slides = gsap.utils.toArray(root.querySelectorAll('.scatter-image'));
+      if (slides.length !== 4) return;
 
-      if (slides.length === 4) {
-        let mm = gsap.matchMedia();
+      const mm = gsap.matchMedia();
 
-        // Desktop Animation
-        mm.add("(min-width: 1024px)", () => {
-          gsap.set(slides, {
-            y: '16vh',
-            xPercent: -50,
-            yPercent: -50,
-            left: '50%',
-            scale: 0.9,
-            opacity: 1,
-            rotation: 0
-          });
+      // Desktop: stack → line → scatter, pinned scrub
+      mm.add('(min-width: 1024px)', () => {
+        // Transform-only motion (no `left`) so images stay inside overflow:hidden
+        gsap.set(slides, {
+          xPercent: -50,
+          yPercent: -50,
+          left: '50%',
+          top: '58%',
+          x: 0,
+          y: 0,
+          scale: 0.88,
+          rotation: 0,
+          opacity: 1,
+          force3D: true,
+        });
 
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: root,
-              start: 'top top',
-              end: '+=250%',
-              pin: true,
-              scrub: 1,
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: root,
+            start: 'top top',
+            end: '+=160%',
+            pin: true,
+            pinSpacing: true,
+            scrub: 0.8,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        // Spread into a horizontal line (viewport-relative x offsets)
+        tl.to(
+          slides[0],
+          { x: () => -window.innerWidth * 0.28, rotation: -2, duration: 1 },
+          'line'
+        )
+          .to(
+            slides[1],
+            { x: () => -window.innerWidth * 0.1, rotation: 1, duration: 1 },
+            'line'
+          )
+          .to(
+            slides[2],
+            { x: () => window.innerWidth * 0.1, rotation: -1, duration: 1 },
+            'line'
+          )
+          .to(
+            slides[3],
+            { x: () => window.innerWidth * 0.28, rotation: 2, duration: 1 },
+            'line'
+          );
+
+        // Final scatter (still transform-based, clipped by overflow)
+        tl.to(
+          slides[0],
+          {
+            x: () => -window.innerWidth * 0.34,
+            y: () => -window.innerHeight * 0.06,
+            scale: 1,
+            rotation: -4,
+            duration: 1.2,
+          },
+          'scatter'
+        )
+          .to(
+            slides[1],
+            {
+              x: () => -window.innerWidth * 0.14,
+              y: () => window.innerHeight * 0.12,
+              scale: 1,
+              rotation: 2,
+              duration: 1.2,
+            },
+            'scatter'
+          )
+          .to(
+            slides[2],
+            {
+              x: () => window.innerWidth * 0.14,
+              y: () => -window.innerHeight * 0.1,
+              scale: 1,
+              rotation: 5,
+              duration: 1.2,
+            },
+            'scatter'
+          )
+          .to(
+            slides[3],
+            {
+              x: () => window.innerWidth * 0.34,
+              y: () => window.innerHeight * 0.04,
+              scale: 1,
+              rotation: -2,
+              duration: 1.2,
+            },
+            'scatter'
+          );
+
+        // Pin + Lenis can mount late — refresh once layout settles
+        requestAnimationFrame(() => ScrollTrigger.refresh());
+      });
+
+      // Mobile / tablet: simple fade-up, no pin
+      mm.add('(max-width: 1023px)', () => {
+        gsap.set(slides, { clearProps: 'all' });
+
+        slides.forEach((slide, i) => {
+          gsap.fromTo(
+            slide,
+            { opacity: 0, y: 48, rotation: i % 2 === 0 ? -3 : 3 },
+            {
+              opacity: 1,
+              y: 0,
+              rotation: i % 2 === 0 ? -1 : 1,
+              duration: 0.75,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: slide,
+                start: 'top 88%',
+                toggleActions: 'play none none reverse',
+              },
             }
-          });
-
-          tl.to(slides[0], { left: '20%', rotation: -2, duration: 1 }, 'line')
-            .to(slides[1], { left: '40%', rotation: 1, duration: 1 }, 'line')
-            .to(slides[2], { left: '60%', rotation: -1, duration: 1 }, 'line')
-            .to(slides[3], { left: '80%', rotation: 2, duration: 1 }, 'line');
-
-          tl.to(slides[0], { y: '2vh', left: '12%', scale: 1, rotation: -4, duration: 1.5 }, 'scatter')
-            // Bottom-left + top-right were hitting the viewport edges — pull them ~10% inward
-            .to(slides[1], { y: '28vh', left: '30%', scale: 1, rotation: 2, duration: 1.5 }, 'scatter')
-            .to(slides[2], { y: '-8vh', left: '70%', scale: 1, rotation: 5, duration: 1.5 }, 'scatter')
-            .to(slides[3], { y: '12vh', left: '88%', scale: 1, rotation: -2, duration: 1.5 }, 'scatter');
+          );
         });
-
-        // Mobile / Tablet Animation
-        mm.add("(max-width: 1023px)", () => {
-          gsap.set(slides, { clearProps: 'all' });
-          
-          slides.forEach((slide, i) => {
-            gsap.fromTo(slide, 
-              { opacity: 0, y: 60, rotation: i % 2 === 0 ? -3 : 3 },
-              {
-                opacity: 1,
-                y: 0,
-                rotation: i % 2 === 0 ? -1 : 1,
-                duration: 0.8,
-                ease: 'power3.out',
-                scrollTrigger: {
-                  trigger: slide,
-                  start: 'top 85%',
-                  toggleActions: 'play none none reverse'
-                }
-              }
-            );
-          });
-        });
-      }
+      });
     }, root);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section data-snap-section className="w-full bg-[#f5f5f5]">
+    // No data-snap-section — pin + magnetic snap fight and feel like endless scroll
+    <section className="w-full bg-[#f5f5f5] overflow-x-clip">
       <div
         ref={containerRef}
-        className="relative w-full lg:h-[100vh] min-h-[100vh] h-auto flex flex-col items-center justify-start pt-16 md:pt-[20vh] pb-24 lg:pb-0 lg:overflow-hidden"
+        className="relative w-full lg:h-[100vh] min-h-[100vh] h-auto flex flex-col items-center justify-start pt-16 md:pt-[18vh] pb-24 lg:pb-0 overflow-x-clip lg:overflow-hidden"
         style={{ color: '#111' }}
       >
         <style>{`
@@ -105,16 +168,20 @@ const WorkAndPlaySection = () => {
             }
           }
         `}</style>
-        
+
         <h2
-          className="text-center font-medium leading-[1.05] tracking-tight z-10 text-[#111]"
-          style={{ fontFamily: 'Switzer, sans-serif', fontSize: 'clamp(48px, 6vw, 68px)', letterSpacing: '-0.04em' }}
+          className="relative z-10 text-center font-medium leading-[1.05] tracking-tight text-[#111] px-4"
+          style={{
+            fontFamily: 'Switzer, sans-serif',
+            fontSize: 'clamp(48px, 6vw, 68px)',
+            letterSpacing: '-0.04em',
+          }}
         >
           There’s Work &<br />There’s Play
         </h2>
 
-        {/* The 4 Images */}
-        <div className="w-full flex flex-col lg:block items-center gap-8 lg:gap-0 mt-12 lg:mt-10 z-20 px-6">
+        {/* Stage: relative + overflow so absolute slides never widen the page */}
+        <div className="relative z-20 mt-12 lg:mt-0 lg:absolute lg:inset-0 lg:pointer-events-none w-full flex flex-col lg:block items-center gap-8 px-6 lg:px-0 overflow-x-clip lg:overflow-hidden">
           {images.map((src, index) => (
             <img
               key={index}
@@ -122,7 +189,7 @@ const WorkAndPlaySection = () => {
               alt={`Work and Play ${index + 1}`}
               loading="lazy"
               decoding="async"
-              className="scatter-image relative lg:absolute lg:top-[calc(50%+10px)] w-full max-w-[280px] sm:max-w-[400px] h-auto aspect-square lg:w-[320px] lg:h-[320px] min-[1301px]:w-[320px] min-[1301px]:h-[320px] object-cover rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] lg:rounded-none lg:shadow-none"
+              className="scatter-image relative lg:absolute w-full max-w-[280px] sm:max-w-[400px] h-auto aspect-square lg:w-[300px] lg:h-[300px] min-[1301px]:w-[320px] min-[1301px]:h-[320px] object-cover rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] lg:rounded-xl lg:shadow-[0_12px_40px_rgba(0,0,0,0.18)] will-change-transform"
             />
           ))}
         </div>

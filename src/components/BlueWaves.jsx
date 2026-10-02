@@ -139,13 +139,35 @@ export default function BlueWaves({
 }) {
   const canvasRef = useRef(null)
   const propsRef = useRef({ speed, frequency, amplitude, level, color })
-  // Animate on every device that can run WebGL. Only fall back to a still
-  // SVG when the user prefers reduced motion (or WebGL init fails later).
-  const [live, setLive] = useState(() => !prefersReducedMotion())
+  // Paint a static SVG first (cheap SI / LCP), then upgrade to WebGL after idle.
+  const [live, setLive] = useState(false)
 
   useLayoutEffect(() => {
     propsRef.current = { speed, frequency, amplitude, level, color }
   })
+
+  useEffect(() => {
+    if (prefersReducedMotion()) return undefined
+
+    let cancelled = false
+    const enable = () => {
+      if (!cancelled) setLive(true)
+    }
+
+    if ('requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(enable, { timeout: 1800 })
+      return () => {
+        cancelled = true
+        window.cancelIdleCallback(id)
+      }
+    }
+
+    const t = window.setTimeout(enable, 200)
+    return () => {
+      cancelled = true
+      window.clearTimeout(t)
+    }
+  }, [])
 
   useEffect(() => {
     if (!live) return

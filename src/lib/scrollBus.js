@@ -57,11 +57,21 @@ export function scrollToTarget(target, options = {}) {
 
 /** Scroll straight to the top (used on route change). */
 export function scrollToTop({ immediate = true } = {}) {
+  if (typeof window === 'undefined') return
+
   if (lenisInstance) {
     lenisInstance.scrollTo(0, { immediate })
-    return
   }
-  window.scrollTo(0, 0)
+
+  // Always pin the native scroller too — Lenis tracks window.scrollY, and CSS
+  // scroll-behavior:smooth can animate behavior:'auto' jumps on some browsers.
+  if (immediate) {
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
+    window.scrollTo(0, 0)
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 }
 
 /**

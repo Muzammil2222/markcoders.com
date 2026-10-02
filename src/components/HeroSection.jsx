@@ -1,7 +1,72 @@
 import PageHero from './landing/PageHero';
 import { Link } from 'react-router-dom';
-import cardImage from '../assets/vantage.webp';
-import BlueWaves from './BlueWaves';
+import { lazy, Suspense, useEffect, useState } from 'react';
+
+// Same URL as the HTML <link rel="preload"> — no hashed chunk delay.
+const HERO_IMG = `${import.meta.env.BASE_URL}hero/vantage.webp`;
+
+const BlueWaves = lazy(() => import('./BlueWaves'));
+
+function DeferredBlueWaves(props) {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    let idleId = null;
+    let timeoutId = null;
+
+    const enable = () => {
+      if (!cancelled) setReady(true);
+    };
+
+    if ('requestIdleCallback' in window) {
+      idleId = window.requestIdleCallback(enable, { timeout: 1800 });
+    } else {
+      timeoutId = window.setTimeout(enable, 200);
+    }
+
+    return () => {
+      cancelled = true;
+      if (idleId != null && 'cancelIdleCallback' in window) {
+        window.cancelIdleCallback(idleId);
+      }
+      if (timeoutId != null) window.clearTimeout(timeoutId);
+    };
+  }, []);
+
+  if (!ready) {
+    // Cheap CSS stand-in until WebGL chunk loads (matches hero dark + blue glow)
+    return (
+      <div
+        aria-hidden="true"
+        style={{
+          width: '100%',
+          height: '100%',
+          background:
+            'radial-gradient(ellipse at 50% 60%, rgba(0,94,247,0.45) 0%, #000 70%)',
+        }}
+      />
+    );
+  }
+
+  return (
+    <Suspense
+      fallback={
+        <div
+          aria-hidden="true"
+          style={{
+            width: '100%',
+            height: '100%',
+            background:
+              'radial-gradient(ellipse at 50% 60%, rgba(0,94,247,0.45) 0%, #000 70%)',
+          }}
+        />
+      }
+    >
+      <BlueWaves {...props} />
+    </Suspense>
+  );
+}
 
 const HeroSection = ({ heroImageRef }) => {
   return (
@@ -11,7 +76,7 @@ const HeroSection = ({ heroImageRef }) => {
       className="relative min-h-[100svh] flex flex-col justify-between overflow-visible pt-28 pb-12 px-6 md:px-10 lg:px-16 z-10"
     >
       <div className="absolute inset-0 z-0 pointer-events-none opacity-80">
-        <BlueWaves color={[0.0, 0.37, 0.97]} level={0.42} />
+        <DeferredBlueWaves color={[0.0, 0.37, 0.97]} level={0.42} />
       </div>
 
       {/* Top Gradient Overlay for smooth blending with Navbar */}
@@ -158,8 +223,12 @@ const HeroSection = ({ heroImageRef }) => {
             >
               <img
                 ref={heroImageRef}
-                src={cardImage}
+                src={HERO_IMG}
                 alt="Our work - Designing a bold voice"
+                width={162}
+                height={197}
+                fetchPriority="high"
+                decoding="async"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-50 relative will-change-transform origin-center"
                 style={{
                   width: '162.16px',

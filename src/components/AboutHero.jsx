@@ -5,11 +5,12 @@ import teamColor from '../assets/team-color.jpg';
 
 const StoryCard = ({ imageRef }) => (
   <div
-    className="w-full max-w-[430.82px] h-[216.86px] rounded-[15px] p-[10px] relative overflow-hidden group cursor-pointer flex flex-row items-stretch"
+    className="w-full max-w-[430.82px] rounded-[15px] p-[10px] relative overflow-hidden group cursor-pointer flex flex-row items-stretch"
     style={{
       width: '430.82px',
       maxWidth: '100%',
-      height: '216.86px',
+      height: 'max-content',
+      minHeight: '216.86px',
       background: '#00060B',
       border: '1px solid #FFFFFF66',
       borderRadius: '15px',

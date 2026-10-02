@@ -41,56 +41,69 @@ const AboutStory = ({ previewImageRef }) => {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // 1. Text Reveal Animation for the paragraph
+      const coarse = window.matchMedia('(pointer: coarse)').matches;
+
       const chars = paragraphRef.current?.querySelectorAll('.about-story-char');
       if (chars && chars.length) {
         gsap.to(chars, {
           opacity: 1,
-          stagger: 0.05,
-          ease: 'none',
+          stagger: coarse ? 0.01 : 0.05,
+          ...(coarse
+            ? { duration: 0.55, ease: 'power2.out' }
+            : { ease: 'none' }),
           scrollTrigger: {
             trigger: paragraphRef.current,
             start: 'top 85%',
             end: 'bottom 45%',
-            scrub: 1,
-          }
+            ...(coarse
+              ? { toggleActions: 'play none none none' }
+              : { scrub: 1 }),
+          },
         });
       }
 
-      // 2. Heading Entrance
       if (headingRef.current) {
-        gsap.fromTo(headingRef.current,
-          { y: 60, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: headingRef.current,
-              start: 'top 95%',
-              end: 'bottom 75%',
-              scrub: 1.5,
-            }
-          }
-        );
-      }
-
-      // 3. Stats Entrance
-      if (statsRef.current) {
-        const rows = statsRef.current.querySelectorAll('.stat-row');
-        gsap.fromTo(rows,
+        gsap.fromTo(
+          headingRef.current,
           { y: 40, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            stagger: 0.15,
-            ease: 'none',
+            ...(coarse
+              ? { duration: 0.55, ease: 'power2.out' }
+              : { ease: 'none' }),
+            scrollTrigger: {
+              trigger: headingRef.current,
+              start: 'top 95%',
+              end: 'bottom 75%',
+              ...(coarse
+                ? { toggleActions: 'play none none none' }
+                : { scrub: 1.5 }),
+            },
+          }
+        );
+      }
+
+      if (statsRef.current) {
+        const rows = statsRef.current.querySelectorAll('.stat-row');
+        gsap.fromTo(
+          rows,
+          { y: 28, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.1,
+            ...(coarse
+              ? { duration: 0.5, ease: 'power2.out' }
+              : { ease: 'none' }),
             scrollTrigger: {
               trigger: statsRef.current,
               start: 'top 95%',
               end: 'center 65%',
-              scrub: 1.5,
-            }
+              ...(coarse
+                ? { toggleActions: 'play none none none' }
+                : { scrub: 1.5 }),
+            },
           }
         );
       }
