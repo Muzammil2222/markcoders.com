@@ -10,7 +10,11 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+dist.zip
 *.local
+
+# Nested local clone — keep offline only, never push
+markcoders.com/
 
 # Local reference copy of another project — not part of this site
 techdejure/
